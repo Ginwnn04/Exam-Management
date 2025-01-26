@@ -4,6 +4,10 @@
  */
 package GUI.Comp.Panel;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+
 /**
  *
  * @author quang
@@ -15,6 +19,10 @@ public class PanelQuestion extends javax.swing.JPanel {
      */
     public PanelQuestion() {
         initComponents();
+        txtCauHoi.putClientProperty("JTextField.placeholderText", "Hôm nay tôi bùn...");
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbCauHoi.getTableHeader().getDefaultRenderer();
+        renderer.setHorizontalAlignment(JLabel.LEFT);
+        tbCauHoi.setRowHeight(30);
     }
 
     /**
@@ -34,10 +42,32 @@ public class PanelQuestion extends javax.swing.JPanel {
         panelBackground5 = new GUI.Comp.Swing.PanelBackground();
         main = new GUI.Comp.Swing.PanelBackground();
         panelBackground6 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground7 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground8 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground9 = new GUI.Comp.Swing.PanelBackground();
+        pnCenter = new GUI.Comp.Swing.PanelBackground();
+        pnTop = new GUI.Comp.Swing.PanelBackground();
+        jLabel1 = new javax.swing.JLabel();
+        panelBackground10 = new GUI.Comp.Swing.PanelBackground();
+        jButton1 = new javax.swing.JButton();
+        panelBackground17 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground18 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        jLabel2 = new javax.swing.JLabel();
+        panelBackground12 = new GUI.Comp.Swing.PanelBackground();
+        txtCauHoi = new javax.swing.JTextField();
+        panelBackground13 = new GUI.Comp.Swing.PanelBackground();
+        jLabel3 = new javax.swing.JLabel();
+        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
+        cbxChuDe = new javax.swing.JComboBox<>();
+        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
+        jLabel4 = new javax.swing.JLabel();
+        panelBackground16 = new GUI.Comp.Swing.PanelBackground();
+        cbxDoKho = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbCauHoi = new javax.swing.JTable();
 
-        setBackground(new java.awt.Color(247, 247, 247));
+        setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1200, 765));
 
         panelBackground1.setBackground(new java.awt.Color(247, 247, 247));
@@ -107,36 +137,251 @@ public class PanelQuestion extends javax.swing.JPanel {
 
         panelBackground1.add(panelBackground5, java.awt.BorderLayout.PAGE_END);
 
-        main.setBackground(new java.awt.Color(247, 247, 247));
         main.setLayout(new java.awt.BorderLayout());
+
+        panelBackground6.setPreferredSize(new java.awt.Dimension(10, 705));
 
         javax.swing.GroupLayout panelBackground6Layout = new javax.swing.GroupLayout(panelBackground6);
         panelBackground6.setLayout(panelBackground6Layout);
         panelBackground6Layout.setHorizontalGroup(
             panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1160, Short.MAX_VALUE)
+            .addGap(0, 10, Short.MAX_VALUE)
         );
         panelBackground6Layout.setVerticalGroup(
             panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 705, Short.MAX_VALUE)
         );
 
-        main.add(panelBackground6, java.awt.BorderLayout.PAGE_START);
+        main.add(panelBackground6, java.awt.BorderLayout.LINE_START);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        panelBackground7.setPreferredSize(new java.awt.Dimension(1160, 10));
+
+        javax.swing.GroupLayout panelBackground7Layout = new javax.swing.GroupLayout(panelBackground7);
+        panelBackground7.setLayout(panelBackground7Layout);
+        panelBackground7Layout.setHorizontalGroup(
+            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1160, Short.MAX_VALUE)
+        );
+        panelBackground7Layout.setVerticalGroup(
+            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground7, java.awt.BorderLayout.PAGE_START);
+
+        panelBackground8.setPreferredSize(new java.awt.Dimension(10, 705));
+
+        javax.swing.GroupLayout panelBackground8Layout = new javax.swing.GroupLayout(panelBackground8);
+        panelBackground8.setLayout(panelBackground8Layout);
+        panelBackground8Layout.setHorizontalGroup(
+            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        panelBackground8Layout.setVerticalGroup(
+            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 705, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground8, java.awt.BorderLayout.LINE_END);
+
+        panelBackground9.setPreferredSize(new java.awt.Dimension(1160, 10));
+
+        javax.swing.GroupLayout panelBackground9Layout = new javax.swing.GroupLayout(panelBackground9);
+        panelBackground9.setLayout(panelBackground9Layout);
+        panelBackground9Layout.setHorizontalGroup(
+            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1160, Short.MAX_VALUE)
+        );
+        panelBackground9Layout.setVerticalGroup(
+            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground9, java.awt.BorderLayout.PAGE_END);
+
+        pnCenter.setLayout(new java.awt.BorderLayout());
+
+        pnTop.setPreferredSize(new java.awt.Dimension(1140, 80));
+        pnTop.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel1.setText("Tìm kiếm");
+        pnTop.add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        panelBackground10.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground10.setLayout(new java.awt.BorderLayout());
+
+        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("+ Thêm câu hỏi");
+        jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
+        panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
+
+        panelBackground17.setPreferredSize(new java.awt.Dimension(150, 22));
+
+        javax.swing.GroupLayout panelBackground17Layout = new javax.swing.GroupLayout(panelBackground17);
+        panelBackground17.setLayout(panelBackground17Layout);
+        panelBackground17Layout.setHorizontalGroup(
+            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        panelBackground17Layout.setVerticalGroup(
+            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+
+        panelBackground10.add(panelBackground17, java.awt.BorderLayout.PAGE_END);
+
+        panelBackground18.setPreferredSize(new java.awt.Dimension(150, 5));
+
+        javax.swing.GroupLayout panelBackground18Layout = new javax.swing.GroupLayout(panelBackground18);
+        panelBackground18.setLayout(panelBackground18Layout);
+        panelBackground18Layout.setHorizontalGroup(
+            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        panelBackground18Layout.setVerticalGroup(
+            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+
+        panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
+
+        pnTop.add(panelBackground10, java.awt.BorderLayout.LINE_END);
+
+        panelBackground11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
+
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel2.setText("Câu hỏi");
+        panelBackground11.add(jLabel2);
+
+        panelBackground12.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground12Layout = new javax.swing.GroupLayout(panelBackground12);
+        panelBackground12.setLayout(panelBackground12Layout);
+        panelBackground12Layout.setHorizontalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground12Layout.setVerticalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground12);
+
+        txtCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtCauHoi.setPreferredSize(new java.awt.Dimension(300, 30));
+        panelBackground11.add(txtCauHoi);
+
+        panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground13Layout = new javax.swing.GroupLayout(panelBackground13);
+        panelBackground13.setLayout(panelBackground13Layout);
+        panelBackground13Layout.setHorizontalGroup(
+            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground13Layout.setVerticalGroup(
+            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground13);
+
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel3.setText("Chủ đề");
+        panelBackground11.add(jLabel3);
+
+        panelBackground14.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
+        panelBackground14.setLayout(panelBackground14Layout);
+        panelBackground14Layout.setHorizontalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground14Layout.setVerticalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground14);
+
+        cbxChuDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxChuDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn chủ đề", "Item 2", "Item 3", "Item 4" }));
+        cbxChuDe.setPreferredSize(new java.awt.Dimension(200, 30));
+        panelBackground11.add(cbxChuDe);
+
+        panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
+        panelBackground15.setLayout(panelBackground15Layout);
+        panelBackground15Layout.setHorizontalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground15Layout.setVerticalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground15);
+
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel4.setText("Độ khó");
+        panelBackground11.add(jLabel4);
+
+        panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
+        panelBackground16.setLayout(panelBackground16Layout);
+        panelBackground16Layout.setHorizontalGroup(
+            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground16Layout.setVerticalGroup(
+            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground16);
+
+        cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn độ khó", "Item 2", "Item 3", "Item 4" }));
+        cbxDoKho.setPreferredSize(new java.awt.Dimension(200, 30));
+        panelBackground11.add(cbxDoKho);
+
+        pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
+
+        pnCenter.add(pnTop, java.awt.BorderLayout.PAGE_START);
+
+        tbCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        tbCauHoi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Hành động"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
-        main.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tbCauHoi);
+
+        pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        main.add(pnCenter, java.awt.BorderLayout.CENTER);
 
         panelBackground1.add(main, java.awt.BorderLayout.CENTER);
 
@@ -154,14 +399,36 @@ public class PanelQuestion extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbxChuDe;
+    private javax.swing.JComboBox<String> cbxDoKho;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private GUI.Comp.Swing.PanelBackground main;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
+    private GUI.Comp.Swing.PanelBackground panelBackground10;
+    private GUI.Comp.Swing.PanelBackground panelBackground11;
+    private GUI.Comp.Swing.PanelBackground panelBackground12;
+    private GUI.Comp.Swing.PanelBackground panelBackground13;
+    private GUI.Comp.Swing.PanelBackground panelBackground14;
+    private GUI.Comp.Swing.PanelBackground panelBackground15;
+    private GUI.Comp.Swing.PanelBackground panelBackground16;
+    private GUI.Comp.Swing.PanelBackground panelBackground17;
+    private GUI.Comp.Swing.PanelBackground panelBackground18;
     private GUI.Comp.Swing.PanelBackground panelBackground2;
     private GUI.Comp.Swing.PanelBackground panelBackground3;
     private GUI.Comp.Swing.PanelBackground panelBackground4;
     private GUI.Comp.Swing.PanelBackground panelBackground5;
     private GUI.Comp.Swing.PanelBackground panelBackground6;
+    private GUI.Comp.Swing.PanelBackground panelBackground7;
+    private GUI.Comp.Swing.PanelBackground panelBackground8;
+    private GUI.Comp.Swing.PanelBackground panelBackground9;
+    private GUI.Comp.Swing.PanelBackground pnCenter;
+    private GUI.Comp.Swing.PanelBackground pnTop;
+    private javax.swing.JTable tbCauHoi;
+    private javax.swing.JTextField txtCauHoi;
     // End of variables declaration//GEN-END:variables
 }

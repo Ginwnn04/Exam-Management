@@ -7,7 +7,8 @@ package GUI.Main;
 
 import GUI.Comp.Panel.PanelQuestion;
 import Helper.MyListener;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.awt.Color;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,24 +41,14 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         Helper.ConnectDB.getInstance().openConnect();
         showForm(new PanelQuestion());
 
-//        FlatMacDarkLaf.registerCustomDefaultsSource("style");
+//        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
 //        UIManager.put("Button.font", style.MyFont.fontText);
 //        UIManager.put("Table.font", style.MyFont.fontText);
-//        UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 14));
-//        UIManager.put("TableHeader.background", new Color(35, 35, 35));
-//        UIManager.put("TableHeader.hoverBackground", new Color(35, 35, 35));
+//       
 //
-//        // UIManager.put("Table.alternateRowColor", new Color(53, 53, 53));
-//        UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
-//        UIManager.put("TableHeader.pressedBackground", new Color(0, 0, 0, 0));
-//        UIManager.put("TableHeader.height", 30);
-//        UIManager.put("RootPane.background", new Color(247, 247, 247));
-//        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
-//        UIManager.put("TitlePane.centerTitle", true);
-
-//        FlatMacDarkLaf.setup();
+//        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
     }
