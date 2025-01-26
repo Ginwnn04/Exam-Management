@@ -4,8 +4,8 @@
  */
 package GUI.Comp.Panel;
 
+import GUI.Comp.Dialog.DialogQuestion;
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -216,6 +216,11 @@ public class PanelQuestion extends javax.swing.JPanel {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("+ Thêm câu hỏi");
         jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
 
         panelBackground17.setPreferredSize(new java.awt.Dimension(150, 22));
@@ -396,6 +401,12 @@ public class PanelQuestion extends javax.swing.JPanel {
             .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DialogQuestion d = new DialogQuestion(null, true);
+        d.setVisible(true);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
