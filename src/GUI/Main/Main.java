@@ -5,10 +5,10 @@
 package GUI.Main;
 
 
+import GUI.Comp.Panel.PanelQuestion;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import javax.swing.UIManager;
+import style.ColorConfig;
 
 /**
  *
@@ -30,14 +31,14 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     public Main() {
         initComponents();
         setLocationRelativeTo(null);
-
+        getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
         
 //        navBar.setInformation(fullName, role);
         MyListener.getInstance().addPropertyChangeListener(this);
 
-//        setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
+        setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
         Helper.ConnectDB.getInstance().openConnect();
-//        showForm(new PanelDashbroad());
+        showForm(new PanelQuestion());
 
 //        FlatMacDarkLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
@@ -216,15 +217,15 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
-        panelBackground.setBackground(new java.awt.Color(247, 247, 247));
         panelBackground.setForeground(new java.awt.Color(153, 255, 0));
         panelBackground.setLayout(new java.awt.BorderLayout());
 
-        navBar.setBackground(new java.awt.Color(247, 247, 247));
+        navBar.setBackground(new java.awt.Color(255, 255, 255));
         navBar.setPreferredSize(new java.awt.Dimension(245, 765));
         panelBackground.add(navBar, java.awt.BorderLayout.LINE_START);
 
-        body.setForeground(new java.awt.Color(255, 255, 255));
+        body.setBackground(new java.awt.Color(247, 247, 247));
+        body.setForeground(new java.awt.Color(247, 247, 247));
         body.setLayout(new java.awt.BorderLayout());
         panelBackground.add(body, java.awt.BorderLayout.CENTER);
 

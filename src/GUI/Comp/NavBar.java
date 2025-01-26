@@ -125,7 +125,7 @@ public class NavBar extends javax.swing.JPanel {
         else {
             btn.setForeground(ColorConfig.GREY_COLOR_FONT);
         }
-        btn.setBackground(ColorConfig.GREY_COLOR_BG);
+        btn.setBackground(ColorConfig.WHITE_COLOR_BG);
         btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setBorderPainted(false);
         btn.setFont(style.MyFont.fontMenuBar);
@@ -151,7 +151,7 @@ public class NavBar extends javax.swing.JPanel {
     
     public void clearSelected() {
         for (JButton btn : listButton) {
-            btn.setBackground(ColorConfig.GREY_COLOR_BG);
+            btn.setBackground(ColorConfig.WHITE_COLOR_BG);
             btn.setForeground(ColorConfig.GREY_COLOR_FONT);
             btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         }
@@ -191,10 +191,9 @@ public class NavBar extends javax.swing.JPanel {
         pnMenuItem = new GUI.Comp.Swing.PanelBackground();
         imageAvatar1 = new GUI.Comp.ImageAvatar();
 
-        setBackground(new java.awt.Color(247, 247, 247));
+        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
 
-        pnContainer.setBackground(new java.awt.Color(247, 247, 247));
         pnContainer.setPreferredSize(new java.awt.Dimension(230, 765));
 
         lbRole.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
@@ -207,7 +206,7 @@ public class NavBar extends javax.swing.JPanel {
         lbName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbName.setText("Dashboard UI");
 
-        btnDangXuat.setBackground(new java.awt.Color(247, 247, 247));
+        btnDangXuat.setBackground(new java.awt.Color(254, 254, 254));
         btnDangXuat.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
         btnDangXuat.setForeground(new java.awt.Color(98, 99, 107));
         btnDangXuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png"))); // NOI18N
@@ -221,7 +220,6 @@ public class NavBar extends javax.swing.JPanel {
         jSeparator2.setBackground(new java.awt.Color(102, 255, 51));
         jSeparator2.setForeground(new java.awt.Color(102, 255, 102));
 
-        pnMenuItem.setBackground(new java.awt.Color(247, 247, 247));
         pnMenuItem.setMaximumSize(new java.awt.Dimension(211, 32767));
         pnMenuItem.setPreferredSize(new java.awt.Dimension(200, 482));
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 3, 2);

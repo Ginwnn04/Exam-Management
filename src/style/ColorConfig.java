@@ -13,5 +13,6 @@ import java.awt.Color;
 public class ColorConfig {
     public static Color GREY_COLOR_FONT = new Color(98, 99, 107);
     public static Color GREY_COLOR_BG = new Color(247, 247, 247);
+    public static Color WHITE_COLOR_BG = new Color(255, 255, 255);
     public static Color PRIMARY_COLOR = new Color(255, 99, 73);
 }

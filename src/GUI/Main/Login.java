@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -251,20 +251,19 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        FlatMacDarkLaf.registerCustomDefaultsSource("style");
+        FlatMacLightLaf.registerCustomDefaultsSource("style");
         UIManager.put("TextField.font", style.MyFont.fontText);
         UIManager.put("Label.font", style.MyFont.fontText);
         UIManager.put("Button.font", style.MyFont.fontText);
         UIManager.put("Table.font", style.MyFont.fontText);
         UIManager.put("PasswordField.font", style.MyFont.fontText);
         UIManager.put("PasswordField.showRevealButton", true);
-//        UIManager.put("RootPane.background", new Color(247, 247, 247));
-//        UIManager.put("TitlePane.background", new Color(247, 247, 247));
-//        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
-
-//        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
-//        UIManager.put("TitlePane.centerTitle", true);
-        FlatMacDarkLaf.setup();
+        UIManager.put("RootPane.background", new Color(255, 255, 255));
+        UIManager.put("TitlePane.background", new Color(255, 255, 255));
+        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
+        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
+        UIManager.put("TitlePane.centerTitle", true);
+        FlatMacLightLaf.setup();
 
         
         
