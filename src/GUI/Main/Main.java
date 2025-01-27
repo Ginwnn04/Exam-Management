@@ -40,8 +40,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
         Helper.ConnectDB.getInstance().openConnect();
-        // showForm(new PanelQuestion());
-        showForm(new PanelCreateExam());
+        showForm(new PanelQuestion());
 
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
