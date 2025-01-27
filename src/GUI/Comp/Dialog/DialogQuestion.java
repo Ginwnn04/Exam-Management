@@ -224,7 +224,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground7.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
 
-        panelBackground8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelBackground8.setLayout(new java.awt.FlowLayout(0));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
@@ -279,7 +279,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground7.add(panelBackground8);
 
-        panelBackground16.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelBackground16.setLayout(new java.awt.FlowLayout(0));
 
         buttonGroup1.add(jRadioButton3);
         jRadioButton3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
@@ -334,7 +334,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground7.add(panelBackground16);
 
-        panelBackground19.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelBackground19.setLayout(new java.awt.FlowLayout(0));
 
         buttonGroup1.add(jRadioButton4);
         jRadioButton4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
@@ -389,11 +389,16 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground7.add(panelBackground19);
 
-        panelBackground22.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelBackground22.setLayout(new java.awt.FlowLayout(0));
 
         buttonGroup1.add(jRadioButton5);
         jRadioButton5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jRadioButton5.setPreferredSize(new java.awt.Dimension(25, 30));
+        jRadioButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton5ActionPerformed(evt);
+            }
+        });
         panelBackground22.add(jRadioButton5);
 
         jTextField5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
@@ -479,7 +484,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground27.setLayout(new java.awt.BorderLayout());
 
         panelBackground28.setPreferredSize(new java.awt.Dimension(500, 49));
-        panelBackground28.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
+        panelBackground28.setLayout(new java.awt.FlowLayout(0, 0, 5));
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel6.setText("Chủ đề");
@@ -608,6 +613,10 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     /**
      * @param args the command line arguments

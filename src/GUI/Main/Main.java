@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
+import GUI.Comp.NavBar;
 import javax.swing.UIManager;
 import style.ColorConfig;
 
@@ -40,7 +40,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
         Helper.ConnectDB.getInstance().openConnect();
         showForm(new PanelQuestion());
-
+        
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
@@ -200,35 +200,19 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        panelBackground = new GUI.Comp.Swing.PanelBackground();
-        navBar = new GUI.Comp.NavBar();
-        body = new GUI.Comp.Swing.PanelBackground();
-
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-
-        panelBackground.setForeground(new java.awt.Color(153, 255, 0));
-        panelBackground.setLayout(new java.awt.BorderLayout());
-
-        navBar.setBackground(new java.awt.Color(255, 255, 255));
-        navBar.setPreferredSize(new java.awt.Dimension(245, 765));
-        panelBackground.add(navBar, java.awt.BorderLayout.LINE_START);
-
-        body.setBackground(new java.awt.Color(247, 247, 247));
-        body.setForeground(new java.awt.Color(247, 247, 247));
-        body.setLayout(new java.awt.BorderLayout());
-        panelBackground.add(body, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground, javax.swing.GroupLayout.DEFAULT_SIZE, 1445, Short.MAX_VALUE)
+            .addGap(0, 1445, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 20, Short.MAX_VALUE)
         );
 
         pack();
@@ -239,9 +223,8 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
     private GUI.Comp.Swing.PanelBackground body;
     private GUI.Comp.NavBar navBar;
     private GUI.Comp.Swing.PanelBackground panelBackground;
-    // End of variables declaration//GEN-END:variables
-
 }

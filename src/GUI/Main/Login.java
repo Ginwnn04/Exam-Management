@@ -33,7 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
-
+import GUI.Comp.Panel.PanelUser;
 /**
  *
  * @author vuled
@@ -251,6 +251,7 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         FlatMacLightLaf.registerCustomDefaultsSource("style");
         UIManager.put("TextField.font", style.MyFont.fontText);
         UIManager.put("Label.font", style.MyFont.fontText);
