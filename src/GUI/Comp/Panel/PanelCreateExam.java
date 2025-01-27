@@ -60,8 +60,8 @@ public class PanelCreateExam extends JPanel {
 
         gbcBuilder.reset();
         GridBagConstraints gbc = gbcBuilder.setPosition(0, 0)
-                                        .setAnchor(GridBagConstraints.CENTER)
-                                        .result();
+                                           .setAnchor(GridBagConstraints.CENTER)
+                                           .result();
 
         add(main, gbc);
     }
@@ -136,17 +136,40 @@ public class PanelCreateExam extends JPanel {
                                       .setFill(GridBagConstraints.HORIZONTAL)
                                       .result());
 
-        container.add(Box.createRigidArea(new Dimension(0, 30)), gbcBuilder.setPosition(0, 3).result());
+        gbcBuilder.reset();
+        easyQuestionCount = new JTextField();
+        mediumQuestionCount = new JTextField();
+        hardQuestionCount = new JTextField();
+
+        container.add(new JLabel("Số câu dễ: "), gbcBuilder.setPosition(0, 3).result());
+        container.add(easyQuestionCount, gbcBuilder.setPosition(1, 3)
+                                                   .setWeights(1, 1)
+                                                   .setFill(GridBagConstraints.HORIZONTAL)
+                                                   .setInsets(0, 0, 0, 10)
+                                                   .result());
 
         gbcBuilder.reset();
+
+        container.add(new JLabel("Số câu trung bình: "), gbcBuilder.setPosition(0, 4).result());
+        container.add(mediumQuestionCount, gbcBuilder.setPosition(1, 4)
+                                                     .setWeights(1, 1)
+                                                     .setFill(GridBagConstraints.HORIZONTAL)
+                                                     .result());
+
+        gbcBuilder.reset();
+        
+        container.add(new JLabel("Số câu khó: "), gbcBuilder.setPosition(2, 3).result());
+        container.add(hardQuestionCount, gbcBuilder.setPosition(3, 3)
+                                                   .setWeights(1, 1)
+                                                   .setFill(GridBagConstraints.HORIZONTAL)
+                                                   .result());
+
         informationPanel.add(container, gbcBuilder.setPosition(0, 0)
                                                   .setWeights(1, 1)
                                                   .setInsets(0, 20, 0, 0)
                                                   .result());
 
         initStartDateChooser();
-
-
         content.add(informationPanel);
     }
 
@@ -226,11 +249,11 @@ public class PanelCreateExam extends JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Hành động"
+                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Điểm", "Hành động"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -252,6 +275,9 @@ public class PanelCreateExam extends JPanel {
     private JTextField testLimit;
     private JTextField time;
     private DateChooser startDateChooser;
+    private JTextField easyQuestionCount;
+    private JTextField mediumQuestionCount;
+    private JTextField hardQuestionCount;
     private JLabel title;
     private JButton addQuestionButton;
     private JTable questionTable;
