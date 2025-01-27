@@ -5,6 +5,7 @@
 package GUI.Main;
 
 
+import GUI.Comp.Panel.PanelCreateExam;
 import GUI.Comp.Panel.PanelQuestion;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -51,6 +52,8 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
+
+        setResizable(false);
     }
 
     @Override
