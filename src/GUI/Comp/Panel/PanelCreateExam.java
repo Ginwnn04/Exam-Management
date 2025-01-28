@@ -43,7 +43,7 @@ public class PanelCreateExam extends JPanel {
         setPreferredSize(new Dimension(1200, 765));
 
         main = new PanelBackground();
-        main.setPreferredSize(new Dimension(1180, 745));
+        main.setPreferredSize(new Dimension(1160, 725));
         main.setLayout(new FlowLayout());
 
         content = new PanelBackground();
