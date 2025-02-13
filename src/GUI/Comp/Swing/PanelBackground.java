@@ -36,6 +36,13 @@ public class PanelBackground extends JPanel {
         repaint();
     }
 
+    public void setAbsoluteSize(int width, int height){
+        var dimension = new Dimension(width, height);
+        setPreferredSize(dimension);
+        setMaximumSize(dimension);
+        setMinimumSize(dimension);
+    }
+
     public PanelBackground() {
         setOpaque(false);
         super.setBackground(Color.WHITE);
