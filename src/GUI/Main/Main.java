@@ -24,6 +24,8 @@ import javax.swing.JPanel;
 
 import javax.swing.UIManager;
 import style.ColorConfig;
+import Helper.ConnectDB;
+
 
 /**
  *
@@ -40,7 +42,6 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-        Helper.ConnectDB.getInstance().openConnect();
 //         showForm(new PanelQuestion());
         showForm(new PanelUser());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
@@ -65,7 +66,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             int index = (int) evt.getNewValue();
 //            String role = hashMap.keySet().iterator().next();
             
-            
+            switch (index) {
+                case 1:
+                    showForm(new PanelQuestion());
+                    break;
+                default:
+                    throw new AssertionError();
+            }
             
 //            if (role.equals("admin")) {
 //                System.out.println(role + " " + 1);

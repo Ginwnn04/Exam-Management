@@ -17,6 +17,10 @@ public class DialogQuestion extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        pnTraLoi3.setVisible(false);
+        pnTraLoi4.setVisible(false);
+        pnTraLoi5.setVisible(false);
+
     }
 
     /**
@@ -47,34 +51,42 @@ public class DialogQuestion extends javax.swing.JDialog {
         pnAnwser = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
         panelBackground7 = new GUI.Comp.Swing.PanelBackground();
-        panelBackground8 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi1 = new GUI.Comp.Swing.PanelBackground();
         jRadioButton1 = new javax.swing.JRadioButton();
         jTextField1 = new javax.swing.JTextField();
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
         jButton2 = new javax.swing.JButton();
         panelBackground9 = new GUI.Comp.Swing.PanelBackground();
         jButton1 = new javax.swing.JButton();
-        panelBackground16 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi2 = new GUI.Comp.Swing.PanelBackground();
         jRadioButton3 = new javax.swing.JRadioButton();
         jTextField3 = new javax.swing.JTextField();
         panelBackground17 = new GUI.Comp.Swing.PanelBackground();
         jButton5 = new javax.swing.JButton();
         panelBackground18 = new GUI.Comp.Swing.PanelBackground();
         jButton6 = new javax.swing.JButton();
-        panelBackground19 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi3 = new GUI.Comp.Swing.PanelBackground();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jTextField2 = new javax.swing.JTextField();
+        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
+        jButton3 = new javax.swing.JButton();
+        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
+        jButton7 = new javax.swing.JButton();
+        pnTraLoi4 = new GUI.Comp.Swing.PanelBackground();
         jRadioButton4 = new javax.swing.JRadioButton();
         jTextField4 = new javax.swing.JTextField();
-        panelBackground20 = new GUI.Comp.Swing.PanelBackground();
-        jButton7 = new javax.swing.JButton();
-        panelBackground21 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground19 = new GUI.Comp.Swing.PanelBackground();
         jButton8 = new javax.swing.JButton();
-        panelBackground22 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground20 = new GUI.Comp.Swing.PanelBackground();
+        jButton9 = new javax.swing.JButton();
+        pnTraLoi5 = new GUI.Comp.Swing.PanelBackground();
         jRadioButton5 = new javax.swing.JRadioButton();
         jTextField5 = new javax.swing.JTextField();
-        panelBackground23 = new GUI.Comp.Swing.PanelBackground();
-        jButton9 = new javax.swing.JButton();
-        panelBackground24 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground21 = new GUI.Comp.Swing.PanelBackground();
         jButton10 = new javax.swing.JButton();
+        panelBackground22 = new GUI.Comp.Swing.PanelBackground();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         pnBottom = new GUI.Comp.Swing.PanelBackground();
         line = new GUI.Comp.Swing.PanelBackground();
         panelBackground13 = new GUI.Comp.Swing.PanelBackground();
@@ -123,7 +135,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground3Layout.setVerticalGroup(
             panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground3, java.awt.BorderLayout.LINE_START);
@@ -138,7 +150,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground4Layout.setVerticalGroup(
             panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground4, java.awt.BorderLayout.LINE_END);
@@ -191,7 +203,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground10Layout.setVerticalGroup(
             panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 241, Short.MAX_VALUE)
+            .addGap(0, 250, Short.MAX_VALUE)
         );
 
         panelBackground6.add(panelBackground10);
@@ -207,7 +219,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground11Layout.setVerticalGroup(
             panelBackground11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 241, Short.MAX_VALUE)
+            .addGap(0, 250, Short.MAX_VALUE)
         );
 
         panelBackground6.add(panelBackground11);
@@ -222,20 +234,19 @@ public class DialogQuestion extends javax.swing.JDialog {
         jLabel2.setText("Câu trả lời");
         pnAnwser.add(jLabel2, java.awt.BorderLayout.PAGE_START);
 
-        panelBackground7.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
+        panelBackground7.setLayout(new java.awt.GridLayout(6, 1, 0, 5));
 
-        panelBackground8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jRadioButton1.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground8.add(jRadioButton1);
+        pnTraLoi1.add(jRadioButton1);
 
         jTextField1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField1.setText("jTextField1");
         jTextField1.setMinimumSize(new java.awt.Dimension(64, 30));
         jTextField1.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground8.add(jTextField1);
+        pnTraLoi1.add(jTextField1);
 
         panelBackground12.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -250,12 +261,12 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground8.add(panelBackground12);
+        pnTraLoi1.add(panelBackground12);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton2.setBorder(null);
         jButton2.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground8.add(jButton2);
+        pnTraLoi1.add(jButton2);
 
         panelBackground9.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -270,27 +281,26 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground8.add(panelBackground9);
+        pnTraLoi1.add(panelBackground9);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         jButton1.setBorder(null);
         jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground8.add(jButton1);
+        pnTraLoi1.add(jButton1);
 
-        panelBackground7.add(panelBackground8);
+        panelBackground7.add(pnTraLoi1);
 
-        panelBackground16.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         buttonGroup1.add(jRadioButton3);
         jRadioButton3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jRadioButton3.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground16.add(jRadioButton3);
+        pnTraLoi2.add(jRadioButton3);
 
         jTextField3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField3.setText("jTextField1");
         jTextField3.setMinimumSize(new java.awt.Dimension(64, 30));
         jTextField3.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground16.add(jTextField3);
+        pnTraLoi2.add(jTextField3);
 
         panelBackground17.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -305,12 +315,12 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground16.add(panelBackground17);
+        pnTraLoi2.add(panelBackground17);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton5.setBorder(null);
         jButton5.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground16.add(jButton5);
+        pnTraLoi2.add(jButton5);
 
         panelBackground18.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -325,27 +335,102 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground16.add(panelBackground18);
+        pnTraLoi2.add(panelBackground18);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         jButton6.setBorder(null);
         jButton6.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground16.add(jButton6);
+        pnTraLoi2.add(jButton6);
 
-        panelBackground7.add(panelBackground16);
+        panelBackground7.add(pnTraLoi2);
 
-        panelBackground19.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi3.setEnabled(false);
+        pnTraLoi3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jRadioButton2.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi3.add(jRadioButton2);
+
+        jTextField2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jTextField2.setMinimumSize(new java.awt.Dimension(64, 30));
+        jTextField2.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi3.add(jTextField2);
+
+        panelBackground14.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
+        panelBackground14.setLayout(panelBackground14Layout);
+        panelBackground14Layout.setHorizontalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground14Layout.setVerticalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi3.add(panelBackground14);
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
+        jButton3.setBorder(null);
+        jButton3.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi3.add(jButton3);
+
+        panelBackground15.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
+        panelBackground15.setLayout(panelBackground15Layout);
+        panelBackground15Layout.setHorizontalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground15Layout.setVerticalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi3.add(panelBackground15);
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton7.setBorder(null);
+        jButton7.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi3.add(jButton7);
+
+        panelBackground7.add(pnTraLoi3);
+
+        pnTraLoi4.setEnabled(false);
+        pnTraLoi4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         buttonGroup1.add(jRadioButton4);
         jRadioButton4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jRadioButton4.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground19.add(jRadioButton4);
+        pnTraLoi4.add(jRadioButton4);
 
         jTextField4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField4.setText("jTextField1");
         jTextField4.setMinimumSize(new java.awt.Dimension(64, 30));
         jTextField4.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground19.add(jTextField4);
+        pnTraLoi4.add(jTextField4);
+
+        panelBackground19.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground19Layout = new javax.swing.GroupLayout(panelBackground19);
+        panelBackground19.setLayout(panelBackground19Layout);
+        panelBackground19Layout.setHorizontalGroup(
+            panelBackground19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground19Layout.setVerticalGroup(
+            panelBackground19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi4.add(panelBackground19);
+
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
+        jButton8.setBorder(null);
+        jButton8.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi4.add(jButton8);
 
         panelBackground20.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -360,12 +445,27 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground19.add(panelBackground20);
+        pnTraLoi4.add(panelBackground20);
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
-        jButton7.setBorder(null);
-        jButton7.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground19.add(jButton7);
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton9.setBorder(null);
+        jButton9.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi4.add(jButton9);
+
+        panelBackground7.add(pnTraLoi4);
+
+        pnTraLoi5.setEnabled(false);
+        pnTraLoi5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        buttonGroup1.add(jRadioButton5);
+        jRadioButton5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jRadioButton5.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi5.add(jRadioButton5);
+
+        jTextField5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jTextField5.setMinimumSize(new java.awt.Dimension(64, 30));
+        jTextField5.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi5.add(jTextField5);
 
         panelBackground21.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -380,69 +480,40 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground19.add(panelBackground21);
+        pnTraLoi5.add(panelBackground21);
 
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
-        jButton8.setBorder(null);
-        jButton8.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground19.add(jButton8);
-
-        panelBackground7.add(panelBackground19);
-
-        panelBackground22.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        buttonGroup1.add(jRadioButton5);
-        jRadioButton5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton5.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground22.add(jRadioButton5);
-
-        jTextField5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField5.setText("jTextField1");
-        jTextField5.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField5.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground22.add(jTextField5);
-
-        panelBackground23.setPreferredSize(new java.awt.Dimension(5, 30));
-
-        javax.swing.GroupLayout panelBackground23Layout = new javax.swing.GroupLayout(panelBackground23);
-        panelBackground23.setLayout(panelBackground23Layout);
-        panelBackground23Layout.setHorizontalGroup(
-            panelBackground23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-        panelBackground23Layout.setVerticalGroup(
-            panelBackground23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
-
-        panelBackground22.add(panelBackground23);
-
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
-        jButton9.setBorder(null);
-        jButton9.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground22.add(jButton9);
-
-        panelBackground24.setPreferredSize(new java.awt.Dimension(5, 30));
-
-        javax.swing.GroupLayout panelBackground24Layout = new javax.swing.GroupLayout(panelBackground24);
-        panelBackground24.setLayout(panelBackground24Layout);
-        panelBackground24Layout.setHorizontalGroup(
-            panelBackground24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-        panelBackground24Layout.setVerticalGroup(
-            panelBackground24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
-
-        panelBackground22.add(panelBackground24);
-
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton10.setBorder(null);
         jButton10.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground22.add(jButton10);
+        pnTraLoi5.add(jButton10);
 
-        panelBackground7.add(panelBackground22);
+        panelBackground22.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground22Layout = new javax.swing.GroupLayout(panelBackground22);
+        panelBackground22.setLayout(panelBackground22Layout);
+        panelBackground22Layout.setHorizontalGroup(
+            panelBackground22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground22Layout.setVerticalGroup(
+            panelBackground22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi5.add(panelBackground22);
+
+        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton11.setBorder(null);
+        jButton11.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi5.add(jButton11);
+
+        panelBackground7.add(pnTraLoi5);
+
+        jButton12.setBackground(new java.awt.Color(243, 215, 208));
+        jButton12.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jButton12.setText("Thêm câu trả lời");
+        jButton12.setPreferredSize(new java.awt.Dimension(50, 23));
+        panelBackground7.add(jButton12);
 
         pnAnwser.add(panelBackground7, java.awt.BorderLayout.CENTER);
 
@@ -603,7 +674,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
         );
 
         pack();
@@ -655,7 +726,10 @@ public class DialogQuestion extends javax.swing.JDialog {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -670,12 +744,14 @@ public class DialogQuestion extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
@@ -685,7 +761,8 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground panelBackground11;
     private GUI.Comp.Swing.PanelBackground panelBackground12;
     private GUI.Comp.Swing.PanelBackground panelBackground13;
-    private GUI.Comp.Swing.PanelBackground panelBackground16;
+    private GUI.Comp.Swing.PanelBackground panelBackground14;
+    private GUI.Comp.Swing.PanelBackground panelBackground15;
     private GUI.Comp.Swing.PanelBackground panelBackground17;
     private GUI.Comp.Swing.PanelBackground panelBackground18;
     private GUI.Comp.Swing.PanelBackground panelBackground19;
@@ -693,8 +770,6 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground panelBackground20;
     private GUI.Comp.Swing.PanelBackground panelBackground21;
     private GUI.Comp.Swing.PanelBackground panelBackground22;
-    private GUI.Comp.Swing.PanelBackground panelBackground23;
-    private GUI.Comp.Swing.PanelBackground panelBackground24;
     private GUI.Comp.Swing.PanelBackground panelBackground27;
     private GUI.Comp.Swing.PanelBackground panelBackground28;
     private GUI.Comp.Swing.PanelBackground panelBackground29;
@@ -708,12 +783,16 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground panelBackground5;
     private GUI.Comp.Swing.PanelBackground panelBackground6;
     private GUI.Comp.Swing.PanelBackground panelBackground7;
-    private GUI.Comp.Swing.PanelBackground panelBackground8;
     private GUI.Comp.Swing.PanelBackground panelBackground9;
     private GUI.Comp.Swing.PanelBackground pnAnwser;
     private GUI.Comp.Swing.PanelBackground pnBottom;
     private GUI.Comp.Swing.PanelBackground pnCenter;
     private GUI.Comp.Swing.PanelBackground pnQuestion;
     private GUI.Comp.Swing.PanelBackground pnTop;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi1;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi2;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi3;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi4;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi5;
     // End of variables declaration//GEN-END:variables
 }

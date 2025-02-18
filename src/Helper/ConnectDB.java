@@ -9,15 +9,9 @@ import java.util.logging.Logger;
 
 public class ConnectDB {
     private static ConnectDB instance;
-//    private String host = "dpg-crgm10aj1k6c739jcud0-a.singapore-postgres.render.com";
-//    private String dbName = "testing_restaurant_manager";
-//    private String username = "testing_restaurant_manager_user";
-//    private String password = "7p3LCOi2nW7LAE9kxlfwSFq3yGKnL1gK";
-//    private String sslMode = "&ssl=true";
-    
-//    private String connectionUrl = "jdbc:postgresql://" + host + ":5432/" + dbName + "?user=" + username + "&password=" + password + sslMode;
-    
-    private String connectionUrl = "jdbc:postgresql://localhost:5432/testing?user=postgres&password=123456";
+    private String url = "jdbc:mysql://exammanagement.c1m26ocsabbv.ap-southeast-1.rds.amazonaws.com/exammanagement";
+    private String username = "admin";
+    private String password = "12345678";
     private Connection con;
     
     private ConnectDB() {
@@ -32,7 +26,7 @@ public class ConnectDB {
     
     public void openConnect() {
         try {
-            this.con = DriverManager.getConnection(connectionUrl);
+            this.con = DriverManager.getConnection(url, username, password);
         } 
         catch (SQLException ex) {
             ex.printStackTrace();
