@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package GUI.Comp.Panel;
-import GUI.Comp.Swing.TableActionEvent;
+package GUI.Custom;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ActionListener; 
 /**
  *
  * @author nguye
@@ -53,8 +53,11 @@ public class PanelAction extends javax.swing.JPanel {
         btnDelete = new GUI.Comp.DateChooser.Button();
         btnView = new GUI.Comp.DateChooser.Button();
 
-        btnUpdate.setBackground(java.awt.Color.cyan);
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/repair.png"))); // NOI18N
+        btnUpdate.setBackground(new Color(0,0,0,0));
+        btnDelete.setBackground(new Color(0,0,0,0));
+        btnView.setBackground(new Color(0,0,0,0));
+        
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/fix.png"))); // NOI18N
         btnUpdate.setToolTipText("");
         btnUpdate.setBorderPainted(false);
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -63,7 +66,6 @@ public class PanelAction extends javax.swing.JPanel {
             }
         });
 
-        btnDelete.setBackground(java.awt.Color.lightGray);
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,8 +73,7 @@ public class PanelAction extends javax.swing.JPanel {
             }
         });
 
-        btnView.setBackground(java.awt.Color.yellow);
-        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/eye.png"))); // NOI18N
+        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/black_eye.png"))); // NOI18N
         btnView.setBorderPainted(false);
         btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

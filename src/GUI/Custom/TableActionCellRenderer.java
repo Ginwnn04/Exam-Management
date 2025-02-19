@@ -1,8 +1,6 @@
-package GUI.Comp.Swing;
+package GUI.Custom;
 
 import javax.swing.table.DefaultTableCellRenderer;
-
-import GUI.Comp.Panel.PanelAction;
 
 import javax.swing.JTable;
 import java.awt.Component;

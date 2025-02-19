@@ -1,11 +1,8 @@
-package GUI.Comp.Swing;
+package GUI.Custom;
 
 import javax.swing.DefaultCellEditor;
-import GUI.Comp.Panel.PanelAction;
 import javax.swing.JTable;
-
 import org.apache.poi.hwpf.usermodel.Table;
-
 import java.awt.Component;
 import javax.swing.JCheckBox;
 

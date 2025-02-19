@@ -1,4 +1,4 @@
-package GUI.Comp.Swing;
+package GUI.Custom;
 
 public interface TableActionEvent {
     public void onUpdate(int row);

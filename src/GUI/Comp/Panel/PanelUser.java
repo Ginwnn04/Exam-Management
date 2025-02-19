@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import GUI.Comp.Swing.TableActionCellRenderer;
-import GUI.Comp.Swing.TableActionEvent;
-import GUI.Comp.Swing.TableActionCellEditor;
+import GUI.Custom.TableActionCellRenderer;
+import GUI.Custom.TableActionEvent;
+import GUI.Custom.TableActionCellEditor;
 import BUS.UserBus;
 import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogQuestion;
-import GUI.Comp.Dialog.DialogUser;
 import GUI.Comp.Dialog.DialogUsers;
 
 /*
@@ -40,7 +39,8 @@ public class PanelUser extends javax.swing.JPanel {
 
             @Override
             public void onDelete(int row) {
-                System.out.println("nhan nut delete");
+                var a = tbNguoidung.getModel().getValueAt(row, 4);
+                System.out.println("id la : "+ a );
                 System.out.println("delete: "+row);
             }
 
@@ -72,7 +72,8 @@ public class PanelUser extends javax.swing.JPanel {
                 user.getFullName(),
                 user.getEmail(),
                 user.getIsAdmin() == 1 ? "Admin" : "Người dùng",
-                "Hành động"
+                "Hành động",
+                user.getId()
             });
         }
 
@@ -421,7 +422,7 @@ public class PanelUser extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Họ và Tên", "Email", "Phân Quyền", "Hành động"
+                "Họ và Tên", "Email", "Phân Quyền", "Hành động","id"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -432,6 +433,7 @@ public class PanelUser extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tbNguoidung.removeColumn(tbNguoidung.getColumnModel().getColumn(4));
         jScrollPane1.setViewportView(tbNguoidung);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);

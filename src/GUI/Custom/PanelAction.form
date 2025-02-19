@@ -44,11 +44,8 @@
   <SubComponents>
     <Component class="GUI.Comp.DateChooser.Button" name="btnUpdate">
       <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" id="cyan" palette="1" red="0" type="palette"/>
-        </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/GUI/Comp/Icon/repair.png"/>
+          <Image iconType="3" name="/GUI/Comp/Icon/fix.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="borderPainted" type="boolean" value="false"/>
@@ -59,9 +56,6 @@
     </Component>
     <Component class="GUI.Comp.DateChooser.Button" name="btnDelete">
       <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="c0" green="c0" id="lightGray" palette="1" red="c0" type="palette"/>
-        </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/GUI/Comp/Icon/delete.png"/>
         </Property>
@@ -72,11 +66,8 @@
     </Component>
     <Component class="GUI.Comp.DateChooser.Button" name="btnView">
       <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="0" green="ff" id="yellow" palette="1" red="ff" type="palette"/>
-        </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/GUI/Comp/Icon/eye.png"/>
+          <Image iconType="3" name="/GUI/Comp/Icon/black_eye.png"/>
         </Property>
         <Property name="borderPainted" type="boolean" value="false"/>
       </Properties>

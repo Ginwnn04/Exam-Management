@@ -7,9 +7,6 @@ import javax.swing.JOptionPane;
 
 import BUS.UserBus;
 import DTO.UserDTO;
-import GUI.Comp.DateChooser.Event;
-import GUI.Comp.Panel.PanelUser;
-import java.awt.EventQueue;
 /**
  *
  * @author nguye
