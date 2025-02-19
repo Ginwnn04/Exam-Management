@@ -1,8 +1,15 @@
 package GUI.Comp.Panel;
 
+import java.util.ArrayList;
+
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
-
+import javax.swing.table.DefaultTableModel;
+import GUI.Comp.Swing.TableActionCellRenderer;
+import GUI.Comp.Swing.TableActionEvent;
+import GUI.Comp.Swing.TableActionCellEditor;
+import BUS.UserBus;
+import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogQuestion;
 import GUI.Comp.Dialog.DialogUser;
 import GUI.Comp.Dialog.DialogUsers;
@@ -21,11 +28,57 @@ public class PanelUser extends javax.swing.JPanel {
     /**
      * Creates new form PanelUser
      */
+
+    private ArrayList<UserDTO> listUser = new ArrayList<>();
+    private UserBus userBus = new UserBus();
+
     public PanelUser() {
         initComponents();
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbNguoidung.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
+        TableActionEvent event = new TableActionEvent() {
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println("nhan nut delete");
+                System.out.println("delete: "+row);
+            }
+
+            @Override
+            public void onUpdate(int row) {
+                System.out.println("update: "+row);   
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println("view: "+row);
+            }
+            
+        };
+        tbNguoidung.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
+        tbNguoidung.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
         tbNguoidung.setRowHeight(30);
+        render();
+    }
+
+    
+    public void render(){
+        listUser = userBus.getAllUsers();
+        System.out.println("size of listUser: "+listUser.size());
+        DefaultTableModel model = (DefaultTableModel) tbNguoidung.getModel();
+        model.setRowCount(0);
+        for (UserDTO user : listUser) {
+            model.addRow(new Object[]{
+                user.getFullName(),
+                user.getEmail(),
+                user.getIsAdmin() == 1 ? "Admin" : "Người dùng",
+                "Hành động"
+            });
+        }
+
+
+        model.fireTableDataChanged();
+        tbNguoidung.setModel(model);
     }
 
     /**
@@ -372,7 +425,7 @@ public class PanelUser extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -421,11 +474,10 @@ public class PanelUser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DialogUser d1 =new DialogUser(null, true);
-        DialogQuestion d2=new DialogQuestion(null, true);
         DialogUsers d = new DialogUsers(null,true);
         System.out.println("them nguoi dung");
         d.setVisible(true);
+        render();
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
