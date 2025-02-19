@@ -3,21 +3,19 @@ package Helper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+// import java.util.logging.Level;
+// import java.util.logging.Logger;
 
 
 public class ConnectDB {
     private static ConnectDB instance;
-//    private String host = "dpg-crgm10aj1k6c739jcud0-a.singapore-postgres.render.com";
-//    private String dbName = "testing_restaurant_manager";
-//    private String username = "testing_restaurant_manager_user";
-//    private String password = "7p3LCOi2nW7LAE9kxlfwSFq3yGKnL1gK";
-//    private String sslMode = "&ssl=true";
-    
-//    private String connectionUrl = "jdbc:postgresql://" + host + ":5432/" + dbName + "?user=" + username + "&password=" + password + sslMode;
-    
-    private String connectionUrl = "jdbc:postgresql://localhost:5432/testing?user=postgres&password=123456";
+    private static final String HOST = "exammanagement.c1m26ocsabbv.ap-southeast-1.rds.amazonaws.com";
+    private static final String PORT = "3306";
+    private static final String DB_NAME = "exammanagement";
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "12345678";
+
+    private static final String CONNECTION_URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DB_NAME + "?useSSL=false&serverTimezone=UTC";
     private Connection con;
     
     private ConnectDB() {
@@ -32,9 +30,10 @@ public class ConnectDB {
     
     public void openConnect() {
         try {
-            this.con = DriverManager.getConnection(connectionUrl);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            this.con = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
         } 
-        catch (SQLException ex) {
+        catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
     }

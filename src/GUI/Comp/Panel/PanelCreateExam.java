@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.TestExamBUS;
 import GUI.Comp.DateChooser.DateChooser;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.GridBagConstraintsBuilder;
@@ -32,6 +33,7 @@ import GUI.Utils.RoundBorder;
 
 public class PanelCreateExam extends JPanel {
     private GridBagConstraintsBuilder gbcBuilder;
+    private TestExamBUS BUS;
 
     public PanelCreateExam(){
         gbcBuilder = new GridBagConstraintsBuilder();
