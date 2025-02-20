@@ -1,4 +1,4 @@
-package GUI.Comp.Panel;
+package GUI.Comp.Dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,7 +13,10 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -24,41 +27,49 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.formdev.flatlaf.FlatClientProperties;
-
-import BUS.TestExamBUS;
 import GUI.Comp.DateChooser.DateChooser;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.GridBagConstraintsBuilder;
+import GUI.Utils.RandomCode;
 import GUI.Utils.RoundBorder;
 
-public class PanelCreateExam extends JPanel {
+public class DialogTestExam extends JDialog {
     private GridBagConstraintsBuilder gbcBuilder;
-    private TestExamBUS BUS;
 
-    public PanelCreateExam(){
+    public DialogTestExam(JFrame parent) {
+        super(parent, "Tạo cấu trúc đề thi", true);
         gbcBuilder = new GridBagConstraintsBuilder();
         initComponents();
+
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
     
-    private void initComponents(){
+    private void initComponents() {
         setLayout(new GridBagLayout());
+        setMinimumSize(new Dimension(1200, 765));
         setPreferredSize(new Dimension(1200, 765));
 
         main = new PanelBackground();
-        main.setPreferredSize(new Dimension(1160, 725));
-        main.setLayout(new FlowLayout());
+        main.setPreferredSize(getPreferredSize());
+        main.setLayout(new BorderLayout());
 
         content = new PanelBackground();
-        content.setPreferredSize(getPreferredSize());
-        content.setBorder(new EmptyBorder(10, 10, 10, 10));
+        content.setMinimumSize(new Dimension(1180, 765));
+        content.setPreferredSize(new Dimension(1180, 765));
+        content.setBorder(new EmptyBorder(0, 0, 0, 15));
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
-        initTitle();
-        initExamTitle();
+        initTitleAndTestCode();
         initInformationPanel();
         initQuestionTableContainer();
+        initSaveButton();
 
-        main.add(content);
+        JScrollPane scrollablePanel = new JScrollPane();
+        scrollablePanel.setViewportView(content);
+        scrollablePanel.setMinimumSize(new Dimension(1200, 765));
+
+        main.add(scrollablePanel, BorderLayout.CENTER);
 
         gbcBuilder.reset();
         GridBagConstraints gbc = gbcBuilder.setPosition(0, 0)
@@ -67,31 +78,47 @@ public class PanelCreateExam extends JPanel {
 
         add(main, gbc);
     }
-    
-    private void initTitle(){
-        title = new JLabel("Tạo đề thi");
-        title.setAlignmentX(CENTER_ALIGNMENT);
-        title.setFont(new Font("Roboto", Font.BOLD, 30));
 
-        content.add(title);
-        content.add(Box.createRigidArea(new Dimension(1180, 30)));
+    private void initTitleAndTestCode() {
+        titleAndTestCodeContainer = new PanelBackground();
+        titleAndTestCodeContainer.setLayout(new FlowLayout());
+        titleAndTestCodeContainer.setAbsoluteSize(1180, 60);
+        titleAndTestCodeContainer.setBorder(new EmptyBorder(0, 10, 0, 10));
+
+        initExamTitle();
+        titleAndTestCodeContainer.add(Box.createRigidArea(new Dimension(10, 0)));
+        initExamTestCode();
+
+        content.add(titleAndTestCodeContainer);
+        content.add(Box.createRigidArea(new Dimension(0, 20)));
     }
-
-    private void initExamTitle(){
-        examTitleContainer = new PanelBackground();
-        examTitleContainer.setLayout(new FlowLayout());
-        examTitleContainer.setAbsoluteSize(1180, 60);
-        examTitleContainer.setBorder(new EmptyBorder(0, 10, 0, 10));
-
+    
+    private void initExamTitle() {
         examTitle = new JTextField();
         examTitle.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Tiêu đề");
-        examTitle.setPreferredSize(new Dimension(1140, 40));
+        examTitle.setPreferredSize(new Dimension(880, 50));
         
-        examTitleContainer.add(examTitle);
-        content.add(examTitleContainer);
+        titleAndTestCodeContainer.add(examTitle);
     }
 
-    private void initInformationPanel(){
+    private void initExamTestCode() {
+        testCode = new JTextField();
+        testCode.setEditable(false);
+        testCode.setPreferredSize(new Dimension(200, 50));
+
+        var roundedBorder = new RoundBorder(Color.gray, 10);
+        var titleBorder = new TitledBorder(roundedBorder, "Mã đề");
+        titleBorder.setTitleJustification(TitledBorder.CENTER);
+        titleBorder.setTitleFont(new Font("Roboto", Font.BOLD, 13));
+        testCode.setBorder(titleBorder);
+
+        String code = RandomCode.generate(6);
+        testCode.setText(code);
+
+        titleAndTestCodeContainer.add(testCode);
+    }
+
+    private void initInformationPanel() {
         informationPanel = new PanelBackground();
         informationPanel.setLayout(new GridBagLayout());
         informationPanel.setBorder(new EmptyBorder(0, 20, 0, 20));
@@ -175,7 +202,7 @@ public class PanelCreateExam extends JPanel {
         content.add(informationPanel);
     }
 
-    private void initStartDateChooser(){
+    private void initStartDateChooser() {
         var dateContainer = new PanelBackground();
         dateContainer.setLayout(new BoxLayout(dateContainer, BoxLayout.Y_AXIS));
         dateContainer.setAbsoluteSize(500, 315);
@@ -200,7 +227,7 @@ public class PanelCreateExam extends JPanel {
                                                       .result());
     }
 
-    private void initQuestionTableContainer(){
+    private void initQuestionTableContainer() {
         content.add(Box.createRigidArea(new Dimension(0, 5)));
 
         var container = new PanelBackground();
@@ -214,15 +241,6 @@ public class PanelCreateExam extends JPanel {
         container.add(Box.createRigidArea(new Dimension(520, 10)), BorderLayout.WEST);
         container.add(title, BorderLayout.CENTER);
 
-        addQuestionButton = new JButton("Thêm câu hỏi");
-        addQuestionButton.setBackground(new Color(225, 99, 73));
-        addQuestionButton.setFont(new Font("Roboto", 1, 16)); // NOI18N
-        addQuestionButton.setForeground(new Color(255, 255, 255));
-        addQuestionButton.setText("+ Thêm câu hỏi");
-        addQuestionButton.setPreferredSize(new Dimension(156, 15));
-
-        container.add(addQuestionButton, BorderLayout.EAST);
-
         content.add(container);
         content.add(Box.createRigidArea(new Dimension(0, 5)));
 
@@ -235,11 +253,11 @@ public class PanelCreateExam extends JPanel {
 
         tableContainer.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.WEST);
         tableContainer.add(questionTableScrollPane, BorderLayout.CENTER);
-        tableContainer.add(Box.createRigidArea(new Dimension(10, 0)), BorderLayout.EAST);
+        tableContainer.add(Box.createRigidArea(new Dimension(25, 0)), BorderLayout.EAST);
         content.add(tableContainer);
     }
 
-    private void initQuestionTable(){
+    private void initQuestionTable() {
         questionTable = new JTable();
 
         questionTable.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
@@ -247,15 +265,13 @@ public class PanelCreateExam extends JPanel {
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Điểm", "Hành động"
+                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Điểm"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -268,11 +284,31 @@ public class PanelCreateExam extends JPanel {
         questionTable.setRowHeight(30);
     }
 
+    private void initSaveButton() {
+        content.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        saveButton = new JButton("Lưu");
+        saveButton.setFont(new Font("Roboto", Font.BOLD, 16));
+        saveButton.setPreferredSize(new Dimension(100, 50));
+        saveButton.setForeground(Color.white);
+        saveButton.setBackground(Color.green);
+        saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        saveButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Lưu thành công", "", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        });
+
+        content.add(saveButton);
+        content.add(Box.createRigidArea(new Dimension(0, 20)));
+    }
+
     private PanelBackground main;
     private PanelBackground content;
     private PanelBackground informationPanel;
-    private PanelBackground examTitleContainer;
+    private PanelBackground titleAndTestCodeContainer;
     private JTextField examTitle;
+    private JTextField testCode;
     private JComboBox<String> topic;
     private JTextField testLimit;
     private JTextField time;
@@ -280,8 +316,7 @@ public class PanelCreateExam extends JPanel {
     private JTextField easyQuestionCount;
     private JTextField mediumQuestionCount;
     private JTextField hardQuestionCount;
-    private JLabel title;
-    private JButton addQuestionButton;
     private JTable questionTable;
     private JScrollPane questionTableScrollPane;
+    private JButton saveButton;
 }
