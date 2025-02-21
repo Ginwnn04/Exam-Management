@@ -6,8 +6,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Date;
-import java.util.concurrent.Flow;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,27 +22,44 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.TestExamBUS;
+import DTO.TestExamDTO;
 import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
+import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
 
 public class PanelTestExam extends JPanel {
     private GridBagConstraintsBuilder gbcBuilder = new GridBagConstraintsBuilder();
+    private TestExamBUS BUS;
+    private ArrayList<TestExamDTO> testExams;
 
     public PanelTestExam() {
+        BUS = new TestExamBUS();
         initComponents();
+    }
+
+    private void updateTableItems() {
+        testExams = BUS.getAll(true);
+        renderTable();
+    }
+
+    private void setTableItems(ArrayList<TestExamDTO> testExams) {
+        this.testExams = testExams;
+        renderTable();
     }
 
     private void initComponents() {
@@ -79,6 +100,7 @@ public class PanelTestExam extends JPanel {
         searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(350, 30));
         searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+        setupSearchFieldEvent();
 
         searchAndFilterContainer.add(searchField);
         searchAndFilterContainer.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -100,7 +122,77 @@ public class PanelTestExam extends JPanel {
 
         searchAndFilterContainer.add(topicFilterLabel);
         searchAndFilterContainer.add(topicFilter);
+    
+        container.add(searchAndFilterContainer);
+        container.add(buildCreateButtonContainer());
 
+        content.add(container);
+    }
+
+    private void setupSearchFieldEvent() {
+        Debounce onSearch = new Debounce(() -> filtTableItems(), 500);
+
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+        });
+    }
+
+    private void filtTableItems() {
+        var list = BUS.getAll(true);
+        String query = searchField.getText().toLowerCase();
+
+        var searchBy = searchByCb.getSelectedItem().toString();
+        List<TestExamDTO> filtList;
+
+        if (query.isEmpty()){
+            updateTableItems();
+            return;
+        }
+
+        Predicate<TestExamDTO> filter = getSearchFilter(searchBy, query);
+        filtList = list.stream().filter(filter).toList();
+
+        setTableItems(new ArrayList<>(filtList));
+    }
+
+    private Predicate<TestExamDTO> getSearchFilter(String searchBy, String query) {
+        switch (searchBy) {
+            case "ID":
+                return testExam -> {
+                    try {
+                        return testExam.getId() == Integer.parseInt(query);
+                    }
+                    catch (Exception ignore) {
+                        return false;
+                    }
+                };
+
+            case "Tiêu đề":
+                return testExam -> testExam.getTitle().toLowerCase().contains(query);
+
+            case "Mã đề":
+                return testExam -> testExam.getTestCode().toLowerCase().contains(query);
+        
+            default:
+                return null;
+        }
+    }
+
+    private PanelBackground buildCreateButtonContainer() {
         createButton = new JButton("+ Thêm");
         createButton.setBackground(new Color(225, 99, 73));
         createButton.setFont(new Font("Roboto", 1, 16));
@@ -113,11 +205,17 @@ public class PanelTestExam extends JPanel {
         temp.setAbsoluteSize(166, 50);
         temp.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         temp.add(createButton);
-    
-        container.add(searchAndFilterContainer);
-        container.add(temp);
 
-        content.add(container);
+        return temp;
+    }
+
+    private void assignCreateElement() {
+        DialogTestExam dialogTestExam = new DialogTestExam(BUS, null);
+
+        createButton.addActionListener(e -> {
+            dialogTestExam.setVisible(true);
+            updateTableItems();
+        });
     }
 
     private void initTable() {
@@ -125,15 +223,13 @@ public class PanelTestExam extends JPanel {
 
         table.setFont(new Font("Roboto", 0, 16)); // NOI18N
         table.setModel(new DefaultTableModel(
-            new Object [][] {
-                {"1", "Akms24", "Shiba Lmao", "Toan", 15, 2, new Date()}
-            },
+            new Object [][]{},
             new String [] {
-                "ID", "Mã đề", "Tiêu đề", "Chủ đề", "Thời gian thi", "Số lượt thi", "Ngày tạo", "Hành động"
+                "ID", "Mã đề", "Tiêu đề", "Chủ đề", "Thời gian thi", "Số lượt thi", "Ngày thi", "Hành động"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -156,12 +252,14 @@ public class PanelTestExam extends JPanel {
 
             @Override
             public void onDelete(int row) {
-                
+                int id = (int) table.getValueAt(row, 0);
+                BUS.delete(id);
+                updateTableItems();
             }
 
             @Override
             public void onUpdate(int row) {
-                
+                showUpdateDialog(row);
             }
 
             @Override
@@ -177,16 +275,41 @@ public class PanelTestExam extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(170);
         table.setRowHeight(30);
 
+        setTableItems(BUS.getAll(true));
+
         JScrollPane scrollPane = new JScrollPane(table);
         content.add(scrollPane);
     }
 
-    private void assignCreateElement() {
-        DialogTestExam dialogTestExam = new DialogTestExam(null);
+    private void showUpdateDialog(int row) {
+        int id = (int) table.getValueAt(row, 0);
+        DialogTestExam dialogTestExam = new DialogTestExam(id, BUS, null);
 
-        createButton.addActionListener(e -> {
-            dialogTestExam.setVisible(true);
+        dialogTestExam.setVisible(true);
+        updateTableItems();
+    }
+
+    private void renderTable() {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        if (testExams == null) return;
+
+        testExams.forEach(testExam -> {
+            model.addRow(new Object[] {
+                testExam.getId(),
+                testExam.getTestCode(),
+                testExam.getTitle(),
+                testExam.getTopicId(),
+                testExam.getTestTime(),
+                testExam.getTestLimit(),
+                testExam.getTestDate(),
+                ""
+            });
         });
+
+        model.fireTableDataChanged();
+        table.setModel(model);
     }
 
     private PanelBackground main;

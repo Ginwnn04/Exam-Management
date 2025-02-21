@@ -3,7 +3,7 @@ package GUI.Utils;
 import java.util.Random;
 
 public class RandomCode {
-    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String ALPHA_NUMERIC_STRING = "0123456789";
 
     public static String generate(int length) {
         String code = "";

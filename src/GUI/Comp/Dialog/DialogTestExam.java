@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.sql.Date;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,9 +27,14 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+
+import BUS.TestExamBUS;
+import DTO.TestExamDTO;
 import GUI.Comp.DateChooser.DateChooser;
+import GUI.Comp.DateChooser.SelectedDate;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.GridBagConstraintsBuilder;
 import GUI.Utils.RandomCode;
@@ -35,9 +42,36 @@ import GUI.Utils.RoundBorder;
 
 public class DialogTestExam extends JDialog {
     private GridBagConstraintsBuilder gbcBuilder;
+    private boolean isUpdateDialog;
+    private int selectedTestExamId;
+    private TestExamBUS BUS;
 
-    public DialogTestExam(JFrame parent) {
+    /**
+     * For create
+     */
+    public DialogTestExam(TestExamBUS BUS, JFrame parent) {
         super(parent, "Tạo cấu trúc đề thi", true);
+
+        isUpdateDialog = false;
+        this.BUS = BUS;
+        gbcBuilder = new GridBagConstraintsBuilder();
+        initComponents();
+
+        setResizable(false);
+        setLocationRelativeTo(null);
+    }
+
+    /**
+     * For update
+     * @param id id of the test exam
+     */
+    public DialogTestExam(int id, TestExamBUS BUS, JFrame parent) {
+        super(parent, "Cập nhật cấu trúc đề thi", true);
+
+        isUpdateDialog = true;
+        this.BUS = BUS;
+        selectedTestExamId = id;
+
         gbcBuilder = new GridBagConstraintsBuilder();
         initComponents();
 
@@ -60,6 +94,7 @@ public class DialogTestExam extends JDialog {
         content.setBorder(new EmptyBorder(0, 0, 0, 15));
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
+        initIdLabel();
         initTitleAndTestCode();
         initInformationPanel();
         initQuestionTableContainer();
@@ -68,6 +103,8 @@ public class DialogTestExam extends JDialog {
         JScrollPane scrollablePanel = new JScrollPane();
         scrollablePanel.setViewportView(content);
         scrollablePanel.setMinimumSize(new Dimension(1200, 765));
+
+        if (isUpdateDialog) setModel();
 
         main.add(scrollablePanel, BorderLayout.CENTER);
 
@@ -78,6 +115,52 @@ public class DialogTestExam extends JDialog {
 
         add(main, gbc);
     }
+
+    //#region Update Model
+
+    private void initIdLabel() {
+        if (!isUpdateDialog) return;
+
+        content.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        PanelBackground container = new PanelBackground();
+        container.setLayout(new FlowLayout(FlowLayout.CENTER));
+        container.setAbsoluteSize(1180, 30);
+        container.setBorder(new EmptyBorder(0, 10, 0, 10));
+
+        idLabel = new JLabel();
+        idLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        idLabel.setText("ID cấu trúc đề thi: " + selectedTestExamId);
+
+        container.add(idLabel);
+
+        content.add(container);
+        content.add(Box.createRigidArea(new Dimension(0, 20)));
+    }
+
+    private void setModel() {
+        TestExamDTO model = BUS.findById(selectedTestExamId);
+        if (model == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy cấu trúc đề thi", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+            return;
+        }
+
+        examTitle.setText(model.getTitle());
+        testCode.setText(model.getTestCode());
+        topic.setSelectedIndex(model.getTopicId());
+        testLimit.setText(String.valueOf(model.getTestLimit()));
+        time.setText(String.valueOf(model.getTestTime()));
+        easyQuestionCount.setText(String.valueOf(model.getEasyQuestionCount()));
+        mediumQuestionCount.setText(String.valueOf(model.getMediumQuestionCount()));
+        hardQuestionCount.setText(String.valueOf(model.getDiffQuestionCount()));
+
+        var date = model.getTestDate().toLocalDate();
+        SelectedDate testDate = new SelectedDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
+        testDateChooser.setSelectedDate(testDate);
+    }
+
+    //#endregion
 
     private void initTitleAndTestCode() {
         titleAndTestCodeContainer = new PanelBackground();
@@ -102,8 +185,7 @@ public class DialogTestExam extends JDialog {
     }
 
     private void initExamTestCode() {
-        testCode = new JTextField();
-        testCode.setEditable(false);
+        testCode = new JLabel();
         testCode.setPreferredSize(new Dimension(200, 50));
 
         var roundedBorder = new RoundBorder(Color.gray, 10);
@@ -112,8 +194,9 @@ public class DialogTestExam extends JDialog {
         titleBorder.setTitleFont(new Font("Roboto", Font.BOLD, 13));
         testCode.setBorder(titleBorder);
 
-        String code = RandomCode.generate(6);
+        String code = RandomCode.generate(3);
         testCode.setText(code);
+        testCode.setHorizontalAlignment(JLabel.CENTER);
 
         titleAndTestCodeContainer.add(testCode);
     }
@@ -137,7 +220,8 @@ public class DialogTestExam extends JDialog {
 
         topic = new JComboBox<>();
         topic.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        topic.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn chủ đề", "Item 1", "Item 2", "Item 3" }));
+        topic.setModel(new javax.swing.DefaultComboBoxModel<>(new Integer[] { 1, 2, 3, 4 }));
+        topic.addActionListener(this::onTopicChange);
 
         container.add(Box.createRigidArea(new Dimension(0, 30)), gbcBuilder.setPosition(0, 0).result());
 
@@ -198,11 +282,11 @@ public class DialogTestExam extends JDialog {
                                                   .setInsets(0, 20, 0, 0)
                                                   .result());
 
-        initStartDateChooser();
+        initTestDateChooser();
         content.add(informationPanel);
     }
 
-    private void initStartDateChooser() {
+    private void initTestDateChooser() {
         var dateContainer = new PanelBackground();
         dateContainer.setLayout(new BoxLayout(dateContainer, BoxLayout.Y_AXIS));
         dateContainer.setAbsoluteSize(500, 315);
@@ -214,11 +298,11 @@ public class DialogTestExam extends JDialog {
         titleBorder.setTitleFont(new Font("Roboto", Font.BOLD, 13));
         dateContainer.setBorder(titleBorder);
 
-        startDateChooser = new DateChooser();
-        startDateChooser.setMaximumSize(new Dimension(260, 315));
-        startDateChooser.setAlignmentX(CENTER_ALIGNMENT);
+        testDateChooser = new DateChooser();
+        testDateChooser.setMaximumSize(new Dimension(260, 315));
+        testDateChooser.setAlignmentX(CENTER_ALIGNMENT);
 
-        dateContainer.add(startDateChooser);
+        dateContainer.add(testDateChooser);
 
         gbcBuilder.reset();
         informationPanel.add(dateContainer, gbcBuilder.setPosition(1, 0)
@@ -263,15 +347,15 @@ public class DialogTestExam extends JDialog {
         questionTable.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         questionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
             },
             new String [] {
-                "ID", "Câu hỏi", "Chủ đề", "Độ khó", "Điểm"
+                "ID", "Câu hỏi", "Chủ đề", "Độ khó"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -282,6 +366,27 @@ public class DialogTestExam extends JDialog {
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) questionTable.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         questionTable.setRowHeight(30);
+
+        renderTable();
+    }
+
+    private void renderTable() {
+        DefaultTableModel model = (DefaultTableModel) questionTable.getModel();
+        model.setRowCount(0);
+
+        int topicId = (int)topic.getSelectedItem();
+
+        BUS.getByTopicId(topicId).forEach(question -> {
+            model.addRow(new Object[] {
+                question.getId(),
+                question.getContent(),
+                question.getTopicId(),
+                question.getLevel()
+            });
+        });
+
+        model.fireTableDataChanged();
+        questionTable.setModel(model);
     }
 
     private void initSaveButton() {
@@ -293,26 +398,67 @@ public class DialogTestExam extends JDialog {
         saveButton.setForeground(Color.white);
         saveButton.setBackground(Color.green);
         saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        saveButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Lưu thành công", "", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
-        });
+        
+        saveButton.addActionListener(this::onSave);
 
         content.add(saveButton);
         content.add(Box.createRigidArea(new Dimension(0, 20)));
+    }
+
+    private void onTopicChange(ActionEvent e) {
+        renderTable();
+    }
+
+    private void onSave(ActionEvent e) {
+        TestExamDTO data = gatherFormData();
+        boolean result;
+        String action;
+
+        action = !isUpdateDialog ? "Tạo" : "Cập nhật";
+        result = !isUpdateDialog ? create(data) : update(data);
+
+        if (result) JOptionPane.showMessageDialog(this, action + " thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        else JOptionPane.showMessageDialog(this, action + " thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);
+
+        this.dispose();
+    }
+
+    private boolean create(TestExamDTO data) {
+        return BUS.create(data);
+    }
+
+    private boolean update(TestExamDTO data) {
+        return BUS.update(selectedTestExamId, data);
+    }
+
+    private TestExamDTO gatherFormData() {
+        var date = testDateChooser.getSelectedDate();
+        Date starDate = Date.valueOf(date.getYear() + "-" + date.getMonth() + "-" + date.getDay());
+
+        return TestExamDTO.builder()
+                          .setTestCode(testCode.getText())
+                          .setTitle(examTitle.getText())
+                          .setTopicId((int) topic.getSelectedItem())
+                          .setEasyQuestionCount(Integer.parseInt(easyQuestionCount.getText()))
+                          .setMediumQuestionCount(Integer.parseInt(mediumQuestionCount.getText()))
+                          .setDiffQuestionCount(Integer.parseInt(hardQuestionCount.getText()))
+                          .setTestLimit(Short.parseShort(testLimit.getText()))
+                          .setTestTime(Integer.parseInt(time.getText()))
+                          .setTestDate(starDate)
+                          .setTestStatus(true);
     }
 
     private PanelBackground main;
     private PanelBackground content;
     private PanelBackground informationPanel;
     private PanelBackground titleAndTestCodeContainer;
+    private JLabel idLabel;
     private JTextField examTitle;
-    private JTextField testCode;
-    private JComboBox<String> topic;
+    private JLabel testCode;
+    private JComboBox<Integer> topic;
     private JTextField testLimit;
     private JTextField time;
-    private DateChooser startDateChooser;
+    private DateChooser testDateChooser;
     private JTextField easyQuestionCount;
     private JTextField mediumQuestionCount;
     private JTextField hardQuestionCount;

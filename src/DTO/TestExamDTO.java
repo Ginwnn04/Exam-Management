@@ -6,11 +6,12 @@ public class TestExamDTO {
     private int id;
     private String testCode;
     private String title;
-    private int topicId; // Change to object later
+    private int topicId;
     private int easyQuestionCount;
     private int mediumQuestionCount;
     private int diffQuestionCount;
     private short testLimit;
+    private int testTime;
     private Date testDate;
     private boolean testStatus;
 
@@ -87,6 +88,15 @@ public class TestExamDTO {
 
     public TestExamDTO setTestLimit(short testLimit) {
         this.testLimit = testLimit;
+        return this;
+    }
+
+    public int getTestTime() {
+        return testTime;
+    }
+
+    public TestExamDTO setTestTime(int testTime) {
+        this.testTime = testTime;
         return this;
     }
 

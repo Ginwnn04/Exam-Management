@@ -33,6 +33,7 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
                                                .setMediumQuestionCount(rs.getInt("num_medium"))
                                                .setDiffQuestionCount(rs.getInt("num_diff"))
                                                .setTestLimit(rs.getShort("testLimit"))
+                                               .setTestTime(rs.getInt("testTime"))
                                                .setTestDate(rs.getDate("testDate"))
                                                .setTestStatus(rs.getBoolean("testStatus"));
 
@@ -47,7 +48,6 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
         return result;
     }
 
-    @Override
     public TestExamDTO findById(Integer id) {
         String query = "SELECT * FROM test WHERE testID = ?";
 
@@ -67,6 +67,7 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
                               .setMediumQuestionCount(rs.getInt("num_medium"))
                               .setDiffQuestionCount(rs.getInt("num_diff"))
                               .setTestLimit(rs.getShort("testLimit"))
+                              .setTestTime(rs.getInt("testTime"))
                               .setTestDate(rs.getDate("testDate"))
                               .setTestStatus(rs.getBoolean("testStatus"));
         }
@@ -79,22 +80,21 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
 
     @Override
     public boolean create(TestExamDTO request) {
-        String query = "INSERT INTO YourTable (testCode, title, topicId, easyQuestionCount, mediumQuestionCount, diffQuestionCount, testLimit, testDate, testStatus) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO test (testCode, testTitle, tpID, num_easy, num_medium, num_diff, testLimit, testTime, testDate, testStatus) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
             ps.setString(1, request.getTestCode());
-            ps.setInt(2, request.getId());
-            ps.setString(3, request.getTestCode());
-            ps.setString(4, request.getTitle());
-            ps.setInt(5, request.getTopicId());
-            ps.setInt(6, request.getEasyQuestionCount());
-            ps.setInt(7, request.getMediumQuestionCount());
-            ps.setInt(8, request.getDiffQuestionCount());
-            ps.setShort(9, request.getTestLimit());
-            ps.setDate(10, request.getTestDate());
-            ps.setBoolean(11, request.isTestStatus());
+            ps.setString(2, request.getTitle());
+            ps.setInt(3, request.getTopicId());
+            ps.setInt(4, request.getEasyQuestionCount());
+            ps.setInt(5, request.getMediumQuestionCount());
+            ps.setInt(6, request.getDiffQuestionCount());
+            ps.setShort(7, request.getTestLimit());
+            ps.setInt(8, request.getTestTime());
+            ps.setDate(9, request.getTestDate());
+            ps.setBoolean(10, request.isTestStatus());
 
             return ps.executeUpdate() > 0;
         }
@@ -107,21 +107,22 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
 
     @Override
     public boolean update(Integer id, TestExamDTO request) {
-        String query = "UPDATE test SET testCode = ?, title = ?, topicId = ?, easyQuestionCount = ?, mediumQuestionCount = ?," +
-                        " diffQuestionCount = ?, testLimit = ?, testDate = ?, testStatus = ? WHERE testID = ?";
+        String query = "UPDATE test SET testCode = ?, testTitle = ?, tpID = ?, num_easy = ?, num_medium = ?," +
+                        " num_diff = ?, testLimit = ?, testTime = ?, testDate = ?, testStatus = ? WHERE testID = ?";
                         
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
-            ps.setString(0, request.getTestCode()); 
-            ps.setString(1, request.getTitle());
-            ps.setInt(2, request.getTopicId());
-            ps.setInt(3, request.getEasyQuestionCount());
-            ps.setInt(4, request.getMediumQuestionCount());
-            ps.setInt(5, request.getDiffQuestionCount());
-            ps.setShort(6, request.getTestLimit());
-            ps.setDate(7, request.getTestDate());
-            ps.setBoolean(8, request.isTestStatus());
-            ps.setInt(9, id);
+            ps.setString(1, request.getTestCode()); 
+            ps.setString(2, request.getTitle());
+            ps.setInt(3, request.getTopicId());
+            ps.setInt(4, request.getEasyQuestionCount());
+            ps.setInt(5, request.getMediumQuestionCount());
+            ps.setInt(6, request.getDiffQuestionCount());
+            ps.setShort(7, request.getTestLimit());
+            ps.setInt(8, request.getTestTime());
+            ps.setDate(9, request.getTestDate());
+            ps.setBoolean(10, request.isTestStatus());
+            ps.setInt(11, id);
 
             return ps.executeUpdate() > 0;
 
