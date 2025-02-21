@@ -20,20 +20,54 @@ public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
 
     @Override
     public boolean create(QuestionDTO request) {
-        
-        return true;
+        String query = "INSERT INTO(qContent, qPictures, qTopicID, qLevel, qStatus) VALUES ?, ?, ?, ?, ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setString(1, request.getContent());
+            pstm.setString(2, request.getPicture());
+            pstm.setInt(3, request.getTopicId());
+            pstm.setString(4, request.getLevel());
+            pstm.setInt(5, 1);
+            return pstm.executeUpdate() != 0; 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean update(Integer id, QuestionDTO request) {
-        
-        return true;
+        String query = "UPDATE questions SET "
+                + "qContent = ? AND "
+                + "qPictures = ? AND "
+                + "qTopicID = ? AND "
+                + "qLevel = ? "
+                + "WHERE qID = ? AND qStatus = 1";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setString(1, request.getContent());
+            pstm.setString(2, request.getPicture());
+            pstm.setInt(3, request.getTopicId());
+            pstm.setString(4, request.getLevel());
+            pstm.setInt(5, id);
+            return pstm.executeUpdate() != 0; 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean delete(Integer id) {
-
-        return true;
+        String query = "UPDATE questions SET qStatus = 0 WHERE qID = ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setInt(1, id);
+            return pstm.executeUpdate() != 0; 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

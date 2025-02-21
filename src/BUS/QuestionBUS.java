@@ -28,4 +28,15 @@ public class QuestionBUS {
         return listQuestion;
     }
     
+    public boolean createQuestion(QuestionDTO question) {
+        return questionDAO.create(question);
+    }
+    public boolean updateQuestion(int id, QuestionDTO question) {
+        return questionDAO.update(id, question);
+    }
+    public boolean deleteQuestion(int id) {
+        return questionDAO.delete(id);
+    }
+    
+    
 }

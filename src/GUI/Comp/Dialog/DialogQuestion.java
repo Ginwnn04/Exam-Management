@@ -4,12 +4,28 @@
  */
 package GUI.Comp.Dialog;
 
+import BUS.AnwserBUS;
+import BUS.QuestionBUS;
+import DTO.QuestionDTO;
+import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.nio.file.Files;
+import javax.swing.JFileChooser;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author quang
  */
 public class DialogQuestion extends javax.swing.JDialog {
-
+    private AnwserBUS anwserBUS = new AnwserBUS();
+    private QuestionBUS questionBUS = new QuestionBUS();
     /**
      * Creates new form DialogQuestion
      */
@@ -17,9 +33,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-        pnTraLoi3.setVisible(false);
-        pnTraLoi4.setVisible(false);
-        pnTraLoi5.setVisible(false);
+
 
     }
 
@@ -45,43 +59,45 @@ public class DialogQuestion extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         panelBackground6 = new GUI.Comp.Swing.PanelBackground();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtCauHoi = new javax.swing.JTextArea();
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        jButton13 = new javax.swing.JButton();
+        txtImg = new javax.swing.JLabel();
         pnAnwser = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
         panelBackground7 = new GUI.Comp.Swing.PanelBackground();
         pnTraLoi1 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jTextField1 = new javax.swing.JTextField();
+        rd1 = new javax.swing.JRadioButton();
+        txtAws1 = new javax.swing.JTextField();
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
         jButton2 = new javax.swing.JButton();
         panelBackground9 = new GUI.Comp.Swing.PanelBackground();
         jButton1 = new javax.swing.JButton();
         pnTraLoi2 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jTextField3 = new javax.swing.JTextField();
+        rd2 = new javax.swing.JRadioButton();
+        txtAws2 = new javax.swing.JTextField();
         panelBackground17 = new GUI.Comp.Swing.PanelBackground();
         jButton5 = new javax.swing.JButton();
         panelBackground18 = new GUI.Comp.Swing.PanelBackground();
         jButton6 = new javax.swing.JButton();
         pnTraLoi3 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jTextField2 = new javax.swing.JTextField();
+        rd3 = new javax.swing.JRadioButton();
+        txtAws3 = new javax.swing.JTextField();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         jButton3 = new javax.swing.JButton();
         panelBackground15 = new GUI.Comp.Swing.PanelBackground();
         jButton7 = new javax.swing.JButton();
         pnTraLoi4 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jTextField4 = new javax.swing.JTextField();
+        rd4 = new javax.swing.JRadioButton();
+        txtAws4 = new javax.swing.JTextField();
         panelBackground19 = new GUI.Comp.Swing.PanelBackground();
         jButton8 = new javax.swing.JButton();
         panelBackground20 = new GUI.Comp.Swing.PanelBackground();
         jButton9 = new javax.swing.JButton();
         pnTraLoi5 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton5 = new javax.swing.JRadioButton();
-        jTextField5 = new javax.swing.JTextField();
+        rd5 = new javax.swing.JRadioButton();
+        txtAws5 = new javax.swing.JTextField();
         panelBackground21 = new GUI.Comp.Swing.PanelBackground();
         jButton10 = new javax.swing.JButton();
         panelBackground22 = new GUI.Comp.Swing.PanelBackground();
@@ -95,11 +111,11 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground28 = new GUI.Comp.Swing.PanelBackground();
         jLabel6 = new javax.swing.JLabel();
         panelBackground29 = new GUI.Comp.Swing.PanelBackground();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbxChuDe = new javax.swing.JComboBox<>();
         panelBackground30 = new GUI.Comp.Swing.PanelBackground();
         jLabel7 = new javax.swing.JLabel();
         panelBackground31 = new GUI.Comp.Swing.PanelBackground();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        cbxDoKho = new javax.swing.JComboBox<>();
         panelBackground32 = new GUI.Comp.Swing.PanelBackground();
         jButton4 = new javax.swing.JButton();
         panelBackground33 = new GUI.Comp.Swing.PanelBackground();
@@ -185,11 +201,11 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 96));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtCauHoi.setColumns(20);
+        txtCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtCauHoi.setLineWrap(true);
+        txtCauHoi.setRows(5);
+        jScrollPane1.setViewportView(txtCauHoi);
 
         panelBackground6.add(jScrollPane1);
 
@@ -199,7 +215,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground10.setLayout(panelBackground10Layout);
         panelBackground10Layout.setHorizontalGroup(
             panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+            .addGap(0, 19, Short.MAX_VALUE)
         );
         panelBackground10Layout.setVerticalGroup(
             panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,19 +224,24 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground6.add(panelBackground10);
 
-        panelBackground11.setBackground(new java.awt.Color(255, 153, 0));
         panelBackground11.setPreferredSize(new java.awt.Dimension(350, 241));
+        panelBackground11.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout panelBackground11Layout = new javax.swing.GroupLayout(panelBackground11);
-        panelBackground11.setLayout(panelBackground11Layout);
-        panelBackground11Layout.setHorizontalGroup(
-            panelBackground11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
-        );
-        panelBackground11Layout.setVerticalGroup(
-            panelBackground11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-        );
+        jButton13.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jButton13.setText("Thêm hình ảnh");
+        jButton13.setPreferredSize(new java.awt.Dimension(137, 35));
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+        panelBackground11.add(jButton13, java.awt.BorderLayout.PAGE_END);
+
+        txtImg.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        txtImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/minus-sign-inside-a-black-circle (1).png"))); // NOI18N
+        txtImg.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelBackground11.add(txtImg, java.awt.BorderLayout.CENTER);
 
         panelBackground6.add(panelBackground11);
 
@@ -238,15 +259,15 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         pnTraLoi1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton1.setPreferredSize(new java.awt.Dimension(25, 30));
-        pnTraLoi1.add(jRadioButton1);
+        buttonGroup1.add(rd1);
+        rd1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd1.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi1.add(rd1);
 
-        jTextField1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField1.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField1.setPreferredSize(new java.awt.Dimension(700, 30));
-        pnTraLoi1.add(jTextField1);
+        txtAws1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws1.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws1.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi1.add(txtAws1);
 
         panelBackground12.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -292,15 +313,15 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         pnTraLoi2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton3.setPreferredSize(new java.awt.Dimension(25, 30));
-        pnTraLoi2.add(jRadioButton3);
+        buttonGroup1.add(rd2);
+        rd2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd2.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi2.add(rd2);
 
-        jTextField3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField3.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField3.setPreferredSize(new java.awt.Dimension(700, 30));
-        pnTraLoi2.add(jTextField3);
+        txtAws2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws2.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws2.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi2.add(txtAws2);
 
         panelBackground17.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -340,6 +361,11 @@ public class DialogQuestion extends javax.swing.JDialog {
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         jButton6.setBorder(null);
         jButton6.setPreferredSize(new java.awt.Dimension(30, 30));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         pnTraLoi2.add(jButton6);
 
         panelBackground7.add(pnTraLoi2);
@@ -347,15 +373,15 @@ public class DialogQuestion extends javax.swing.JDialog {
         pnTraLoi3.setEnabled(false);
         pnTraLoi3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton2.setPreferredSize(new java.awt.Dimension(25, 30));
-        pnTraLoi3.add(jRadioButton2);
+        buttonGroup1.add(rd3);
+        rd3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd3.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi3.add(rd3);
 
-        jTextField2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField2.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField2.setPreferredSize(new java.awt.Dimension(700, 30));
-        pnTraLoi3.add(jTextField2);
+        txtAws3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws3.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws3.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi3.add(txtAws3);
 
         panelBackground14.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -402,15 +428,15 @@ public class DialogQuestion extends javax.swing.JDialog {
         pnTraLoi4.setEnabled(false);
         pnTraLoi4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton4.setPreferredSize(new java.awt.Dimension(25, 30));
-        pnTraLoi4.add(jRadioButton4);
+        buttonGroup1.add(rd4);
+        rd4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd4.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi4.add(rd4);
 
-        jTextField4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField4.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField4.setPreferredSize(new java.awt.Dimension(700, 30));
-        pnTraLoi4.add(jTextField4);
+        txtAws4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws4.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws4.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi4.add(txtAws4);
 
         panelBackground19.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -457,15 +483,15 @@ public class DialogQuestion extends javax.swing.JDialog {
         pnTraLoi5.setEnabled(false);
         pnTraLoi5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton5);
-        jRadioButton5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton5.setPreferredSize(new java.awt.Dimension(25, 30));
-        pnTraLoi5.add(jRadioButton5);
+        buttonGroup1.add(rd5);
+        rd5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd5.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi5.add(rd5);
 
-        jTextField5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField5.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField5.setPreferredSize(new java.awt.Dimension(700, 30));
-        pnTraLoi5.add(jTextField5);
+        txtAws5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws5.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws5.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi5.add(txtAws5);
 
         panelBackground21.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -571,10 +597,10 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground28.add(panelBackground29);
 
-        jComboBox3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox3.setPreferredSize(new java.awt.Dimension(150, 30));
-        panelBackground28.add(jComboBox3);
+        cbxChuDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxChuDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxChuDe.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground28.add(cbxChuDe);
 
         panelBackground30.setPreferredSize(new java.awt.Dimension(10, 30));
 
@@ -610,10 +636,10 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground28.add(panelBackground31);
 
-        jComboBox4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox4.setPreferredSize(new java.awt.Dimension(150, 30));
-        panelBackground28.add(jComboBox4);
+        cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxDoKho.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground28.add(cbxDoKho);
 
         panelBackground27.add(panelBackground28, java.awt.BorderLayout.LINE_START);
 
@@ -624,6 +650,11 @@ public class DialogQuestion extends javax.swing.JDialog {
         jButton4.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Lưu");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         panelBackground32.add(jButton4, java.awt.BorderLayout.CENTER);
 
         panelBackground33.setPreferredSize(new java.awt.Dimension(100, 5));
@@ -680,6 +711,32 @@ public class DialogQuestion extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+
+        
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+//        System.out.println(rd1.isSelected() + " " + txtAws1.getText());
+//        System.out.println(rd2.isSelected() + " " + txtAws2.getText());
+//        System.out.println(rd3.isSelected() + " " + txtAws3.getText());
+//        System.out.println(rd4.isSelected() + " " + txtAws4.getText());
+//        System.out.println(rd5.isSelected() + " " + txtAws5.getText());
+//        
+//        QuestionDTO question = QuestionDTO.builder()
+//                .setContent(txtCauHoi.getText())
+//                .setPicture(txtImg.getText())
+//                .setLevel("")
+//                .setTopicId(12)
+//                .setStatus(true)
+//                .build();
+        System.out.println(cbxChuDe.getSelectedIndex() + " " + cbxDoKho.getSelectedItem().toString());
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -724,10 +781,13 @@ public class DialogQuestion extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cbxChuDe;
+    private javax.swing.JComboBox<String> cbxDoKho;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -736,25 +796,12 @@ public class DialogQuestion extends javax.swing.JDialog {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private GUI.Comp.Swing.PanelBackground line;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
     private GUI.Comp.Swing.PanelBackground panelBackground10;
@@ -794,5 +841,17 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground pnTraLoi3;
     private GUI.Comp.Swing.PanelBackground pnTraLoi4;
     private GUI.Comp.Swing.PanelBackground pnTraLoi5;
+    private javax.swing.JRadioButton rd1;
+    private javax.swing.JRadioButton rd2;
+    private javax.swing.JRadioButton rd3;
+    private javax.swing.JRadioButton rd4;
+    private javax.swing.JRadioButton rd5;
+    private javax.swing.JTextField txtAws1;
+    private javax.swing.JTextField txtAws2;
+    private javax.swing.JTextField txtAws3;
+    private javax.swing.JTextField txtAws4;
+    private javax.swing.JTextField txtAws5;
+    private javax.swing.JTextArea txtCauHoi;
+    private javax.swing.JLabel txtImg;
     // End of variables declaration//GEN-END:variables
 }
