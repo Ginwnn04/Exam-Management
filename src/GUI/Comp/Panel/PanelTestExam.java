@@ -1,6 +1,7 @@
 package GUI.Comp.Panel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -16,9 +17,11 @@ import java.util.function.Supplier;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,7 +36,9 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.TestExamBUS;
+import BUS.TopicBUS;
 import DTO.TestExamDTO;
+import DTO.TopicDTO;
 import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.TableActionCellEditor;
@@ -45,15 +50,20 @@ import GUI.Utils.GridBagConstraintsBuilder;
 public class PanelTestExam extends JPanel {
     private GridBagConstraintsBuilder gbcBuilder = new GridBagConstraintsBuilder();
     private TestExamBUS BUS;
+    private TopicBUS topicBUS;
     private ArrayList<TestExamDTO> testExams;
+    private ArrayList<TestExamDTO> testExamsTemp;
 
     public PanelTestExam() {
         BUS = new TestExamBUS();
+        topicBUS = new TopicBUS();
+
         initComponents();
     }
 
     private void updateTableItems() {
         testExams = BUS.getAll(true);
+        testExamsTemp = testExams;
         renderTable();
     }
 
@@ -113,7 +123,8 @@ public class PanelTestExam extends JPanel {
         JLabel topicFilterLabel = new JLabel("Chủ đề: ");
         topicFilter = new JComboBox<>();
         topicFilter.setPreferredSize(new Dimension(150, 30));
-        topicFilter.setModel(new DefaultComboBoxModel<>(new String[] { "Tất cả", "Toán", "Văn", "Anh" }));
+        setTopicFilterItems();
+        topicFilter.addActionListener(this::applyTopicFilter);
 
         searchAndFilterContainer.add(searchByCbLabel);
         searchAndFilterContainer.add(searchByCb);
@@ -127,6 +138,28 @@ public class PanelTestExam extends JPanel {
         container.add(buildCreateButtonContainer());
 
         content.add(container);
+    }
+
+    private void setTopicFilterItems() {
+        topicFilter.removeAllItems();
+        var topics = topicBUS.getAllTopic();
+
+        topicFilter.addItem(TopicDTO.builder().setId(-1).setTitle("Tất cả").build());
+        topics.forEach(topicFilter::addItem);
+
+        topicFilter.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof TopicDTO) {
+                    TopicDTO topic = (TopicDTO) value;
+                    setText(topic.getTitle());
+                }
+
+                return this;
+            }
+        });
     }
 
     private void setupSearchFieldEvent() {
@@ -167,6 +200,7 @@ public class PanelTestExam extends JPanel {
         filtList = list.stream().filter(filter).toList();
 
         setTableItems(new ArrayList<>(filtList));
+        testExamsTemp = testExams;
     }
 
     private Predicate<TestExamDTO> getSearchFilter(String searchBy, String query) {
@@ -190,6 +224,22 @@ public class PanelTestExam extends JPanel {
             default:
                 return null;
         }
+    }
+
+    private void applyTopicFilter(ActionEvent e) {
+        // testExams = BUS.getAll(true);
+
+        TopicDTO topic = (TopicDTO) topicFilter.getSelectedItem();
+        if (topic.getId() == -1) {
+            setTableItems(testExamsTemp);
+            return;
+        }
+
+        var list = testExamsTemp.stream()
+                            .filter(item -> item.getTopicId() == topic.getId())
+                            .toList();
+
+        setTableItems(new ArrayList<>(list));
     }
 
     private PanelBackground buildCreateButtonContainer() {
@@ -275,7 +325,7 @@ public class PanelTestExam extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(170);
         table.setRowHeight(30);
 
-        setTableItems(BUS.getAll(true));
+        updateTableItems();
 
         JScrollPane scrollPane = new JScrollPane(table);
         content.add(scrollPane);
@@ -293,14 +343,21 @@ public class PanelTestExam extends JPanel {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
 
+        var topics = topicBUS.getAllTopic();
+
         if (testExams == null) return;
 
         testExams.forEach(testExam -> {
+            var topic = topics.stream()
+                              .filter(item -> item.getId() == testExam.getTopicId())
+                              .findFirst()
+                              .orElse(null);
+
             model.addRow(new Object[] {
                 testExam.getId(),
                 testExam.getTestCode(),
                 testExam.getTitle(),
-                testExam.getTopicId(),
+                topic != null ? topic.getTitle() : "",
                 testExam.getTestTime(),
                 testExam.getTestLimit(),
                 testExam.getTestDate(),
@@ -318,6 +375,6 @@ public class PanelTestExam extends JPanel {
     private JButton createButton;
     private JTextField searchField;
     private JComboBox<String> searchByCb;
-    private JComboBox<String> topicFilter;
+    private JComboBox<TopicDTO> topicFilter;
     private JTable table;
 }

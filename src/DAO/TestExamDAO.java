@@ -48,6 +48,34 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
         return result;
     }
 
+    public TestExamDTO getByTestCode(String testCode) {
+        String query = "SELECT * FROM test WHERE testCode = " + testCode;
+
+        try {
+            PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            if (!rs.next()) return null;
+
+            return TestExamDTO.builder()
+                              .setId(rs.getInt("testID"))
+                              .setTestCode(rs.getString("testCode"))
+                              .setTitle(rs.getString("testTitle"))
+                              .setTopicId(rs.getInt("tpID"))
+                              .setEasyQuestionCount(rs.getInt("num_easy"))
+                              .setMediumQuestionCount(rs.getInt("num_medium"))
+                              .setDiffQuestionCount(rs.getInt("num_diff"))
+                              .setTestLimit(rs.getShort("testLimit"))
+                              .setTestTime(rs.getInt("testTime"))
+                              .setTestDate(rs.getDate("testDate"))
+                              .setTestStatus(rs.getBoolean("testStatus"));
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     public TestExamDTO findById(Integer id) {
         String query = "SELECT * FROM test WHERE testID = ?";
 

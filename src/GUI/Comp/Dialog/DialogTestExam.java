@@ -13,11 +13,13 @@ import java.sql.Date;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -32,7 +34,9 @@ import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.TestExamBUS;
+import BUS.TopicBUS;
 import DTO.TestExamDTO;
+import DTO.TopicDTO;
 import GUI.Comp.DateChooser.DateChooser;
 import GUI.Comp.DateChooser.SelectedDate;
 import GUI.Comp.Swing.PanelBackground;
@@ -45,6 +49,7 @@ public class DialogTestExam extends JDialog {
     private boolean isUpdateDialog;
     private int selectedTestExamId;
     private TestExamBUS BUS;
+    private TopicBUS topicBUS = new TopicBUS();
 
     /**
      * For create
@@ -148,7 +153,7 @@ public class DialogTestExam extends JDialog {
 
         examTitle.setText(model.getTitle());
         testCode.setText(model.getTestCode());
-        topic.setSelectedIndex(model.getTopicId());
+        topicCb.setSelectedIndex(model.getTopicId());
         testLimit.setText(String.valueOf(model.getTestLimit()));
         time.setText(String.valueOf(model.getTestTime()));
         easyQuestionCount.setText(String.valueOf(model.getEasyQuestionCount()));
@@ -218,15 +223,15 @@ public class DialogTestExam extends JDialog {
 
         container.setBorder(titleBorder);
 
-        topic = new JComboBox<>();
-        topic.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        topic.setModel(new javax.swing.DefaultComboBoxModel<>(new Integer[] { 1, 2, 3, 4 }));
-        topic.addActionListener(this::onTopicChange);
+        topicCb = new JComboBox<>();
+        topicCb.setFont(new java.awt.Font("Roboto", 0, 16));
+        setTopicItems();
+        topicCb.addActionListener(this::onTopicChange);
 
         container.add(Box.createRigidArea(new Dimension(0, 30)), gbcBuilder.setPosition(0, 0).result());
 
         container.add(new JLabel("Chủ đề: "), gbcBuilder.setPosition(0, 1).result());
-        container.add(topic, gbcBuilder.setPosition(1, 1)
+        container.add(topicCb, gbcBuilder.setPosition(1, 1)
                                        .setSize(3, 1)
                                        .setWeights(1, 1)
                                        .setFill(GridBagConstraints.HORIZONTAL)
@@ -284,6 +289,27 @@ public class DialogTestExam extends JDialog {
 
         initTestDateChooser();
         content.add(informationPanel);
+    }
+
+    private void setTopicItems() {
+        topicCb.removeAllItems();
+        var topics = topicBUS.getAllTopic();
+
+        topics.forEach(topicCb::addItem);
+
+        topicCb.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof TopicDTO) {
+                    TopicDTO topic = (TopicDTO) value;
+                    setText(topic.getTitle());
+                }
+
+                return this;
+            }
+        });
     }
 
     private void initTestDateChooser() {
@@ -374,7 +400,8 @@ public class DialogTestExam extends JDialog {
         DefaultTableModel model = (DefaultTableModel) questionTable.getModel();
         model.setRowCount(0);
 
-        int topicId = (int)topic.getSelectedItem();
+        TopicDTO selectedTopic = (TopicDTO) topicCb.getSelectedItem();
+        int topicId = selectedTopic.getId();
 
         BUS.getByTopicId(topicId).forEach(question -> {
             model.addRow(new Object[] {
@@ -435,10 +462,13 @@ public class DialogTestExam extends JDialog {
         var date = testDateChooser.getSelectedDate();
         Date starDate = Date.valueOf(date.getYear() + "-" + date.getMonth() + "-" + date.getDay());
 
+        TopicDTO selectedTopic = (TopicDTO) topicCb.getSelectedItem();
+        int topicId = selectedTopic.getId();
+
         return TestExamDTO.builder()
                           .setTestCode(testCode.getText())
                           .setTitle(examTitle.getText())
-                          .setTopicId((int) topic.getSelectedItem())
+                          .setTopicId(topicId)
                           .setEasyQuestionCount(Integer.parseInt(easyQuestionCount.getText()))
                           .setMediumQuestionCount(Integer.parseInt(mediumQuestionCount.getText()))
                           .setDiffQuestionCount(Integer.parseInt(hardQuestionCount.getText()))
@@ -455,7 +485,7 @@ public class DialogTestExam extends JDialog {
     private JLabel idLabel;
     private JTextField examTitle;
     private JLabel testCode;
-    private JComboBox<Integer> topic;
+    private JComboBox<TopicDTO> topicCb;
     private JTextField testLimit;
     private JTextField time;
     private DateChooser testDateChooser;
