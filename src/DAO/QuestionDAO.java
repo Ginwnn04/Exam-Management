@@ -103,14 +103,44 @@ public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
         return listQuestion;
     }
 
-    public List<QuestionDTO> getQuestionByTopicId(List<Integer> listTopic) {
+    public List<QuestionDTO> getQuestionByTopicAndLevel(List<Integer> listTopic, String level) {
+        List<QuestionDTO> listQuestion = new ArrayList<>();
+        String placeholders = String.join(",", Collections.nCopies(listTopic.size(), "?"));
+        String query = "SELECT * FROM questions WHERE qStatus = 1 AND qTopicID IN (" + placeholders + ") AND qLevel = ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            for (int i = 0; i < listTopic.size(); i++) {
+                pstm.setInt(i + 1, listTopic.get(i));
+            }
+            pstm.setString(listTopic.size() + 1, level);
+            
+            ResultSet rs = pstm.executeQuery();
+            System.out.println(pstm.toString());
+            while (rs.next()) {
+                QuestionDTO question = QuestionDTO.builder()
+                        .setId(rs.getInt("qId"))
+                        .setContent(rs.getString("qContent"))
+                        .setPicture(rs.getString("qPictures"))
+                        .setTopicId(rs.getInt("qTopicID"))
+                        .setLevel(rs.getString("qLevel"))
+                        .build();
+                listQuestion.add(question);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return listQuestion;
+    }
+    
+    public List<QuestionDTO> getQuestionByTopic(List<Integer> listTopic) {
         List<QuestionDTO> listQuestion = new ArrayList<>();
         String placeholders = String.join(",", Collections.nCopies(listTopic.size(), "?"));
         String query = "SELECT * FROM questions WHERE qStatus = 1 AND qTopicID IN (" + placeholders + ")";
         try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             for (int i = 0; i < listTopic.size(); i++) {
                 pstm.setInt(i + 1, listTopic.get(i));
-            }
+            }            
             ResultSet rs = pstm.executeQuery();
             System.out.println(pstm.toString());
             while (rs.next()) {

@@ -38,7 +38,7 @@ public class DialogQuestion extends javax.swing.JDialog {
     private QuestionBUS questionBUS = new QuestionBUS();
     private List<TopicDTO> listTopic = new ArrayList<>();
     private TopicBUS topicBUS = new TopicBUS();
-
+    private boolean isUpdate = false;
     
     private List<JRadioButton> listRadio = new ArrayList<>();
     private List<JTextField> listTxt = new ArrayList<>();
@@ -65,7 +65,11 @@ public class DialogQuestion extends javax.swing.JDialog {
 
     }
     
-    public void setData(QuestionDTO question) {
+    public void setData(QuestionDTO question, boolean isUpdate) {
+        this.isUpdate = isUpdate;
+        if (isUpdate == true) {
+            btnLuu.setEnabled(true);
+        }
         System.out.println("hihi");
         txtCauHoi.setText(question.getContent());
         Path destinationFile = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + question.getPicture());
@@ -715,6 +719,8 @@ public class DialogQuestion extends javax.swing.JDialog {
         btnLuu.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         btnLuu.setForeground(new java.awt.Color(255, 255, 255));
         btnLuu.setText("Lưu");
+        btnLuu.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnLuu.setEnabled(false);
         btnLuu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLuuActionPerformed(evt);
@@ -812,12 +818,7 @@ public class DialogQuestion extends javax.swing.JDialog {
     }//GEN-LAST:event_btnThemAnhActionPerformed
 
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
-//        System.out.println(rd1.isSelected() + " " + txtAws1.getText());
-//        System.out.println(rd2.isSelected() + " " + txtAws2.getText());
-//        System.out.println(rd3.isSelected() + " " + txtAws3.getText());
-//        System.out.println(rd4.isSelected() + " " + txtAws4.getText());
-//        System.out.println(rd5.isSelected() + " " + txtAws5.getText());
-//        
+
         QuestionDTO question = QuestionDTO.builder()
                 .setContent(txtCauHoi.getText())
                 .setPicture(txtImg.getName())
@@ -863,6 +864,7 @@ public class DialogQuestion extends javax.swing.JDialog {
                 .setStatus(true)
                 .build();
         anwserBUS.createAnwser(aws5);
+        
         
     }//GEN-LAST:event_btnLuuActionPerformed
 

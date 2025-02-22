@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PanelQuestion extends javax.swing.JPanel {
     private List<QuestionDTO> listQuestion = new ArrayList<>();
+    private List<QuestionDTO> listTmp = new  ArrayList<>();
     private List<TopicDTO> listTopic = new ArrayList<>();
     private QuestionBUS questionBUS = new QuestionBUS();
     private TopicBUS topicBUS = new TopicBUS();
@@ -36,19 +37,22 @@ public class PanelQuestion extends javax.swing.JPanel {
         TableActionEvent actionEvent = new TableActionEvent() {
             @Override
             public void onUpdate(int row) {
-                System.out.println("Update" + row);
+                DialogQuestion question = new DialogQuestion(null, true);
+                question.setData(listQuestion.get(row), true);
+                question.setVisible(true);
             }
 
             @Override
             public void onDelete(int row) {
                 questionBUS.deleteQuestion(listQuestion.get(row).getId());
-                renderData();
+                listQuestion = questionBUS.getAllQuestion(true);
+                renderData(listQuestion);
             }
 
             @Override
             public void onView(int row) {
                 DialogQuestion question = new DialogQuestion(null, true);
-                question.setData(listQuestion.get(row));
+                question.setData(listQuestion.get(row), false);
                 question.setVisible(true);
                 
             }
@@ -57,16 +61,17 @@ public class PanelQuestion extends javax.swing.JPanel {
         tbCauHoi.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(actionEvent));
         tbCauHoi.setRowHeight(30);
         listQuestion = questionBUS.getAllQuestion(true);
-        renderData();
+        listTmp = listQuestion;
+        renderData(listQuestion);
         renderTopic();
         
         
     }
 
-    public void renderData() {
+    public void renderData(List<QuestionDTO> list) {
         model = (DefaultTableModel)tbCauHoi.getModel();
         model.setRowCount(0);
-        listQuestion.stream()
+        list.stream()
                 .forEach(question -> {
                     model.addRow(new Object[] {question.getId(), question.getContent(), question.getTopicId(), question.getLevel()});
                 });
@@ -333,6 +338,11 @@ public class PanelQuestion extends javax.swing.JPanel {
 
         txtCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtCauHoi.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtCauHoi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCauHoiKeyReleased(evt);
+            }
+        });
         panelBackground11.add(txtCauHoi);
 
         panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -416,6 +426,11 @@ public class PanelQuestion extends javax.swing.JPanel {
         cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dễ", "Trung bình", "Khó" }));
         cbxDoKho.setPreferredSize(new java.awt.Dimension(200, 30));
+        cbxDoKho.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxDoKhoItemStateChanged(evt);
+            }
+        });
         panelBackground11.add(cbxDoKho);
 
         pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
@@ -492,12 +507,44 @@ public class PanelQuestion extends javax.swing.JPanel {
             listQuestion = questionBUS.getAllQuestion(true);
         }
         else {
-            listQuestion = questionBUS.getQuestionByTopicID(listTopic.get(index - 1).getId());
+            int topicId = listTopic.get(index - 1).getId();
+            String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
+            listQuestion = questionBUS.getQuestionByTopicAndLevel(topicId, level);
         }
-        renderData();
+        renderData(listQuestion);
     }//GEN-LAST:event_cbxChuDeItemStateChanged
 
+    private void cbxDoKhoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxDoKhoItemStateChanged
+        String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
+        if (level.equals("")) {
+            renderData(listQuestion);
+        }
+        else {
+            for (QuestionDTO q : listQuestion) {
+                if (q.getLevel().equals(level)) {
+                    listTmp.add(q);
+                }
+            }
+            renderData(listTmp);
+        }
+    }//GEN-LAST:event_cbxDoKhoItemStateChanged
 
+    private void txtCauHoiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCauHoiKeyReleased
+        if (txtCauHoi.getText().equals("")) {
+            renderData(listTmp); 
+        }
+        else {
+            List<QuestionDTO> listTmp1 = new  ArrayList<>();
+            for (QuestionDTO q : listTmp) {
+                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase())) {
+                    listTmp1.add(q);
+                }
+            }
+            renderData(listTmp1); 
+        }
+    }//GEN-LAST:event_txtCauHoiKeyReleased
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbxChuDe;
     private javax.swing.JComboBox<String> cbxDoKho;
