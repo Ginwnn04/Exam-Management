@@ -119,6 +119,7 @@ public class PanelTestExam extends JPanel {
         searchByCb = new JComboBox<>();
         searchByCb.setPreferredSize(new Dimension(150, 30));
         searchByCb.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "Mã đề", "Tiêu đề" }));
+        searchByCb.addActionListener(e -> filtTableItems());
 
         JLabel topicFilterLabel = new JLabel("Chủ đề: ");
         topicFilter = new JComboBox<>();
@@ -283,7 +284,7 @@ public class PanelTestExam extends JPanel {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
 
