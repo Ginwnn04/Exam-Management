@@ -4,21 +4,22 @@
  */
 package DAO;
 
-import DTO.AnwserDTO;
+import DTO.AnswerDTO;
 import Helper.ConnectDB;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 /**
  *
  * @author pc
  */
-public class AnwserDAO implements BaseDAO<AnwserDTO, Integer>{
+public class AnswerDAO implements BaseDAO<AnswerDTO, Integer>{
 
     @Override
-    public AnwserDTO create(AnwserDTO request) {
+    public AnswerDTO create(AnswerDTO request) {
         String query = "INSERT INTO answers (qID, awContent, awPictures, isRight, awStatus) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstm.setInt(1, request.getQuestionId());
@@ -40,7 +41,7 @@ public class AnwserDAO implements BaseDAO<AnwserDTO, Integer>{
     }
 
     @Override
-    public boolean update(Integer id, AnwserDTO request) {
+    public boolean update(Integer id, AnswerDTO request) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -50,8 +51,44 @@ public class AnwserDAO implements BaseDAO<AnwserDTO, Integer>{
     }
 
     @Override
-    public List<AnwserDTO> getAll(boolean active) {
+    public List<AnswerDTO> getAll(boolean active) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    public List<AnswerDTO> getByQuestionId(int id) {
+        List<AnswerDTO> listAnsw = new ArrayList<>();
+        String query = "SELECT * FROM answers WHERE awStatus = 1 AND qID = ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setInt(1, id);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                AnswerDTO answ = AnswerDTO.builder()
+                        .setId(rs.getInt("awID"))
+                        .setContent(rs.getString("awContent"))
+                        .setPicture(rs.getString("awPictures"))
+                        .setQuestionId(rs.getInt("qID"))
+                        .setIsRight(rs.getInt("isRight") == 1 ? true : false)
+                        .build();
+                listAnsw.add(answ);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return listAnsw;
+        
+    }
+    
+    public boolean deleteByQuestionId(int id) {
+        String query = "UPDATE answers SET awStatus = 0 WHERE qID = ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setInt(1, id);
+            return pstm.executeUpdate() != 0; 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

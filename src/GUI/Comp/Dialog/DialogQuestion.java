@@ -4,15 +4,18 @@
  */
 package GUI.Comp.Dialog;
 
-import BUS.AnwserBUS;
+import BUS.AnswerBUS;
 import BUS.QuestionBUS;
 import BUS.TopicBUS;
-import DTO.AnwserDTO;
+import DAO.AnswerDAO;
+import DTO.AnswerDTO;
 import DTO.QuestionDTO;
 import DTO.TopicDTO;
+import java.awt.Image;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import javax.swing.JFileChooser;
 import java.nio.file.Path;
@@ -23,17 +26,22 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 /**
  *
  * @author quang
  */
 public class DialogQuestion extends javax.swing.JDialog {
-    private AnwserBUS anwserBUS = new AnwserBUS();
+    private AnswerBUS anwserBUS = new AnswerBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
     private List<TopicDTO> listTopic = new ArrayList<>();
     private TopicBUS topicBUS = new TopicBUS();
 
+    
+    private List<JRadioButton> listRadio = new ArrayList<>();
+    private List<JTextField> listTxt = new ArrayList<>();
     /**
      * Creates new form DialogQuestion
      */
@@ -42,9 +50,48 @@ public class DialogQuestion extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         renderTopic();
+        listRadio.add(rd1);
+        listRadio.add(rd2);
+        listRadio.add(rd3);
+        listRadio.add(rd4);
+        listRadio.add(rd5);
+        
+        listTxt.add(txtAws1);
+        listTxt.add(txtAws2);
+        listTxt.add(txtAws3);
+        listTxt.add(txtAws4);
+        listTxt.add(txtAws5);
+        
 
     }
     
+    public void setData(QuestionDTO question) {
+        System.out.println("hihi");
+        txtCauHoi.setText(question.getContent());
+        Path destinationFile = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + question.getPicture());
+        Image img = new ImageIcon(destinationFile.toString()).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
+        txtImg.setIcon(new ImageIcon(img));
+        txtImg.setName(question.getPicture());
+        for (int i = 0; i < listTopic.size(); i++) {
+            if (listTopic.get(i).getId() == question.getTopicId()) {
+                cbxChuDe.setSelectedIndex(i);
+                break;
+            }
+        }
+        cbxDoKho.setSelectedIndex(question.getLevel().equals("Dễ") ? 0 : 
+                question.getLevel().equals("Trung bình") ? 1 : 2);
+        
+        List<AnswerDTO> listAnsw = anwserBUS.getAnswerByQuestionId(question.getId());
+        System.out.println(listAnsw.size());
+        for(int i = 0; i < listAnsw.size(); i++) {
+            listTxt.get(i).setText(listAnsw.get(i).getContent());
+            if (listAnsw.get(i).isIsRight()) {
+                listRadio.get(i).setSelected(true);
+            }
+        }
+        
+        
+    }
     
     private void renderTopic() {
        listTopic = topicBUS.getAllTopic();
@@ -79,7 +126,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         txtCauHoi = new javax.swing.JTextArea();
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
-        jButton13 = new javax.swing.JButton();
+        btnThemAnh = new javax.swing.JButton();
         txtImg = new javax.swing.JLabel();
         pnAnwser = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
@@ -244,20 +291,21 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground11.setPreferredSize(new java.awt.Dimension(350, 241));
         panelBackground11.setLayout(new java.awt.BorderLayout());
 
-        jButton13.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jButton13.setText("Thêm hình ảnh");
-        jButton13.setPreferredSize(new java.awt.Dimension(137, 35));
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        btnThemAnh.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        btnThemAnh.setText("Thêm hình ảnh");
+        btnThemAnh.setPreferredSize(new java.awt.Dimension(137, 35));
+        btnThemAnh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                btnThemAnhActionPerformed(evt);
             }
         });
-        panelBackground11.add(jButton13, java.awt.BorderLayout.PAGE_END);
+        panelBackground11.add(btnThemAnh, java.awt.BorderLayout.PAGE_END);
 
         txtImg.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         txtImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/minus-sign-inside-a-black-circle (1).png"))); // NOI18N
         txtImg.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtImg.setName(""); // NOI18N
         panelBackground11.add(txtImg, java.awt.BorderLayout.CENTER);
 
         panelBackground6.add(panelBackground11);
@@ -733,9 +781,35 @@ public class DialogQuestion extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        
-    }//GEN-LAST:event_jButton13ActionPerformed
+    private void btnThemAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemAnhActionPerformed
+        String regex = "^.+\\.(jpg|jpeg|png|gif|bmp)$";
+        JFileChooser file = new JFileChooser();
+        file.showOpenDialog(this);
+        if (file.getSelectedFile() == null) {
+            return;
+        }
+        String pathSource = file.getSelectedFile().getAbsolutePath();
+        String nameFile = pathSource.substring(pathSource.lastIndexOf("\\") + 1);
+        if (nameFile.matches(regex)) {
+            Path sourceFile = Paths.get(pathSource);
+            Path destinationFile = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + nameFile);
+            System.out.println(sourceFile.toString());
+            System.out.println(destinationFile.toString());
+            try {
+                Files.copy(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                Image img = new ImageIcon(destinationFile.toString()).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
+                txtImg.setIcon(new ImageIcon(img));
+                txtImg.setName(nameFile);
+            } 
+            catch (IOException ex) {
+            }
+
+         
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "File bạn chọn không phải là ẢNH");
+        }
+    }//GEN-LAST:event_btnThemAnhActionPerformed
 
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
 //        System.out.println(rd1.isSelected() + " " + txtAws1.getText());
@@ -746,7 +820,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 //        
         QuestionDTO question = QuestionDTO.builder()
                 .setContent(txtCauHoi.getText())
-                .setPicture(txtImg.getText())
+                .setPicture(txtImg.getName())
                 .setLevel(cbxDoKho.getSelectedItem().toString())
                 .setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId())
                 .setStatus(true)
@@ -754,35 +828,35 @@ public class DialogQuestion extends javax.swing.JDialog {
         int idQuestion = questionBUS.createQuestion(question).getId();
         System.out.println(idQuestion + "");
        
-        AnwserDTO aws1 = AnwserDTO.builder()
+        AnswerDTO aws1 = AnswerDTO.builder()
                 .setContent(txtAws1.getText())
                 .setIsRight(rd1.isSelected())
                 .setQuestionId(idQuestion)
                 .setStatus(true)
                 .build();
         anwserBUS.createAnwser(aws1);
-        AnwserDTO aws2 = AnwserDTO.builder()
+        AnswerDTO aws2 = AnswerDTO.builder()
                 .setContent(txtAws2.getText())
                 .setIsRight(rd2.isSelected())
                 .setQuestionId(idQuestion)
                 .setStatus(true)
                 .build();
         anwserBUS.createAnwser(aws2);
-        AnwserDTO aws3 = AnwserDTO.builder()
+        AnswerDTO aws3 = AnswerDTO.builder()
                 .setContent(txtAws3.getText())
                 .setIsRight(rd3.isSelected())
                 .setQuestionId(idQuestion)
                 .setStatus(true)
                 .build();
         anwserBUS.createAnwser(aws3);
-        AnwserDTO aws4 = AnwserDTO.builder()
+        AnswerDTO aws4 = AnswerDTO.builder()
                 .setContent(txtAws4.getText())
                 .setIsRight(rd4.isSelected())
                 .setQuestionId(idQuestion)
                 .setStatus(true)
                 .build();
         anwserBUS.createAnwser(aws4);
-        AnwserDTO aws5 = AnwserDTO.builder()
+        AnswerDTO aws5 = AnswerDTO.builder()
                 .setContent(txtAws5.getText())
                 .setIsRight(rd5.isSelected())
                 .setQuestionId(idQuestion)
@@ -836,6 +910,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLuu;
+    private javax.swing.JButton btnThemAnh;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbxChuDe;
     private javax.swing.JComboBox<String> cbxDoKho;
@@ -843,7 +918,6 @@ public class DialogQuestion extends javax.swing.JDialog {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;

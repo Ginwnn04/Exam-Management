@@ -4,9 +4,11 @@
  */
 package BUS;
 
+import DAO.AnswerDAO;
 import DAO.QuestionDAO;
 import DTO.QuestionDTO;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -14,18 +16,13 @@ import java.util.List;
  * @author quang
  */
 public class QuestionBUS {
-    private List<QuestionDTO> listQuestion;
-    private QuestionDAO questionDAO;
+    private QuestionDAO questionDAO =  new QuestionDAO();
+    private AnswerDAO answerDAO = new AnswerDAO();
 
-    public QuestionBUS() {
-        this.listQuestion = new ArrayList<>();
-        this.questionDAO = new QuestionDAO();
-    }
-    
+
     
     public List<QuestionDTO> getAllQuestion(boolean active) {
-        listQuestion = questionDAO.getAll(active);
-        return listQuestion;
+        return questionDAO.getAll(active);
     }
     
     public QuestionDTO createQuestion(QuestionDTO question) {
@@ -35,7 +32,18 @@ public class QuestionBUS {
         return questionDAO.update(id, question);
     }
     public boolean deleteQuestion(int id) {
-        return questionDAO.delete(id);
+        return questionDAO.delete(id) && answerDAO.deleteByQuestionId(id);
+    }
+    
+    public List<QuestionDTO> getQuestionByTopicID(int id) {
+        List<Integer> listTopic = getListTopicParent(id);
+        return questionDAO.getQuestionByTopicId(listTopic);
+    }
+    
+    private List<Integer> getListTopicParent(int topicId) {
+        
+        
+        return questionDAO.getListTopic(topicId);
     }
     
     

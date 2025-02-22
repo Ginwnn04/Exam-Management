@@ -8,7 +8,7 @@ package DTO;
  *
  * @author pc
  */
-public class AnwserDTO {
+public class AnswerDTO {
     private int id;
     private int questionId;
     private String content;
@@ -16,42 +16,42 @@ public class AnwserDTO {
     private boolean isRight;
     private boolean status;
 
-    public AnwserDTO setId(int id) {
+    public AnswerDTO setId(int id) {
         this.id = id;
         return this;
     }
 
-    public AnwserDTO setQuestionId(int questionId) {
+    public AnswerDTO setQuestionId(int questionId) {
         this.questionId = questionId;
         return this;
     }
 
-    public AnwserDTO setContent(String content) {
+    public AnswerDTO setContent(String content) {
         this.content = content;
         return this;
 
     }
 
-    public AnwserDTO setPicture(String picture) {
+    public AnswerDTO setPicture(String picture) {
         this.picture = picture;
         return this;
     }
 
-    public AnwserDTO setIsRight(boolean isRight) {
+    public AnswerDTO setIsRight(boolean isRight) {
         this.isRight = isRight;
         return this;
     }
 
-    public AnwserDTO setStatus(boolean status) {
+    public AnswerDTO setStatus(boolean status) {
         this.status = status;
         return this;
     }
 
-    public static AnwserDTO builder() {
-        return new AnwserDTO();
+    public static AnswerDTO builder() {
+        return new AnswerDTO();
     }
 
-    public AnwserDTO build() {
+    public AnswerDTO build() {
         return this;
     }
     

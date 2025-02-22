@@ -9,6 +9,9 @@ import BUS.TopicBUS;
 import DTO.QuestionDTO;
 import DTO.TopicDTO;
 import GUI.Comp.Dialog.DialogQuestion;
+import GUI.Custom.TableActionCellEditor;
+import GUI.Custom.TableActionCellRenderer;
+import GUI.Custom.TableActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
@@ -30,19 +33,44 @@ public class PanelQuestion extends javax.swing.JPanel {
         txtCauHoi.putClientProperty("JTextField.placeholderText", "Hôm nay tôi bùn...");
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbCauHoi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
+        TableActionEvent actionEvent = new TableActionEvent() {
+            @Override
+            public void onUpdate(int row) {
+                System.out.println("Update" + row);
+            }
+
+            @Override
+            public void onDelete(int row) {
+                questionBUS.deleteQuestion(listQuestion.get(row).getId());
+                renderData();
+            }
+
+            @Override
+            public void onView(int row) {
+                DialogQuestion question = new DialogQuestion(null, true);
+                question.setData(listQuestion.get(row));
+                question.setVisible(true);
+                
+            }
+        };
+        tbCauHoi.getColumnModel().getColumn(4).setCellRenderer(new TableActionCellRenderer());
+        tbCauHoi.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(actionEvent));
         tbCauHoi.setRowHeight(30);
+        listQuestion = questionBUS.getAllQuestion(true);
         renderData();
         renderTopic();
+        
+        
     }
 
     public void renderData() {
-        listQuestion = questionBUS.getAllQuestion(true);
         model = (DefaultTableModel)tbCauHoi.getModel();
         model.setRowCount(0);
         listQuestion.stream()
                 .forEach(question -> {
                     model.addRow(new Object[] {question.getId(), question.getContent(), question.getTopicId(), question.getLevel()});
                 });
+        
         model.fireTableDataChanged();
         tbCauHoi.setModel(model);
     }
@@ -51,6 +79,7 @@ public class PanelQuestion extends javax.swing.JPanel {
     private void renderTopic() {
        listTopic = topicBUS.getAllTopic();
        cbxChuDe.removeAllItems();
+       cbxChuDe.addItem("Tất cả");
        for (TopicDTO topic : listTopic) {
            cbxChuDe.addItem(topic.getTitle());
        }
@@ -343,6 +372,11 @@ public class PanelQuestion extends javax.swing.JPanel {
         cbxChuDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         cbxChuDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn chủ đề", "Item 2", "Item 3", "Item 4" }));
         cbxChuDe.setPreferredSize(new java.awt.Dimension(200, 30));
+        cbxChuDe.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxChuDeItemStateChanged(evt);
+            }
+        });
         panelBackground11.add(cbxChuDe);
 
         panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -380,7 +414,7 @@ public class PanelQuestion extends javax.swing.JPanel {
         panelBackground11.add(panelBackground16);
 
         cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dễ", "Trung bình", "Khó" }));
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Dễ", "Trung bình", "Khó" }));
         cbxDoKho.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxDoKho);
 
@@ -401,7 +435,7 @@ public class PanelQuestion extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -450,6 +484,18 @@ public class PanelQuestion extends javax.swing.JPanel {
         d.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbxChuDeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxChuDeItemStateChanged
+        int index = cbxChuDe.getSelectedIndex();
+        System.out.println(index);
+        if (index == -1 || index == 0) {
+            listQuestion = questionBUS.getAllQuestion(true);
+        }
+        else {
+            listQuestion = questionBUS.getQuestionByTopicID(listTopic.get(index - 1).getId());
+        }
+        renderData();
+    }//GEN-LAST:event_cbxChuDeItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
