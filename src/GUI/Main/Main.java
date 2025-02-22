@@ -70,13 +70,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             
 //            if (role.equals("admin")) {
 //                System.out.println(role + " " + 1);
-               switch (index) {
-                   case 0:
-                       showForm(new PanelQuestion());
-                       break;
-                   case 1:
-                       showForm(new PanelTestExam());
-                       break;
+//               switch (index) {
+//                   case 0:
+//                       showForm(new PanelQuestion());
+//                       break;
+//                   case 1:
+//                       showForm(new PanelTestExam());
+//                       break;
 //                    case 2:
 //                        showForm(new QuanLiDatMon());
 //                        break;
@@ -109,7 +109,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //                        showForm(new QuanLi_Staff());
 //                        break;
 //                }
-           }
+//           }
 //            else if (role.equals("manager")) {
 //                System.out.println(role + " " + 2);
 //                switch (index) {
