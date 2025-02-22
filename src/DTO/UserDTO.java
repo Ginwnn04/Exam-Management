@@ -10,12 +10,6 @@ public class UserDTO {
     private boolean isDeleted;
     public UserDTO() {
     }
-
-    // public int createId() {
-    //     this.id = System.currentTimeMillis();
-    //     return id;
-    // }
-    
     public UserDTO(int id, String name, String email, String password, String fullName, int isAdmin , Boolean isDeleted) {
         this.id = id;
         this.name = name;

@@ -7,20 +7,72 @@ import javax.swing.JOptionPane;
 
 import BUS.UserBus;
 import DTO.UserDTO;
+import java.awt.event.ActionEvent;
 /**
  *
  * @author nguye
  */
 public class DialogUsers extends javax.swing.JDialog {
+    private boolean isUpdateDialog;
+    private int selected_UserID;
+    private UserBus BUS;
 
-    /**
-     * Creates new form DialogUsers
-     */
-    public DialogUsers(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    //for create
+    public DialogUsers(java.awt.Frame parent ,UserBus BUS ) {
+        super(parent, true);
+        isUpdateDialog = false;
+        this.BUS = BUS;
         initComponents();
-         setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
     }
+
+    //for update , id is the id of the user to update
+    public DialogUsers(java.awt.Frame parent ,UserBus BUS, int id){
+        super(parent,true);
+        isUpdateDialog = true;
+        selected_UserID = id;
+        this.BUS = BUS;
+        initComponents();
+        setLocationRelativeTo(null);
+        renderFormUpdate(id);
+    }
+
+    private boolean create(UserDTO data) {
+        return BUS.addUser(data);
+    }
+
+    private boolean update(UserDTO data) {
+        return BUS.updateUser(data, selected_UserID);
+    }
+
+    private void renderFormUpdate(int id){
+        var user = BUS.findByID(id);
+        jTextField1.setText(user.getName());
+        jTextField2.setText(user.getEmail());
+        jTextField3.setText(user.getPassword());
+        jTextField4.setText(user.getFullName());
+        jCheckBox1.setSelected(user.getIsAdmin()==1);
+    }
+
+    private UserDTO gatherFormData(){
+        return UserDTO.builder()
+                .setName(jTextField1.getText())
+                .setEmail(jTextField2.getText())
+                .setPassword(jTextField3.getText())
+                .setFullName(jTextField4.getText())
+                .setIsAdmin(jCheckBox1.isSelected() ? 1 : 0)
+                .build();
+    }
+    private void onSave(ActionEvent e){
+        var data = gatherFormData();
+        boolean rs;
+        String action;
+        action = !isUpdateDialog ? "Tạo" : "Cập nhật";
+        rs = !isUpdateDialog ? create(data) : update(data);
+        if (rs) JOptionPane.showMessageDialog(this, action + " thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        else JOptionPane.showMessageDialog(this, action + " thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        this.dispose();
+    }   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -194,7 +246,7 @@ public class DialogUsers extends javax.swing.JDialog {
         );
 
         jButton1.setBackground(new java.awt.Color(225, 99, 73));
-        jButton1.setText("Thêm");
+        jButton1.setText("Lưu");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -246,45 +298,8 @@ public class DialogUsers extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        String username = jTextField1.getText();
-        String email = jTextField2.getText();
-        String password = jTextField3.getText();
-        String fullName = jTextField4.getText();
-        int isAdmin = jCheckBox1.isSelected() ? 1 : 0;
-        if(username.equals("") || email.equals("") || password.equals("")){
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
-            return;
-        }
-        UserDTO user = new UserDTO(username , email, password,fullName,isAdmin);
-        UserBus userBus = new UserBus();
-
-        // var a = this;
-        
-        // EventQueue.invokeLater(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         if(userBus.addUser(user)){
-        //             JOptionPane.showMessageDialog(a, "Thêm người dùng thành công");
-        //             PanelUser panelUser = new PanelUser();
-        //             // panelUser.render();
-        //             a.dispose();
-        //         }
-        //         else{
-        //             JOptionPane.showMessageDialog(a, "Thêm người dùng thất bại");
-        //         }
-        //     }
-        // });
-        if(userBus.addUser(user)){
-            JOptionPane.showMessageDialog(this, "Thêm người dùng thành công");
-            // PanelUser panelUser = new PanelUser();
-            // panelUser.render();
-            this.dispose();
-        }
-        else{
-            JOptionPane.showMessageDialog(this, "Thêm người dùng thất bại");
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        onSave(evt);
+    }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -320,7 +335,7 @@ public class DialogUsers extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DialogUsers dialog = new DialogUsers(new javax.swing.JFrame(), true);
+                DialogUsers dialog = new DialogUsers(new javax.swing.JFrame(), new UserBus());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

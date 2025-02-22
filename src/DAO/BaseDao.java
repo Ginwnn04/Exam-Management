@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author quang
  */
-public interface BaseDao<T, ID> {
+public interface BaseDAO<T, ID> {
     boolean create(T request);
     boolean update(ID id, T request);
     boolean delete(ID id);

@@ -3,7 +3,7 @@ import DTO.UserDTO;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-public class UserDao implements BaseDao<UserDTO, Integer> {
+public class UserDao implements BaseDAO<UserDTO, Integer> {
     @Override
     public ArrayList<UserDTO> getAll(boolean active) {
         ArrayList<UserDTO> list_users = new ArrayList<UserDTO>();
@@ -29,20 +29,19 @@ public class UserDao implements BaseDao<UserDTO, Integer> {
     }
     @Override
     public UserDTO findByID(Integer id){
-        String query = "SELECT * FROM users WHERE id = ?";
+        String query = "SELECT * FROM users WHERE userID = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
         .prepareStatement(query)){
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 UserDTO user = UserDTO.builder()
-                .setId(resultSet.getInt("id"))
-                .setName(resultSet.getString("name"))
-                .setEmail(resultSet.getString("email"))
-                .setPassword(resultSet.getString("password"))
-                .setFullName(resultSet.getString("full_name"))
-                .setIsAdmin(resultSet.getInt("is_admin"))
-                .setIsDeleted(resultSet.getBoolean("is_deleted"))
+                .setId(resultSet.getInt("userID"))
+                .setName(resultSet.getString("userName"))
+                .setEmail(resultSet.getString("userEmail"))
+                .setPassword(resultSet.getString("userPassword"))
+                .setFullName(resultSet.getString("userFullName"))
+                .setIsAdmin(resultSet.getInt("isAdmin"))
                 .build();
                 return user;
             }
@@ -86,7 +85,7 @@ public class UserDao implements BaseDao<UserDTO, Integer> {
     }
     @Override
     public boolean update(Integer id , UserDTO userDTO){
-        String query = "UPDATE users SET name = ?, email = ?, password = ?, full_name = ?, is_admin = ?, is_deleted = ? WHERE id = ?";
+        String query = "UPDATE users SET userName = ?, userEmail = ?, userPassword = ?, userFullname = ?, isAdmin = ? WHERE userID = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
         .prepareStatement(query)){
             preparedStatement.setString(1, userDTO.getName());
@@ -94,8 +93,8 @@ public class UserDao implements BaseDao<UserDTO, Integer> {
             preparedStatement.setString(3, userDTO.getPassword());
             preparedStatement.setString(4, userDTO.getFullName());
             preparedStatement.setInt(5, userDTO.getIsAdmin());
-            preparedStatement.setBoolean(6, userDTO.getIsDeleted());
-            preparedStatement.setLong(7, id);
+            // preparedStatement.setBoolean(6, userDTO.getIsDeleted());
+            preparedStatement.setLong(6, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +103,7 @@ public class UserDao implements BaseDao<UserDTO, Integer> {
     }
     @Override
     public boolean delete(Integer id){
-        String query = "UPDATE users SET is_deleted = TRUE WHERE id = ?";
+        String query = "DELETE from users WHERE userID = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
         .prepareStatement(query)){
             preparedStatement.setLong(1, id);
