@@ -505,13 +505,15 @@ public class PanelQuestion extends javax.swing.JPanel {
         System.out.println(index);
         if (index == -1 || index == 0) {
             listQuestion = questionBUS.getAllQuestion(true);
+            renderData(listQuestion);
+
         }
         else {
             int topicId = listTopic.get(index - 1).getId();
             String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
-            listQuestion = questionBUS.getQuestionByTopicAndLevel(topicId, level);
+            listTmp = questionBUS.getQuestionByTopicAndLevel(topicId, level);
+            renderData(listTmp);
         }
-        renderData(listQuestion);
     }//GEN-LAST:event_cbxChuDeItemStateChanged
 
     private void cbxDoKhoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxDoKhoItemStateChanged
@@ -520,12 +522,13 @@ public class PanelQuestion extends javax.swing.JPanel {
             renderData(listQuestion);
         }
         else {
-            for (QuestionDTO q : listQuestion) {
+            List<QuestionDTO> listTmp1 = new  ArrayList<>();
+            for (QuestionDTO q : listTmp) {
                 if (q.getLevel().equals(level)) {
-                    listTmp.add(q);
+                    listTmp1.add(q);
                 }
             }
-            renderData(listTmp);
+            renderData(listTmp1);
         }
     }//GEN-LAST:event_cbxDoKhoItemStateChanged
 
@@ -535,8 +538,10 @@ public class PanelQuestion extends javax.swing.JPanel {
         }
         else {
             List<QuestionDTO> listTmp1 = new  ArrayList<>();
+            String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
+
             for (QuestionDTO q : listTmp) {
-                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase())) {
+                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase()) && q.getLevel().equals(level)) {
                     listTmp1.add(q);
                 }
             }
