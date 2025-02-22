@@ -6,7 +6,10 @@ package GUI.Comp.Dialog;
 
 import BUS.AnwserBUS;
 import BUS.QuestionBUS;
+import BUS.TopicBUS;
+import DTO.AnwserDTO;
 import DTO.QuestionDTO;
+import DTO.TopicDTO;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -15,6 +18,8 @@ import javax.swing.JFileChooser;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -26,6 +31,9 @@ import javax.swing.JOptionPane;
 public class DialogQuestion extends javax.swing.JDialog {
     private AnwserBUS anwserBUS = new AnwserBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
+    private List<TopicDTO> listTopic = new ArrayList<>();
+    private TopicBUS topicBUS = new TopicBUS();
+
     /**
      * Creates new form DialogQuestion
      */
@@ -33,8 +41,17 @@ public class DialogQuestion extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        renderTopic();
 
-
+    }
+    
+    
+    private void renderTopic() {
+       listTopic = topicBUS.getAllTopic();
+       cbxChuDe.removeAllItems();
+       for (TopicDTO topic : listTopic) {
+           cbxChuDe.addItem(topic.getTitle());
+       }
     }
 
     /**
@@ -117,7 +134,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground31 = new GUI.Comp.Swing.PanelBackground();
         cbxDoKho = new javax.swing.JComboBox<>();
         panelBackground32 = new GUI.Comp.Swing.PanelBackground();
-        jButton4 = new javax.swing.JButton();
+        btnLuu = new javax.swing.JButton();
         panelBackground33 = new GUI.Comp.Swing.PanelBackground();
         panelBackground34 = new GUI.Comp.Swing.PanelBackground();
 
@@ -637,7 +654,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground28.add(panelBackground31);
 
         cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dễ", "Trung bình", "Khó" }));
         cbxDoKho.setPreferredSize(new java.awt.Dimension(150, 30));
         panelBackground28.add(cbxDoKho);
 
@@ -646,16 +663,16 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground32.setPreferredSize(new java.awt.Dimension(75, 49));
         panelBackground32.setLayout(new java.awt.BorderLayout());
 
-        jButton4.setBackground(new java.awt.Color(225, 99, 73));
-        jButton4.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Lưu");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnLuu.setBackground(new java.awt.Color(225, 99, 73));
+        btnLuu.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        btnLuu.setForeground(new java.awt.Color(255, 255, 255));
+        btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnLuuActionPerformed(evt);
             }
         });
-        panelBackground32.add(jButton4, java.awt.BorderLayout.CENTER);
+        panelBackground32.add(btnLuu, java.awt.BorderLayout.CENTER);
 
         panelBackground33.setPreferredSize(new java.awt.Dimension(100, 5));
 
@@ -720,22 +737,60 @@ public class DialogQuestion extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
 //        System.out.println(rd1.isSelected() + " " + txtAws1.getText());
 //        System.out.println(rd2.isSelected() + " " + txtAws2.getText());
 //        System.out.println(rd3.isSelected() + " " + txtAws3.getText());
 //        System.out.println(rd4.isSelected() + " " + txtAws4.getText());
 //        System.out.println(rd5.isSelected() + " " + txtAws5.getText());
 //        
-//        QuestionDTO question = QuestionDTO.builder()
-//                .setContent(txtCauHoi.getText())
-//                .setPicture(txtImg.getText())
-//                .setLevel("")
-//                .setTopicId(12)
-//                .setStatus(true)
-//                .build();
-        System.out.println(cbxChuDe.getSelectedIndex() + " " + cbxDoKho.getSelectedItem().toString());
-    }//GEN-LAST:event_jButton4ActionPerformed
+        QuestionDTO question = QuestionDTO.builder()
+                .setContent(txtCauHoi.getText())
+                .setPicture(txtImg.getText())
+                .setLevel(cbxDoKho.getSelectedItem().toString())
+                .setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId())
+                .setStatus(true)
+                .build();
+        int idQuestion = questionBUS.createQuestion(question).getId();
+        System.out.println(idQuestion + "");
+       
+        AnwserDTO aws1 = AnwserDTO.builder()
+                .setContent(txtAws1.getText())
+                .setIsRight(rd1.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws1);
+        AnwserDTO aws2 = AnwserDTO.builder()
+                .setContent(txtAws2.getText())
+                .setIsRight(rd2.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws2);
+        AnwserDTO aws3 = AnwserDTO.builder()
+                .setContent(txtAws3.getText())
+                .setIsRight(rd3.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws3);
+        AnwserDTO aws4 = AnwserDTO.builder()
+                .setContent(txtAws4.getText())
+                .setIsRight(rd4.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws4);
+        AnwserDTO aws5 = AnwserDTO.builder()
+                .setContent(txtAws5.getText())
+                .setIsRight(rd5.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws5);
+        
+    }//GEN-LAST:event_btnLuuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -780,6 +835,7 @@ public class DialogQuestion extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLuu;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbxChuDe;
     private javax.swing.JComboBox<String> cbxDoKho;
@@ -790,7 +846,6 @@ public class DialogQuestion extends javax.swing.JDialog {
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;

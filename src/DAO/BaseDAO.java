@@ -11,7 +11,7 @@ import java.util.List;
  * @author quang
  */
 public interface BaseDAO<T, ID> {
-    boolean create(T request);
+    T create(T request);
     boolean update(ID id, T request);
     boolean delete(ID id);
     List<T> getAll(boolean active);

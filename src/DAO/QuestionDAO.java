@@ -19,20 +19,25 @@ import java.sql.ResultSet;
 public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
 
     @Override
-    public boolean create(QuestionDTO request) {
-        String query = "INSERT INTO(qContent, qPictures, qTopicID, qLevel, qStatus) VALUES ?, ?, ?, ?, ?";
-        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+    public QuestionDTO create(QuestionDTO request) {
+        String query = "INSERT INTO questions (qContent, qPictures, qTopicID, qLevel, qStatus) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstm.setString(1, request.getContent());
             pstm.setString(2, request.getPicture());
             pstm.setInt(3, request.getTopicId());
             pstm.setString(4, request.getLevel());
             pstm.setInt(5, 1);
-            return pstm.executeUpdate() != 0; 
+            pstm.executeUpdate();
+            ResultSet generatedKeys = pstm.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newId = generatedKeys.getInt(1);
+                request.setId(newId); // Gán lại ID cho object
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return request;
     }
 
     @Override

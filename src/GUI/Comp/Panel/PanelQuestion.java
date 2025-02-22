@@ -5,7 +5,9 @@
 package GUI.Comp.Panel;
 
 import BUS.QuestionBUS;
+import BUS.TopicBUS;
 import DTO.QuestionDTO;
+import DTO.TopicDTO;
 import GUI.Comp.Dialog.DialogQuestion;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PanelQuestion extends javax.swing.JPanel {
     private List<QuestionDTO> listQuestion = new ArrayList<>();
+    private List<TopicDTO> listTopic = new ArrayList<>();
     private QuestionBUS questionBUS = new QuestionBUS();
+    private TopicBUS topicBUS = new TopicBUS();
     private DefaultTableModel model;
     public PanelQuestion() {
         initComponents();
@@ -28,6 +32,7 @@ public class PanelQuestion extends javax.swing.JPanel {
         renderer.setHorizontalAlignment(JLabel.LEFT);
         tbCauHoi.setRowHeight(30);
         renderData();
+        renderTopic();
     }
 
     public void renderData() {
@@ -43,7 +48,13 @@ public class PanelQuestion extends javax.swing.JPanel {
     }
     
     
-    
+    private void renderTopic() {
+       listTopic = topicBUS.getAllTopic();
+       cbxChuDe.removeAllItems();
+       for (TopicDTO topic : listTopic) {
+           cbxChuDe.addItem(topic.getTitle());
+       }
+    }
     
     
     @SuppressWarnings("unchecked")
@@ -369,7 +380,7 @@ public class PanelQuestion extends javax.swing.JPanel {
         panelBackground11.add(panelBackground16);
 
         cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn độ khó", "Item 2", "Item 3", "Item 4" }));
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dễ", "Trung bình", "Khó" }));
         cbxDoKho.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxDoKho);
 

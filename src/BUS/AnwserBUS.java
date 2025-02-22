@@ -14,7 +14,7 @@ import DTO.AnwserDTO;
 public class AnwserBUS {
     private AnwserDAO anwserDAO = new AnwserDAO();
     
-    public boolean createAnwser(AnwserDTO answer) {
+    public AnwserDTO createAnwser(AnwserDTO answer) {
         return anwserDAO.create(answer);
     }
 }

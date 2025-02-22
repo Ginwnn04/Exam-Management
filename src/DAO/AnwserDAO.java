@@ -8,6 +8,8 @@ import DTO.AnwserDTO;
 import Helper.ConnectDB;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.sql.ResultSet;
+
 
 /**
  *
@@ -16,20 +18,25 @@ import java.util.List;
 public class AnwserDAO implements BaseDAO<AnwserDTO, Integer>{
 
     @Override
-    public boolean create(AnwserDTO request) {
-        String query = "INSERT INTO(qID, awContent, awPictures, isRight, awStatus) VALUES ?, ?, ?, ?, ?";
-        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+    public AnwserDTO create(AnwserDTO request) {
+        String query = "INSERT INTO answers (qID, awContent, awPictures, isRight, awStatus) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstm.setInt(1, request.getQuestionId());
             pstm.setString(2, request.getContent());
-            pstm.setString(3, request.getPicture());
+            pstm.setString(3, request.getPicture() != null ? request.getPicture() : "");
             pstm.setInt(4, request.isIsRight() ? 1 : 0);
             pstm.setInt(5, request.isStatus() ? 1 : 0);
-            return pstm.executeUpdate() != 0; 
+            pstm.executeUpdate();
+            ResultSet generatedKeys = pstm.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newId = generatedKeys.getInt(1);
+                request.setId(newId); // Gán lại ID cho object
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return request;
     }
 
     @Override

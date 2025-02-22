@@ -28,7 +28,7 @@ public class QuestionBUS {
         return listQuestion;
     }
     
-    public boolean createQuestion(QuestionDTO question) {
+    public QuestionDTO createQuestion(QuestionDTO question) {
         return questionDAO.create(question);
     }
     public boolean updateQuestion(int id, QuestionDTO question) {
