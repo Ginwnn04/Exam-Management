@@ -207,15 +207,15 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     }
 
     public void logout() {
-        navBar.btnDangXuat.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new Login().setVisible(true);
-                System.out.println("zzscsdsd");
-            }
+        // navBar.btnDangXuat.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         dispose();
+        //         new Login().setVisible(true);
+        //         System.out.println("zzscsdsd");
+        //     }
 
-        });
+        // });
     }
 
     @SuppressWarnings("unchecked")
