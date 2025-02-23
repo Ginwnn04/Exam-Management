@@ -57,7 +57,7 @@ public class PanelAction extends javax.swing.JPanel {
         btnDelete.setBackground(new Color(0,0,0,0));
         btnView.setBackground(new Color(0,0,0,0));
         
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/fix.png"))); // NOI18N
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/pen.png"))); // NOI18N
         btnUpdate.setToolTipText("");
         btnUpdate.setBorderPainted(false);
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -65,8 +65,8 @@ public class PanelAction extends javax.swing.JPanel {
                 btnUpdateActionPerformed(evt);
             }
         });
-
-        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+      
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/bin.png"))); // NOI18N
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);

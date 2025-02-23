@@ -3,6 +3,9 @@ package GUI.Utils;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+/**
+ * Help build gridbagconstraints better and cleaner
+ */
 public class GridBagConstraintsBuilder {
     private GridBagConstraints gbc;
 
@@ -54,10 +57,17 @@ public class GridBagConstraintsBuilder {
         return this;
     }
 
+    /**
+     * 
+     * @return Result of the builder
+     */
     public GridBagConstraints result(){
         return gbc;
     }
 
+    /**
+     * Reset the builder
+     */
     public void reset(){
         gbc = new GridBagConstraints();
     }
