@@ -65,7 +65,7 @@ public class PanelAction extends javax.swing.JPanel {
                 btnUpdateActionPerformed(evt);
             }
         });
-
+      
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/bin.png"))); // NOI18N
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
