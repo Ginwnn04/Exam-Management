@@ -4,6 +4,7 @@
  */
 package GUI.Custom;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
 /**
@@ -17,6 +18,9 @@ public class PanelAction extends javax.swing.JPanel {
      */
     public PanelAction() {
         initComponents();
+        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnView.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     public void initEvent(TableActionEvent event,int row) {

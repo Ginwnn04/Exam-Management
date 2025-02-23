@@ -7,6 +7,7 @@ package GUI.Main;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
+import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelCreateExam;
 import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Panel.PanelQuestion;
@@ -45,8 +46,8 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-        Helper.ConnectDB.getInstance().openConnect();
         showForm(new PanelQuestion());
+        // showForm(new PanelTestExam());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);

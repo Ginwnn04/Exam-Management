@@ -21,7 +21,7 @@ public class TopicBUS {
 //        return topicDAO.isExist(fullName);
 //    }
 //
-    public boolean addTopic(TopicDTO topic) {
+    public TopicDTO addTopic(TopicDTO topic) {
         return topicDAO.create(topic);
     }
 //
@@ -31,10 +31,6 @@ public class TopicBUS {
    
     public boolean deleteTopic(Integer id) {
         return topicDAO.delete(id);
-    }
-
-    public TopicDTO findByID(Integer id) {
-        return topicDAO.findByID(id);
     }
 }
     

@@ -78,8 +78,5 @@ public class QuestionDTO {
 
     public boolean isStatus() {
         return status;
-    }
-    
-   
-
+    }  
 }

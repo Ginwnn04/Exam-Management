@@ -125,6 +125,7 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
         
         return listTopic;
     }
+  
     // @Override
 public TopicDTO findByID(Integer id) {
     String query = "SELECT * FROM topics WHERE tpID = ?";
@@ -145,9 +146,5 @@ public TopicDTO findByID(Integer id) {
     }
     return null;
 }
-   
-
-   
-   
     
 }
