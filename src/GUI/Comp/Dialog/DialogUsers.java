@@ -37,7 +37,7 @@ public class DialogUsers extends javax.swing.JDialog {
         renderFormUpdate(id);
     }
 
-    private boolean create(UserDTO data) {
+    private UserDTO create(UserDTO data) {
         return BUS.addUser(data);
     }
 
@@ -68,7 +68,7 @@ public class DialogUsers extends javax.swing.JDialog {
         boolean rs;
         String action;
         action = !isUpdateDialog ? "Tạo" : "Cập nhật";
-        rs = !isUpdateDialog ? create(data) : update(data);
+        rs = !isUpdateDialog ? create(data) != null : update(data);
         if (rs) JOptionPane.showMessageDialog(this, action + " thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         else JOptionPane.showMessageDialog(this, action + " thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);
         this.dispose();

@@ -100,6 +100,7 @@ public class DialogExams extends javax.swing.JDialog {
         label4.setText("Thứ tự:");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestExamDTO[] {  }));
+        jComboBox1.addActionListener(e -> updateLabel());
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
 
@@ -218,10 +219,10 @@ public class DialogExams extends javax.swing.JDialog {
     }
 
     private ExamDTO gatherData() {
-        var a = (TestExamDTO) jComboBox1.getSelectedItem();
+        var testExam = (TestExamDTO) jComboBox1.getSelectedItem();
 
         return ExamDTO.builder()
-                      .setTestCode(a.getTestCode())
+                      .setTestCode(testExam.getTestCode())
                       .setExCode(jLabel1.getText())
                       .setExOrder((String)jComboBox2.getSelectedItem())
                       .setQuestions(questions)
@@ -230,7 +231,7 @@ public class DialogExams extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         ExamDTO exam = gatherData();
-        if (!BUS.addExam(exam)) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
+        if (BUS.addExam(exam) == null) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
         else JOptionPane.showMessageDialog(this, "Tạo đề thi thành công");
         this.dispose();
     }// GEN-LAST:event_jButton2ActionPerformed

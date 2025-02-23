@@ -107,7 +107,7 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
     }
 
     @Override
-    public boolean create(TestExamDTO request) {
+    public TestExamDTO create(TestExamDTO request) {
         String query = "INSERT INTO test (testCode, testTitle, tpID, num_easy, num_medium, num_diff, testLimit, testTime, testDate, testStatus) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -124,13 +124,16 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
             ps.setDate(9, request.getTestDate());
             ps.setBoolean(10, request.isTestStatus());
 
-            return ps.executeUpdate() > 0;
+            var result = ps.executeUpdate() > 0;
+
+            if (!result) return null;
+            else return request;
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     @Override

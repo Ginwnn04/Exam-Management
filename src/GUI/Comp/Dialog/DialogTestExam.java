@@ -408,7 +408,7 @@ public class DialogTestExam extends JDialog {
             model.addRow(new Object[] {
                 question.getId(),
                 question.getContent(),
-                question.getTopicId(),
+                selectedTopic.getTitle(),
                 question.getLevel()
             });
         });
@@ -439,11 +439,9 @@ public class DialogTestExam extends JDialog {
 
     private void onSave(ActionEvent e) {
         TestExamDTO data = gatherFormData();
-        boolean result;
-        String action;
 
-        action = !isUpdateDialog ? "Tạo" : "Cập nhật";
-        result = !isUpdateDialog ? create(data) : update(data);
+        String action = !isUpdateDialog ? "Tạo" : "Cập nhật";
+        var result = !isUpdateDialog ? create(data) != null : update(data);
 
         if (result) JOptionPane.showMessageDialog(this, action + " thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         else JOptionPane.showMessageDialog(this, action + " thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -451,7 +449,7 @@ public class DialogTestExam extends JDialog {
         this.dispose();
     }
 
-    private boolean create(TestExamDTO data) {
+    private TestExamDTO create(TestExamDTO data) {
         return BUS.create(data);
     }
 
