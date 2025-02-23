@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.HashSet;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 /**
@@ -77,7 +79,7 @@ public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
         }
         return false;
     }
-
+    
     @Override
     public List<QuestionDTO> getAll(boolean active) {
         List<QuestionDTO> listQuestion = new ArrayList<>();

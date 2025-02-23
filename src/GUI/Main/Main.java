@@ -4,10 +4,16 @@
  */
 package GUI.Main;
 
+import Helper.MyListener;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import GUI.Comp.Panel.PanelQuestion;
-
+import GUI.Comp.Panel.PanelCreateExam;
+import GUI.Comp.Dialog.DialogTestExam;
+import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Panel.PanelTestExam;
 import GUI.Comp.Panel.PanelUser;
+import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
@@ -64,17 +70,33 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             int index = (int) evt.getNewValue();
 //            String role = hashMap.keySet().iterator().next();
             
-            
+            switch (index) {
+                case 0:
+                    showForm(new PanelUser());
+                    break;
+                case 1:
+                    showForm(new PanelUser());
+                    break;
+                case 2:
+                    showForm(new PanelQuestion());
+                    break;
+                case 3:
+                    showForm(new PanelCreateExam());
+                    break;
+                
+                default:
+                    break;
+            }
             
 //            if (role.equals("admin")) {
 //                System.out.println(role + " " + 1);
-               switch (index) {
-                   case 0:
-                       showForm(new PanelQuestion());
-                       break;
-                   case 1:
+//               switch (index) {
+//                   case 0:
+//                       showForm(new PanelQuestion());
+//                       break;
+//                   case 1:
 //                       showForm(new PanelTestExam());
-                       break;
+//                       break;
 //                    case 2:
 //                        showForm(new QuanLiDatMon());
 //                        break;
@@ -107,7 +129,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //                        showForm(new QuanLi_Staff());
 //                        break;
 //                }
-           }
+//           }
 //            else if (role.equals("manager")) {
 //                System.out.println(role + " " + 2);
 //                switch (index) {
@@ -188,15 +210,15 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     }
 
     public void logout() {
-        navBar.btnDangXuat.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new Login().setVisible(true);
-                System.out.println("zzscsdsd");
-            }
+        // navBar.btnDangXuat.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         dispose();
+        //         new Login().setVisible(true);
+        //         System.out.println("zzscsdsd");
+        //     }
 
-        });
+        // });
     }
 
     @SuppressWarnings("unchecked")

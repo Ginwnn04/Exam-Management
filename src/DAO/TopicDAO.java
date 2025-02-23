@@ -25,9 +25,40 @@ import java.sql.Statement;
 public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
 
     @Override
-    public TopicDTO create(TopicDTO topicDTO) {
+    public boolean create(TopicDTO topicDTO) {
+        String checkQuery = "SELECT COUNT(*) FROM topics WHERE tpID = ?";
+        String query ="INSERT INTO topics ( tpTitle, tpParent,tpStatus) VALUE(?,?,?)";
+        try (Connection conn = Helper.ConnectDB.getInstance().getConnection();
+         PreparedStatement checkpstm = conn.prepareStatement(checkQuery)) {
+
+       
+        checkpstm.setString(1, topicDTO.getTitle());
+        ResultSet rs = checkpstm.executeQuery();
+        if (rs.next() && rs.getInt(1) > 0) {
+            System.out.println("Tiêu đề đã tồn tại! Không thể thêm.");
+            return false; 
+        }
+
         
-        return null;
+        try (PreparedStatement pstm = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstm.setString(1, topicDTO.getTitle());
+            pstm.setInt(2, topicDTO.getParent());
+            pstm.setInt(3, 1); 
+
+            int affectedRows = pstm.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = pstm.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    topicDTO.setId(generatedKeys.getInt(1)); 
+                }
+                return true;
+            }
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: handle exception
+        }
+        return false;
     }
 
     @Override
@@ -94,9 +125,26 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
         
         return listTopic;
     }
-
   
-   
-   
+    // @Override
+public TopicDTO findByID(Integer id) {
+    String query = "SELECT * FROM topics WHERE tpID = ?";
+    try (Connection conn = ConnectDB.getInstance().getConnection();
+         PreparedStatement pstm = conn.prepareStatement(query)) {
+
+        pstm.setInt(1, id);
+        ResultSet rs = pstm.executeQuery();
+        if (rs.next()) {
+            return TopicDTO.builder()
+                    .setId(rs.getInt("tpID"))  // Chú ý đúng tên cột
+                    .setTitle(rs.getString("tpTitle"))
+                    .setParent(rs.getInt("tpParent"))
+                    .build();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
     
 }

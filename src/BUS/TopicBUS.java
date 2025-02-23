@@ -32,6 +32,5 @@ public class TopicBUS {
     public boolean deleteTopic(Integer id) {
         return topicDAO.delete(id);
     }
-
 }
     

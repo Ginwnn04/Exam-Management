@@ -1,8 +1,14 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 package GUI.Comp.Panel;
-
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -10,161 +16,151 @@ import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Custom.TableActionCellEditor;
-import BUS.UserBus;
-import DTO.UserDTO;
-import GUI.Comp.Dialog.DialogUsers;
-import javax.swing.event.DocumentEvent;
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-
+import DTO.ExamDTO;
+import BUS.ExamBUS;
+import GUI.Comp.Dialog.DialogExams;
 /**
  *
- * @author nguye
+ * @author Minh Phuc
  */
-public class PanelUser extends javax.swing.JPanel {
-    private ArrayList<UserDTO> listUser = new ArrayList<>();
-    private ArrayList<UserDTO> listUserTemp;
-    private UserBus userBus = new UserBus();
-
-    public PanelUser() {
+public class PanelExams extends javax.swing.JPanel {
+    private ArrayList<ExamDTO> examsList = new ArrayList<>();
+    private ExamBUS examBUS = new ExamBUS();
+    private Set<String> madeSet = new HashSet<>();
+    /**
+     * Creates new form PanelExams
+     */
+    public PanelExams() {
         initComponents();
-        setupSearchEvent();
-        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbNguoidung.getTableHeader().getDefaultRenderer();
+        initTable();
+        render();
+        renderComboBoxMade();
+        addComboBoxListeners();
+        setupSearchFieldEvent();
+    }
+    
+    private void initTable() {
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbDeThi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         TableActionEvent event = new TableActionEvent() {
 
             @Override
             public void onDelete(int row) {
-                var a = tbNguoidung.getModel().getValueAt(row, 4);
-                int id = ((Number) a).intValue();
-                confirmAndDeleteUser(id);
+                var a = tbDeThi.getModel().getValueAt(row, 4);
                 
             }
 
             @Override
             public void onUpdate(int row) {
-                var a =tbNguoidung.getModel().getValueAt(row, 4);
-                int id = ((Number) a).intValue();
-                DialogUsers d = new DialogUsers(null,userBus,id);
-                d.setVisible(true);
-                updateTableItems();
-                d.dispose();
+                var a = tbDeThi.getModel().getValueAt(row, 4);
             }
 
             @Override
             public void onView(int row) {
-                var a = tbNguoidung.getModel().getValueAt(row, 4);
+                var a = tbDeThi.getModel().getValueAt(row, 4);
             }
             
         };
-        tbNguoidung.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
-        tbNguoidung.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
-        tbNguoidung.setRowHeight(30);
-        updateTableItems();
-    }
-
-    private void updateTableItems(){
-        listUser = userBus.getAllUsers();
-        listUserTemp = listUser;
-        render();
-    }
-
-    private void setTableItems(ArrayList<UserDTO> list){
-        this.listUser = list;
-        render();
+        tbDeThi.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
+        tbDeThi.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
+        tbDeThi.setRowHeight(30);
     }
 
     public void render(){
-        // listUser = userBus.getAllUsers();
-        System.out.println("size of listUser: "+listUser.size());
-        DefaultTableModel model = (DefaultTableModel) tbNguoidung.getModel();
+        DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
         model.setRowCount(0);
-        for (UserDTO user : listUser) {
+        examsList = examBUS.getAllExams();
+        for (ExamDTO exam : examsList) {
             model.addRow(new Object[]{
-                user.getFullName(),
-                user.getEmail(),
-                user.getIsAdmin() == 1 ? "Admin" : "Người dùng",
-                "Hành động",
-                user.getId()
+                exam.getTestCode(),
+                exam.getExOrder(),
+                exam.getExCode(),
+                "Hành động"
             });
         }
 
-
         model.fireTableDataChanged();
-        tbNguoidung.setModel(model);
+        tbDeThi.setModel(model);
     }
 
-    private void confirmAndDeleteUser(int id) {
-    int confirm = JOptionPane.showConfirmDialog(
-        null,
-        "Bạn có chắc chắn muốn xóa người dùng này?",
-        "Xác nhận xóa",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.WARNING_MESSAGE
-    );
+    private void renderComboBoxMade() {
+        madeSet.clear();
+        cbxMaDe.removeAllItems();
+        cbxMaDe.addItem("Chọn mã đề");
+        
+        for (ExamDTO exam : examsList) {
+            String testCode = exam.getTestCode();
 
-    if (confirm == JOptionPane.YES_OPTION) {
-        if (userBus.deleteUser(id)) {
-            updateTableItems();
-            JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Xóa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (!madeSet.contains(testCode)) cbxMaDe.addItem(exam.getTestCode());         
+            madeSet.add(testCode);
         }
     }
-}
 
+    private void addComboBoxListeners() {
+        cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
 
-    private void setupSearchEvent() {
-        Debounce onSearch = new Debounce(() -> filterUsers(), 500);
-    
-        txtNguoiDung.getDocument().addDocumentListener(new DocumentListener() {
+        cbxThuTu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
+    }
+
+    private void setupSearchFieldEvent() {
+        Debounce onSearch = new Debounce(() -> filterTable(), 500);
+
+        txtToHop.getDocument().addDocumentListener(new DocumentListener() {
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 onSearch.execute();
             }
-    
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 onSearch.execute();
             }
-    
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 onSearch.execute();
             }
         });
     }
-    
-    private void filterUsers() {
-        ArrayList<UserDTO> usersList = userBus.getAllUsers();
-        String query = txtNguoiDung.getText().trim().toLowerCase();
-        if (query.isEmpty()) {
-            updateTableItems(); // Hiển thị lại danh sách gốc nếu không nhập gì
-            return;
-        }
-        // Lọc danh sách 
-        ArrayList<UserDTO> filteredUsers = new ArrayList<>();
-        for (UserDTO user : usersList) {
-            filteredUsers.addAll(setUpFilter(user, query));
-        }
-        setTableItems(filteredUsers);
-    }
-    
-    private ArrayList<UserDTO> setUpFilter(UserDTO user,String query){
-        ArrayList<UserDTO> listUserTemp = new ArrayList<>();
-        boolean matchName = user.getFullName().toLowerCase().contains(query);
-        boolean matchEmail = user.getEmail().toLowerCase().contains(query);
-        boolean matchRole = user.getIsAdmin() == 1 ? "Admin".toLowerCase().contains(query) 
-        : "Người dùng".toLowerCase().contains(query);
-        if (matchName || matchEmail || matchRole) {
-            listUserTemp.add(user);
-        }
-        return listUserTemp;
-    }
 
+    private void filterTable() {
+        String selectedMaDe = (String) cbxMaDe.getSelectedItem();
+        String selectedThuTu = (String) cbxThuTu.getSelectedItem();
+        if(selectedMaDe == null || selectedThuTu == null) return;
+        String query = txtToHop.getText().toLowerCase();
 
+        DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
+        model.setRowCount(0);
+
+        for (ExamDTO exam : examsList) {
+            boolean matchesMaDe = selectedMaDe.equals("Chọn mã đề") || exam.getTestCode().equals(selectedMaDe);
+            boolean matchesThuTu = selectedThuTu.equals("Chọn thứ tự") || exam.getExOrder().equals(selectedThuTu);
+            boolean matchesSearch = exam.getTestCode().toLowerCase().contains(query) ||
+                                    exam.getExOrder().toLowerCase().contains(query) ||
+                                    exam.getExCode().toLowerCase().contains(query);
+
+            if (matchesMaDe && matchesThuTu && matchesSearch) {
+                model.addRow(new Object[]{
+                    exam.getTestCode(),
+                    exam.getExOrder(),
+                    exam.getExCode(),
+                    "Hành động"
+                });
+            }
+        }
+        model.fireTableDataChanged();
+        tbDeThi.setModel(model);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -175,7 +171,6 @@ public class PanelUser extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         panelBackground2 = new GUI.Comp.Swing.PanelBackground();
         panelBackground3 = new GUI.Comp.Swing.PanelBackground();
@@ -192,22 +187,24 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
         panelBackground17 = new GUI.Comp.Swing.PanelBackground();
         panelBackground18 = new GUI.Comp.Swing.PanelBackground();
+        jButton1 = new javax.swing.JButton();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
-        txtNguoiDung = new javax.swing.JTextField();
+        txtToHop = new javax.swing.JTextField();
         panelBackground13 = new GUI.Comp.Swing.PanelBackground();
         jLabel3 = new javax.swing.JLabel();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
-        cbxDiemso = new javax.swing.JComboBox<>();
+        cbxMaDe = new javax.swing.JComboBox<>();
         panelBackground15 = new GUI.Comp.Swing.PanelBackground();
+        jLabel4 = new javax.swing.JLabel();
         panelBackground16 = new GUI.Comp.Swing.PanelBackground();
-        jButton1 = new javax.swing.JButton();
+        cbxThuTu = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbNguoidung = new javax.swing.JTable();
+        tbDeThi = new javax.swing.JTable();
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1200, 765));
+        setPreferredSize(new java.awt.Dimension(1200, 765));
+        setLayout(new java.awt.BorderLayout());
 
         panelBackground1.setBackground(new java.awt.Color(247, 247, 247));
         panelBackground1.setLayout(new java.awt.BorderLayout());
@@ -223,7 +220,7 @@ public class PanelUser extends javax.swing.JPanel {
         );
         panelBackground2Layout.setVerticalGroup(
             panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
+            .addGap(0, 602, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground2, java.awt.BorderLayout.LINE_START);
@@ -235,7 +232,7 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground3.setLayout(panelBackground3Layout);
         panelBackground3Layout.setHorizontalGroup(
             panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+            .addGap(0, 1177, Short.MAX_VALUE)
         );
         panelBackground3Layout.setVerticalGroup(
             panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +252,7 @@ public class PanelUser extends javax.swing.JPanel {
         );
         panelBackground4Layout.setVerticalGroup(
             panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
+            .addGap(0, 602, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground4, java.awt.BorderLayout.LINE_END);
@@ -267,7 +264,7 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground5.setLayout(panelBackground5Layout);
         panelBackground5Layout.setHorizontalGroup(
             panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
+            .addGap(0, 1177, Short.MAX_VALUE)
         );
         panelBackground5Layout.setVerticalGroup(
             panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,7 +285,7 @@ public class PanelUser extends javax.swing.JPanel {
         );
         panelBackground6Layout.setVerticalGroup(
             panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 705, Short.MAX_VALUE)
+            .addGap(0, 582, Short.MAX_VALUE)
         );
 
         main.add(panelBackground6, java.awt.BorderLayout.LINE_START);
@@ -299,7 +296,7 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground7.setLayout(panelBackground7Layout);
         panelBackground7Layout.setHorizontalGroup(
             panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1160, Short.MAX_VALUE)
+            .addGap(0, 1137, Short.MAX_VALUE)
         );
         panelBackground7Layout.setVerticalGroup(
             panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +315,7 @@ public class PanelUser extends javax.swing.JPanel {
         );
         panelBackground8Layout.setVerticalGroup(
             panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 705, Short.MAX_VALUE)
+            .addGap(0, 582, Short.MAX_VALUE)
         );
 
         main.add(panelBackground8, java.awt.BorderLayout.LINE_END);
@@ -329,7 +326,7 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground9.setLayout(panelBackground9Layout);
         panelBackground9Layout.setHorizontalGroup(
             panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1160, Short.MAX_VALUE)
+            .addGap(0, 1137, Short.MAX_VALUE)
         );
         panelBackground9Layout.setVerticalGroup(
             panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,13 +377,24 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
 
+        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("+ Thêm đề thi");
+        jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
+
         pnTop.add(panelBackground10, java.awt.BorderLayout.LINE_END);
 
-        panelBackground11.setPreferredSize(new java.awt.Dimension(993, 30));
         panelBackground11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel2.setText("Người dùng");
+        jLabel2.setText("Tổ hợp");
         panelBackground11.add(jLabel2);
 
         panelBackground12.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -404,9 +412,9 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground12);
 
-        txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
-        panelBackground11.add(txtNguoiDung);
+        txtToHop.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtToHop.setPreferredSize(new java.awt.Dimension(300, 30));
+        panelBackground11.add(txtToHop);
 
         panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -424,7 +432,7 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground11.add(panelBackground13);
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel3.setText("Điểm số");
+        jLabel3.setText("Mã đề");
         panelBackground11.add(jLabel3);
 
         panelBackground14.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -442,11 +450,15 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground14);
 
-        cbxDiemso.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxDiemso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "Item 2", "Item 3", "Item 4" }));
-        cbxDiemso.setToolTipText("");
-        cbxDiemso.setPreferredSize(new java.awt.Dimension(200, 30));
-        panelBackground11.add(cbxDiemso);
+        cbxMaDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxMaDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn mã đề" }));
+        cbxMaDe.setPreferredSize(new java.awt.Dimension(200, 30));
+        cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxMaDeActionPerformed(evt);
+            }
+        });
+        panelBackground11.add(cbxMaDe);
 
         panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -463,6 +475,10 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground15);
 
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel4.setText("Thứ tự");
+        panelBackground11.add(jLabel4);
+
         panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
 
         javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
@@ -478,47 +494,27 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground16);
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
-        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setActionCommand("Thêm người dùng");
-        jButton1.setLabel("+ Thêm người dùng");
-        jButton1.setMaximumSize(new java.awt.Dimension(250, 28));
-        jButton1.setMinimumSize(new java.awt.Dimension(250, 28));
-        jButton1.setPreferredSize(new java.awt.Dimension(250, 30));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        panelBackground11.add(jButton1);
+        cbxThuTu.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxThuTu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn thứ tự", "A", "B", "C", "D" }));
+        cbxThuTu.setPreferredSize(new java.awt.Dimension(200, 30));
+        panelBackground11.add(cbxThuTu);
 
         pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
 
         pnCenter.add(pnTop, java.awt.BorderLayout.PAGE_START);
 
-        tbNguoidung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        tbNguoidung.setModel(new javax.swing.table.DefaultTableModel(
+        tbDeThi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        tbDeThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                
             },
             new String [] {
-                "Họ và Tên", "Email", "Phân Quyền", "Hành động","id"
+                "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tbNguoidung.removeColumn(tbNguoidung.getColumnModel().getColumn(4));
-        jScrollPane1.setViewportView(tbNguoidung);
+        ));
+        tbDeThi.setCellSelectionEnabled(true);
+        jScrollPane1.setViewportView(tbDeThi);
+        tbDeThi.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -526,56 +522,30 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground1.add(main, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1200, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 765, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
+        add(panelBackground1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbxMaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaDeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxMaDeActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        UserBus userBus = new UserBus();
-        DialogUsers d = new DialogUsers(null,userBus);
-        System.out.println("them nguoi dung");
+        DialogExams d = new DialogExams(null, true);
         d.setVisible(true);
-        updateTableItems();
-        
+        render();
+        renderComboBoxMade();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cbxDiemso;
+    private javax.swing.JComboBox<String> cbxMaDe;
+    private javax.swing.JComboBox<String> cbxThuTu;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private GUI.Comp.Swing.PanelBackground main;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
@@ -598,7 +568,7 @@ public class PanelUser extends javax.swing.JPanel {
     private GUI.Comp.Swing.PanelBackground panelBackground9;
     private GUI.Comp.Swing.PanelBackground pnCenter;
     private GUI.Comp.Swing.PanelBackground pnTop;
-    private javax.swing.JTable tbNguoidung;
-    private javax.swing.JTextField txtNguoiDung;
+    private javax.swing.JTable tbDeThi;
+    private javax.swing.JTextField txtToHop;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,4 +15,5 @@ public class ColorConfig {
     public static Color GREY_COLOR_BG = new Color(247, 247, 247);
     public static Color WHITE_COLOR_BG = new Color(255, 255, 255);
     public static Color PRIMARY_COLOR = new Color(255, 99, 73);
+    public static Color PRIMARY_PINK_COLOR =new Color(243,215,208);
 }
