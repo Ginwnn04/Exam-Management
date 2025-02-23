@@ -4,6 +4,8 @@
  */
 package GUI.Comp.Panel;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
@@ -24,6 +26,7 @@ import GUI.Comp.Dialog.DialogExams;
 public class PanelExams extends javax.swing.JPanel {
     private ArrayList<ExamDTO> examsList = new ArrayList<>();
     private ExamBUS examBUS = new ExamBUS();
+    private Set<String> madeSet = new HashSet<>();
     /**
      * Creates new form PanelExams
      */
@@ -31,11 +34,13 @@ public class PanelExams extends javax.swing.JPanel {
         initComponents();
         initTable();
         render();
+        renderComboBoxMade();
         addComboBoxListeners();
         setupSearchFieldEvent();
     }
     
     private void initTable() {
+
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbDeThi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         TableActionEvent event = new TableActionEvent() {
@@ -67,13 +72,28 @@ public class PanelExams extends javax.swing.JPanel {
         model.setRowCount(0);
         examsList = examBUS.getAllExams();
         for (ExamDTO exam : examsList) {
-            cbxMaDe.addItem(exam.getTestCode());
             model.addRow(new Object[]{
                 exam.getTestCode(),
                 exam.getExOrder(),
                 exam.getExCode(),
                 "Hành động"
             });
+        }
+
+        model.fireTableDataChanged();
+        tbDeThi.setModel(model);
+    }
+
+    private void renderComboBoxMade() {
+        madeSet.clear();
+        cbxMaDe.removeAllItems();
+        cbxMaDe.addItem("Chọn mã đề");
+        
+        for (ExamDTO exam : examsList) {
+            String testCode = exam.getTestCode();
+
+            if (!madeSet.contains(testCode)) cbxMaDe.addItem(exam.getTestCode());         
+            madeSet.add(testCode);
         }
     }
 
@@ -116,6 +136,7 @@ public class PanelExams extends javax.swing.JPanel {
     private void filterTable() {
         String selectedMaDe = (String) cbxMaDe.getSelectedItem();
         String selectedThuTu = (String) cbxThuTu.getSelectedItem();
+        if(selectedMaDe == null || selectedThuTu == null) return;
         String query = txtToHop.getText().toLowerCase();
 
         DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
@@ -137,6 +158,8 @@ public class PanelExams extends javax.swing.JPanel {
                 });
             }
         }
+        model.fireTableDataChanged();
+        tbDeThi.setModel(model);
     }
 
     /**
@@ -510,6 +533,7 @@ public class PanelExams extends javax.swing.JPanel {
         DialogExams d = new DialogExams(null, true);
         d.setVisible(true);
         render();
+        renderComboBoxMade();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
