@@ -39,7 +39,7 @@ public class ExamBUS {
         return ExamDAO.isExist(testCode);
     }
 
-    public boolean addExam(ExamDTO exam) {
+    public ExamDTO addExam(ExamDTO exam) {
         return ExamDAO.create(exam);
     }
 

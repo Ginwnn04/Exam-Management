@@ -60,26 +60,26 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
     }
 
     @Override
-    public boolean create(ExamDTO examDTO) {
+    public ExamDTO create(ExamDTO examDTO) {
         String query = "INSERT INTO exams(testCode, exOrder, exCode) VALUES(?, ?, ?)";
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             preparedStatement.setString(1, examDTO.getTestCode());
             preparedStatement.setString(2, examDTO.getExOrder());
             preparedStatement.setString(3, examDTO.getExCode());
-            if (preparedStatement.executeUpdate() <= 0) return false;
+            if (preparedStatement.executeUpdate() <= 0) return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
         
         var questions = examDTO.getQuestions();
 
         for (var question : questions) {
-            if (!createExamQuestion(question.getId(), examDTO)) return false;
+            if (!createExamQuestion(question.getId(), examDTO)) return null;
         }
 
-        return true;
+        return examDTO;
     }
 
     private boolean createExamQuestion(int questionId, ExamDTO examDTO) {

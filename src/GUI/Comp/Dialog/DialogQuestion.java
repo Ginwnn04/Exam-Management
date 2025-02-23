@@ -62,7 +62,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         listTxt.add(txtAws4);
         listTxt.add(txtAws5);
         
-
+        btnLuu.setEnabled(true);
     }
     
     public void setData(QuestionDTO question, boolean isUpdate) {

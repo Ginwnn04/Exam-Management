@@ -33,7 +33,7 @@ public class TestExamBUS {
         return DAO.findById(id);
     }
 
-    public boolean create(TestExamDTO request) {
+    public TestExamDTO create(TestExamDTO request) {
         return DAO.create(request);
     }
 

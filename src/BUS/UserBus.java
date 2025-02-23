@@ -18,7 +18,7 @@ public class UserBus {
         return userDao.isExist(fullName);
     }
 
-    public boolean addUser(UserDTO user) {
+    public UserDTO addUser(UserDTO user) {
         return userDao.create(user);
     }
 

@@ -27,7 +27,7 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         }
         return list_users;
     }
-    @Override
+
     public UserDTO findByID(Integer id){
         String query = "SELECT * FROM users WHERE userID = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
@@ -66,7 +66,7 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         return false;
     }
     @Override
-    public boolean create(UserDTO userDTO){
+    public UserDTO create(UserDTO userDTO){
         String query = "INSERT INTO users(  userName, userEmail, userPassword, userFullname, isAdmin) VALUES(  ?, ?, ?, ?, ?)";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
         .prepareStatement(query)){
@@ -77,11 +77,14 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
             preparedStatement.setString(4, userDTO.getFullName());
             preparedStatement.setInt(5, userDTO.getIsAdmin());
             // preparedStatement.setBoolean(6, userDTO.getIsDeleted());
-            return preparedStatement.executeUpdate() > 0;
+            var result = preparedStatement.executeUpdate() > 0;
+
+            if (!result) return null;
+            else return userDTO;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
     @Override
     public boolean update(Integer id , UserDTO userDTO){

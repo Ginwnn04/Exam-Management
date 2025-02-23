@@ -21,16 +21,16 @@ public class TopicBUS {
 //        return topicDAO.isExist(fullName);
 //    }
 //
-    public TopicDTO addTopic(TopicDTO topic) {
-        return topicDAO.create(topic);
-    }
-//
-   public boolean updateTopic(TopicDTO topic,Integer id) {
-       return topicDAO.update(id,topic);
-   }
+//     public TopicDTO addTopic(TopicDTO topic) {
+//         return topicDAO.create(topic);
+//     }
+
+//    public boolean updateTopic(TopicDTO topic,Integer id) {
+//        return topicDAO.update(id,topic);
+//    }
    
-    public boolean deleteTopic(Integer id) {
-        return topicDAO.delete(id);
-    }
+//     public boolean deleteTopic(Integer id) {
+//         return topicDAO.delete(id);
+//     }
 }
     
