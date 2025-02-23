@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -261,9 +262,8 @@ public class PanelTestExam extends JPanel {
     }
 
     private void assignCreateElement() {
-        DialogTestExam dialogTestExam = new DialogTestExam(BUS, null);
-
         createButton.addActionListener(e -> {
+            DialogTestExam dialogTestExam = new DialogTestExam(BUS, null);
             dialogTestExam.setVisible(true);
             updateTableItems();
         });
@@ -303,9 +303,7 @@ public class PanelTestExam extends JPanel {
 
             @Override
             public void onDelete(int row) {
-                int id = (int) table.getValueAt(row, 0);
-                BUS.delete(id);
-                updateTableItems();
+                onDeleteTestExam(row);
             }
 
             @Override
@@ -337,6 +335,17 @@ public class PanelTestExam extends JPanel {
         DialogTestExam dialogTestExam = new DialogTestExam(id, BUS, null);
 
         dialogTestExam.setVisible(true);
+        updateTableItems();
+    }
+
+    private void onDeleteTestExam(int row) {
+        int id = (int) table.getValueAt(row, 0);
+        String message = "Bạn có muốn xóa cấu trúc đề thi với Id " + id + " không";
+        
+        int response = JOptionPane.showConfirmDialog(this, message, "Xóa cấu trúc đề thi", JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.NO_OPTION) return;
+        
+        BUS.delete(id);
         updateTableItems();
     }
 

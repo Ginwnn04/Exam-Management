@@ -61,6 +61,7 @@ public class DialogTestExam extends JDialog {
         this.BUS = BUS;
         gbcBuilder = new GridBagConstraintsBuilder();
         initComponents();
+        // clear();
 
         setResizable(false);
         setLocationRelativeTo(null);
@@ -152,7 +153,7 @@ public class DialogTestExam extends JDialog {
         }
 
         examTitle.setText(model.getTitle());
-        testCode.setText(model.getTestCode());
+        testCodeLabel.setText(model.getTestCode());
         topicCb.setSelectedIndex(model.getTopicId());
         testLimit.setText(String.valueOf(model.getTestLimit()));
         time.setText(String.valueOf(model.getTestTime()));
@@ -190,20 +191,20 @@ public class DialogTestExam extends JDialog {
     }
 
     private void initExamTestCode() {
-        testCode = new JLabel();
-        testCode.setPreferredSize(new Dimension(200, 50));
+        testCodeLabel = new JLabel();
+        testCodeLabel.setPreferredSize(new Dimension(200, 50));
 
         var roundedBorder = new RoundBorder(Color.gray, 10);
         var titleBorder = new TitledBorder(roundedBorder, "Mã đề");
         titleBorder.setTitleJustification(TitledBorder.CENTER);
         titleBorder.setTitleFont(new Font("Roboto", Font.BOLD, 13));
-        testCode.setBorder(titleBorder);
+        testCodeLabel.setBorder(titleBorder);
 
         String code = RandomCode.generate(3);
-        testCode.setText(code);
-        testCode.setHorizontalAlignment(JLabel.CENTER);
+        testCodeLabel.setText(code);
+        testCodeLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        titleAndTestCodeContainer.add(testCode);
+        titleAndTestCodeContainer.add(testCodeLabel);
     }
 
     private void initInformationPanel() {
@@ -466,7 +467,7 @@ public class DialogTestExam extends JDialog {
         int topicId = selectedTopic.getId();
 
         return TestExamDTO.builder()
-                          .setTestCode(testCode.getText())
+                          .setTestCode(testCodeLabel.getText())
                           .setTitle(examTitle.getText())
                           .setTopicId(topicId)
                           .setEasyQuestionCount(Integer.parseInt(easyQuestionCount.getText()))
@@ -478,13 +479,24 @@ public class DialogTestExam extends JDialog {
                           .setTestStatus(true);
     }
 
+    private void clear() {
+        examTitle.setText("");
+        testCodeLabel.setText(RandomCode.generate(3));
+        topicCb.setSelectedIndex(0);
+        testLimit.setText("");
+        time.setText("");
+        easyQuestionCount.setText("");
+        mediumQuestionCount.setText("");
+        hardQuestionCount.setText("");
+    }
+
     private PanelBackground main;
     private PanelBackground content;
     private PanelBackground informationPanel;
     private PanelBackground titleAndTestCodeContainer;
     private JLabel idLabel;
     private JTextField examTitle;
-    private JLabel testCode;
+    private JLabel testCodeLabel;
     private JComboBox<TopicDTO> topicCb;
     private JTextField testLimit;
     private JTextField time;
