@@ -5,8 +5,9 @@
 package GUI.Main;
 
 
-import GUI.Comp.Panel.PanelCreateExam;
+import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Panel.PanelTestExam;
 import GUI.Comp.Panel.PanelUser;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -41,8 +42,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
         Helper.ConnectDB.getInstance().openConnect();
-//         showForm(new PanelQuestion());
-        showForm(new PanelUser());
+        showForm(new PanelQuestion());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
@@ -69,13 +69,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             
 //            if (role.equals("admin")) {
 //                System.out.println(role + " " + 1);
-//                switch (index) {
-//                    case 0:
-//                        showForm(new PanelDashbroad());
-//                        break;
-//                    case 1:
-//                        showForm(new QuanLiBan());
-//                        break;
+//               switch (index) {
+//                   case 0:
+//                       showForm(new PanelQuestion());
+//                       break;
+//                   case 1:
+//                       showForm(new PanelTestExam());
+//                       break;
 //                    case 2:
 //                        showForm(new QuanLiDatMon());
 //                        break;
@@ -108,7 +108,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //                        showForm(new QuanLi_Staff());
 //                        break;
 //                }
-//            }
+//           }
 //            else if (role.equals("manager")) {
 //                System.out.println(role + " " + 2);
 //                switch (index) {
