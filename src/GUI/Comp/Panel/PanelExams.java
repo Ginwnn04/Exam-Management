@@ -6,10 +6,13 @@ package GUI.Comp.Panel;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
+import GUI.Utils.Debounce;
 import GUI.Custom.TableActionCellEditor;
 import DTO.ExamDTO;
 import BUS.ExamBUS;
@@ -28,6 +31,8 @@ public class PanelExams extends javax.swing.JPanel {
         initComponents();
         initTable();
         render();
+        addComboBoxListeners();
+        setupSearchFieldEvent();
     }
     
     private void initTable() {
@@ -69,6 +74,68 @@ public class PanelExams extends javax.swing.JPanel {
                 exam.getExCode(),
                 "Hành động"
             });
+        }
+    }
+
+    private void addComboBoxListeners() {
+        cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
+
+        cbxThuTu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
+    }
+
+    private void setupSearchFieldEvent() {
+        Debounce onSearch = new Debounce(() -> filterTable(), 500);
+
+        txtToHop.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+        });
+    }
+
+    private void filterTable() {
+        String selectedMaDe = (String) cbxMaDe.getSelectedItem();
+        String selectedThuTu = (String) cbxThuTu.getSelectedItem();
+        String query = txtToHop.getText().toLowerCase();
+
+        DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
+        model.setRowCount(0);
+
+        for (ExamDTO exam : examsList) {
+            boolean matchesMaDe = selectedMaDe.equals("Chọn mã đề") || exam.getTestCode().equals(selectedMaDe);
+            boolean matchesThuTu = selectedThuTu.equals("Chọn thứ tự") || exam.getExOrder().equals(selectedThuTu);
+            boolean matchesSearch = exam.getTestCode().toLowerCase().contains(query) ||
+                                    exam.getExOrder().toLowerCase().contains(query) ||
+                                    exam.getExCode().toLowerCase().contains(query);
+
+            if (matchesMaDe && matchesThuTu && matchesSearch) {
+                model.addRow(new Object[]{
+                    exam.getTestCode(),
+                    exam.getExOrder(),
+                    exam.getExCode(),
+                    "Hành động"
+                });
+            }
         }
     }
 
