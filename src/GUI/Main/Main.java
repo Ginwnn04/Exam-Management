@@ -5,11 +5,16 @@
 package GUI.Main;
 
 
+import GUI.Comp.Panel.PanelChinhSua;
 import GUI.Comp.Panel.PanelCreateExam;
 import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Panel.PanelTopic;
 import GUI.Comp.Panel.PanelUser;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
+import DTO.UserDTO;
+
 import java.awt.Color;
 
 import java.awt.Font;
@@ -30,7 +35,8 @@ import style.ColorConfig;
  * @author quang
  */
 public class Main extends javax.swing.JFrame implements PropertyChangeListener {
-
+    private UserDTO user =new UserDTO();
+    private PanelChinhSua panelChinhSua;
     public Main() {
         initComponents();
         setLocationRelativeTo(null);
@@ -42,7 +48,9 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
         Helper.ConnectDB.getInstance().openConnect();
 //         showForm(new PanelQuestion());
-        showForm(new PanelUser());
+        // showForm(new PanelUser());
+        showForm(new PanelTopic());
+    //    showForm(new PanelChinhSua());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
@@ -51,9 +59,12 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //       
 //
 //        FlatMacLightLaf.setup();
+        // panelChinhSua = new PanelChinhSua();
+        // panelChinhSua.setUserData(user);
+        // showForm(panelChinhSua);
         logout();
         setVisible(true);
-
+      
         setResizable(false);
     }
 
