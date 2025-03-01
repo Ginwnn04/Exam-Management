@@ -3,7 +3,6 @@ package BUS;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import DAO.TestExamDAO;
 import DTO.QuestionDTO;
@@ -92,21 +91,5 @@ public class TestExamBUS {
         }
 
         return result;
-    }
-
-    public ArrayList<QuestionDTO> shuffleQuestions(ArrayList<QuestionDTO> questions) {
-        int n = questions.size();
-        Random rand = new Random();
-
-        while (n > 1) {
-            n--;
-            int index = rand.nextInt(n);
-
-            QuestionDTO temp = questions.get(n);
-            questions.set(n, questions.get(index));
-            questions.set(index, temp);
-        }
-
-        return questions;
     }
 }
