@@ -16,4 +16,5 @@ import java.util.Locale;
 public class Format {
    public static DecimalFormat formatNumber = new DecimalFormat("###,###,###", new DecimalFormatSymbols(Locale.US));
    public static SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:s");
+   public static SimpleDateFormat formatTime = new SimpleDateFormat("mm:ss");
 }
