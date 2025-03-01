@@ -121,4 +121,23 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         }
         return false;
     }
+
+    public ExamDTO findByExCode(String exCode) {
+        String query = "SELECT * FROM exams WHERE exCode = ?";
+        try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            preparedStatement.setString(1, exCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                ExamDTO exam = ExamDTO.builder()
+                    .setTestCode(resultSet.getString("testCode"))
+                    .setExOrder(resultSet.getString("exOrder"))
+                    .setExCode(resultSet.getString("exCode"))
+                    .build();
+                return exam;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

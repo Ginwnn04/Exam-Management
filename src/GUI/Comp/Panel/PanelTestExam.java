@@ -4,15 +4,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -47,8 +44,11 @@ import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
+import style.MyFont;
 
 public class PanelTestExam extends JPanel {
+    private final int WIDTH = 1160;
+
     private GridBagConstraintsBuilder gbcBuilder = new GridBagConstraintsBuilder();
     private TestExamBUS BUS;
     private TopicBUS topicBUS;
@@ -78,11 +78,11 @@ public class PanelTestExam extends JPanel {
         setPreferredSize(new Dimension(1200, 765));
 
         main = new PanelBackground();
-        main.setPreferredSize(new Dimension(1160, 725));
+        main.setPreferredSize(new Dimension(WIDTH, 725));
         main.setLayout(new FlowLayout());
 
         content = new PanelBackground();
-        content.setPreferredSize(new Dimension(1160, 725));
+        content.setPreferredSize(new Dimension(WIDTH, 725));
         content.setBorder(new EmptyBorder(10, 10, 10, 10));
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
@@ -101,7 +101,7 @@ public class PanelTestExam extends JPanel {
 
     private void initSearchAndFilter() {
         PanelBackground container = new PanelBackground();
-        container.setAbsoluteSize(1160, 50);
+        container.setAbsoluteSize(WIDTH, 50);
         container.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
         searchAndFilterContainer = new PanelBackground();
@@ -229,25 +229,20 @@ public class PanelTestExam extends JPanel {
     }
 
     private void applyTopicFilter(ActionEvent e) {
-        // testExams = BUS.getAll(true);
-
         TopicDTO topic = (TopicDTO) topicFilter.getSelectedItem();
         if (topic.getId() == -1) {
             setTableItems(testExamsTemp);
             return;
         }
 
-        var list = testExamsTemp.stream()
-                            .filter(item -> item.getTopicId() == topic.getId())
-                            .toList();
-
+        var list = BUS.filtByTopic(topic, testExamsTemp);
         setTableItems(new ArrayList<>(list));
     }
 
     private PanelBackground buildCreateButtonContainer() {
         createButton = new JButton("+ Thêm");
         createButton.setBackground(new Color(225, 99, 73));
-        createButton.setFont(new Font("Roboto", 1, 16));
+        createButton.setFont(MyFont.fontHeader);
         createButton.setForeground(new Color(255, 255, 255));
         createButton.setPreferredSize(new Dimension(116, 30));
 
@@ -272,7 +267,7 @@ public class PanelTestExam extends JPanel {
     private void initTable() {
         table = new JTable();
 
-        table.setFont(new Font("Roboto", 0, 16)); // NOI18N
+        table.setFont(MyFont.fontText); // NOI18N
         table.setModel(new DefaultTableModel(
             new Object [][]{},
             new String [] {
@@ -354,7 +349,6 @@ public class PanelTestExam extends JPanel {
         model.setRowCount(0);
 
         var topics = topicBUS.getAllTopic();
-
         if (testExams == null) return;
 
         testExams.forEach(testExam -> {

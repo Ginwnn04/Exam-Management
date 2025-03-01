@@ -50,4 +50,8 @@ public class ExamBUS {
     public boolean deleteExam(Integer id) {
         return ExamDAO.delete(id);
     }
+
+    public ExamDTO findByExCode(String exCode) {
+        return ExamDAO.findByExCode(exCode);
+    }
 }
