@@ -235,7 +235,7 @@ public class PanelTestExam extends JPanel {
             return;
         }
 
-        var list = BUS.filtByTopic(topic, testExamsTemp);
+        var list = BUS.filterByTopic(topic, testExamsTemp);
         setTableItems(new ArrayList<>(list));
     }
 

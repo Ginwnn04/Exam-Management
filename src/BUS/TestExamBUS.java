@@ -76,7 +76,7 @@ public class TestExamBUS {
         return isTopicSelectChild(topics.get(parentId), selectedTopicId);
     }
 
-    public ArrayList<TestExamDTO> filtByTopic(TopicDTO topic, ArrayList<TestExamDTO> list) {
+    public ArrayList<TestExamDTO> filterByTopic(TopicDTO topic, ArrayList<TestExamDTO> list) {
         ArrayList<TestExamDTO> result = new ArrayList<>();
         int selectedTopicId = topic.getId();
 

@@ -48,10 +48,6 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-
-        // ResultBUS bus = new ResultBUS();
-        // ResultDTO model = bus.findById(1);
-        // showForm(new PanelAfterExam(model));
         showForm(new PanelTestExam());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
