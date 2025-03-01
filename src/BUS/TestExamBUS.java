@@ -3,6 +3,7 @@ package BUS;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import DAO.TestExamDAO;
 import DTO.QuestionDTO;
@@ -13,6 +14,7 @@ public class TestExamBUS {
     private TestExamDAO DAO;
     private QuestionBUS questionBUS;
     private TopicBUS topicBUS;
+    private ExamBUS examBUS;
 
     private HashMap<Integer, TopicDTO> topics = new HashMap<>();
 
@@ -20,6 +22,7 @@ public class TestExamBUS {
         DAO = new TestExamDAO();
         questionBUS = new QuestionBUS();
         topicBUS = new TopicBUS();
+        examBUS = new ExamBUS();
     }
 
     private void updateMap(List<TopicDTO> list) {
@@ -50,8 +53,11 @@ public class TestExamBUS {
         return DAO.findByTestCode(testCode);
     }
 
-    public TestExamDTO create(TestExamDTO request) {
-        return DAO.create(request);
+    public TestExamDTO create(TestExamDTO request, int examCount) {
+        var result = DAO.create(request);
+        examBUS.generateExam(request, examCount);
+
+        return result;
     }
 
     public boolean update(Integer id, TestExamDTO request) {
@@ -86,5 +92,21 @@ public class TestExamBUS {
         }
 
         return result;
+    }
+
+    public ArrayList<QuestionDTO> shuffleQuestions(ArrayList<QuestionDTO> questions) {
+        int n = questions.size();
+        Random rand = new Random();
+
+        while (n > 1) {
+            n--;
+            int index = rand.nextInt(n);
+
+            QuestionDTO temp = questions.get(n);
+            questions.set(n, questions.get(index));
+            questions.set(index, temp);
+        }
+
+        return questions;
     }
 }
