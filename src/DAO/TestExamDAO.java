@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DTO.TestExamDTO;
@@ -14,6 +15,21 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
 
     }
 
+    private TestExamDTO fetchData(ResultSet rs) throws SQLException {
+        return TestExamDTO.builder()
+                          .setId(rs.getInt("testID"))
+                          .setTestCode(rs.getString("testCode"))
+                          .setTitle(rs.getString("testTitle"))
+                          .setTopicId(rs.getInt("tpID"))
+                          .setEasyQuestionCount(rs.getInt("num_easy"))
+                          .setMediumQuestionCount(rs.getInt("num_medium"))
+                          .setDiffQuestionCount(rs.getInt("num_diff"))
+                          .setTestLimit(rs.getShort("testLimit"))
+                          .setTestTime(rs.getInt("testTime"))
+                          .setTestDate(rs.getDate("testDate"))
+                          .setTestStatus(rs.getBoolean("testStatus"));
+    }
+
     public ArrayList<TestExamDTO> getAll(boolean isActive) {
         int isGet = isActive ? 1 : 0;
         String query = "SELECT * FROM test WHERE testStatus = " + isGet;
@@ -24,19 +40,7 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
-                TestExamDTO model = TestExamDTO.builder()
-                                               .setId(rs.getInt("testID"))
-                                               .setTestCode(rs.getString("testCode"))
-                                               .setTitle(rs.getString("testTitle"))
-                                               .setTopicId(rs.getInt("tpID"))
-                                               .setEasyQuestionCount(rs.getInt("num_easy"))
-                                               .setMediumQuestionCount(rs.getInt("num_medium"))
-                                               .setDiffQuestionCount(rs.getInt("num_diff"))
-                                               .setTestLimit(rs.getShort("testLimit"))
-                                               .setTestTime(rs.getInt("testTime"))
-                                               .setTestDate(rs.getDate("testDate"))
-                                               .setTestStatus(rs.getBoolean("testStatus"));
-
+                TestExamDTO model = fetchData(rs);
                 result.add(model);
             }
         }
@@ -48,27 +52,14 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
         return result;
     }
 
-    public TestExamDTO getByTestCode(String testCode) {
+    public TestExamDTO findByTestCode(String testCode) {
         String query = "SELECT * FROM test WHERE testCode = " + testCode;
 
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            
-            if (!rs.next()) return null;
-
-            return TestExamDTO.builder()
-                              .setId(rs.getInt("testID"))
-                              .setTestCode(rs.getString("testCode"))
-                              .setTitle(rs.getString("testTitle"))
-                              .setTopicId(rs.getInt("tpID"))
-                              .setEasyQuestionCount(rs.getInt("num_easy"))
-                              .setMediumQuestionCount(rs.getInt("num_medium"))
-                              .setDiffQuestionCount(rs.getInt("num_diff"))
-                              .setTestLimit(rs.getShort("testLimit"))
-                              .setTestTime(rs.getInt("testTime"))
-                              .setTestDate(rs.getDate("testDate"))
-                              .setTestStatus(rs.getBoolean("testStatus"));
+          
+            return rs.next() ? fetchData(rs) : null;
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -83,21 +74,8 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-
-            if (!rs.next()) return null;
-
-            return TestExamDTO.builder()
-                              .setId(rs.getInt("testID"))
-                              .setTestCode(rs.getString("testCode"))
-                              .setTitle(rs.getString("testTitle"))
-                              .setTopicId(rs.getInt("tpID"))
-                              .setEasyQuestionCount(rs.getInt("num_easy"))
-                              .setMediumQuestionCount(rs.getInt("num_medium"))
-                              .setDiffQuestionCount(rs.getInt("num_diff"))
-                              .setTestLimit(rs.getShort("testLimit"))
-                              .setTestTime(rs.getInt("testTime"))
-                              .setTestDate(rs.getDate("testDate"))
-                              .setTestStatus(rs.getBoolean("testStatus"));
+            
+            return rs.next() ? fetchData(rs) : null;
         }
         catch (Exception ex) {
             ex.printStackTrace();
