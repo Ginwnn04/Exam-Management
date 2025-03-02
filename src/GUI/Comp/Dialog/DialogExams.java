@@ -188,7 +188,7 @@ public class DialogExams extends javax.swing.JDialog {
         // Fetch questions based on the topic ID
         int topicId = selectedTestExam.getTopicId();
         List<QuestionDTO> temp = testExamBUS.getByTopicId(topicId);
-        questions = BUS.shuffleQuestions(new ArrayList<>(temp));
+        questions = BUS.shuffleQuestions(temp);
 
         // Clear the table
         DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();

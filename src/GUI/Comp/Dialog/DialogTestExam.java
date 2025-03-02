@@ -10,6 +10,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,8 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -50,6 +51,7 @@ public class DialogTestExam extends JDialog {
     private int selectedTestExamId;
     private TestExamBUS BUS;
     private TopicBUS topicBUS = new TopicBUS();
+    private List<TopicDTO> topics;
 
     /**
      * For create
@@ -152,9 +154,11 @@ public class DialogTestExam extends JDialog {
             return;
         }
 
+        var currentTopicOpt = topics.stream().filter(topic -> topic.getId() == model.getTopicId()).findFirst();
+
         examTitle.setText(model.getTitle());
         testCodeLabel.setText(model.getTestCode());
-        topicCb.setSelectedIndex(model.getTopicId());
+        topicCb.setSelectedItem(currentTopicOpt.get());
         testLimit.setText(String.valueOf(model.getTestLimit()));
         time.setText(String.valueOf(model.getTestTime()));
         easyQuestionCount.setText(String.valueOf(model.getEasyQuestionCount()));
@@ -256,9 +260,11 @@ public class DialogTestExam extends JDialog {
                                       .result());
 
         gbcBuilder.reset();
+
         easyQuestionCount = new JTextField();
         mediumQuestionCount = new JTextField();
         hardQuestionCount = new JTextField();
+        examCount = new JTextField();
 
         container.add(new JLabel("Số câu dễ: "), gbcBuilder.setPosition(0, 3).result());
         container.add(easyQuestionCount, gbcBuilder.setPosition(1, 3)
@@ -283,6 +289,16 @@ public class DialogTestExam extends JDialog {
                                                    .setFill(GridBagConstraints.HORIZONTAL)
                                                    .result());
 
+        gbcBuilder.reset();
+        
+        if (!isUpdateDialog) {
+            container.add(new JLabel("Số đề thi: "), gbcBuilder.setPosition(2, 4).result());
+            container.add(examCount, gbcBuilder.setPosition(3, 4)
+                                               .setWeights(1, 1)
+                                               .setFill(GridBagConstraints.HORIZONTAL)
+                                               .result());
+        }
+
         informationPanel.add(container, gbcBuilder.setPosition(0, 0)
                                                   .setWeights(1, 1)
                                                   .setInsets(0, 20, 0, 0)
@@ -294,7 +310,7 @@ public class DialogTestExam extends JDialog {
 
     private void setTopicItems() {
         topicCb.removeAllItems();
-        var topics = topicBUS.getAllTopic();
+        topics = topicBUS.getAllTopic();
 
         topics.forEach(topicCb::addItem);
 
@@ -420,7 +436,7 @@ public class DialogTestExam extends JDialog {
     private void initSaveButton() {
         content.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        saveButton = new JButton("Lưu");
+        saveButton = new JButton(!isUpdateDialog ? "Tạo đề thi" : "Lưu");
         saveButton.setFont(new Font("Roboto", Font.BOLD, 16));
         saveButton.setPreferredSize(new Dimension(100, 50));
         saveButton.setForeground(Color.white);
@@ -450,7 +466,7 @@ public class DialogTestExam extends JDialog {
     }
 
     private TestExamDTO create(TestExamDTO data) {
-        return BUS.create(data);
+        return BUS.create(data, Integer.parseInt(examCount.getText()));
     }
 
     private boolean update(TestExamDTO data) {
@@ -502,6 +518,7 @@ public class DialogTestExam extends JDialog {
     private JTextField easyQuestionCount;
     private JTextField mediumQuestionCount;
     private JTextField hardQuestionCount;
+    private JTextField examCount;
     private JTable questionTable;
     private JScrollPane questionTableScrollPane;
     private JButton saveButton;
