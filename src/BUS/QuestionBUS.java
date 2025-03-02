@@ -37,6 +37,10 @@ public class QuestionBUS {
     public boolean deleteQuestion(int id) {
         return questionDAO.delete(id) && answerDAO.deleteByQuestionId(id);
     }
+
+    public List<QuestionDTO> getQuestionByExamCode(String examCode) {
+        return questionDAO.getQuestionByExamCode(examCode);
+    }
     
     public List<QuestionDTO> getQuestionByTopicAndLevel(int id, String level) {
         List<Integer> listTopic = getListTopicParent(id);

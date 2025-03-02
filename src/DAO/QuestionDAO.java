@@ -135,6 +135,30 @@ public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
         return listQuestion;
     }
     
+    public List<QuestionDTO> getQuestionByExamCode(String examCode){
+        List<QuestionDTO> listQuestion = new ArrayList<>();
+        String query = "SELECT * FROM questions q WHERE q.qStatus = 1 AND q.qID IN (SELECT e.question_id FROM exam_question e WHERE e.exCode = ?)";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setString(1, examCode);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                QuestionDTO question = QuestionDTO.builder()
+                        .setId(rs.getInt("qId"))
+                        .setContent(rs.getString("qContent"))
+                        .setPicture(rs.getString("qPictures"))
+                        .setTopicId(rs.getInt("qTopicID"))
+                        .setLevel(rs.getString("qLevel"))
+                        .build();
+                listQuestion.add(question);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return listQuestion;
+    }
+    
     public List<QuestionDTO> getQuestionByTopic(List<Integer> listTopic) {
         List<QuestionDTO> listQuestion = new ArrayList<>();
         String placeholders = String.join(",", Collections.nCopies(listTopic.size(), "?"));

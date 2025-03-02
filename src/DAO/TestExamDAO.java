@@ -49,7 +49,7 @@ public class TestExamDAO implements BaseDAO<TestExamDTO, Integer> {
     }
 
     public TestExamDTO getByTestCode(String testCode) {
-        String query = "SELECT * FROM test WHERE testCode = " + testCode;
+        String query = "SELECT * FROM test WHERE testCode = '" + testCode+"'";
 
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);

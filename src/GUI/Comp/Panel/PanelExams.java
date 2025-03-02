@@ -58,7 +58,14 @@ public class PanelExams extends javax.swing.JPanel {
 
             @Override
             public void onView(int row) {
-                var a = tbDeThi.getModel().getValueAt(row, 4);
+                var a = tbDeThi.getModel().getValueAt(row, 0);
+                var b = tbDeThi.getModel().getValueAt(row, 2);
+                String TestCode = a.toString();
+                String examCode = b.toString();
+                System.out.println(TestCode);
+                DialogExams d = new DialogExams(null, true,examCode);
+                d.setVisible(true);
+
             }
             
         };

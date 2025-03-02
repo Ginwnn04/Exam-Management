@@ -12,6 +12,7 @@ import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTestExam;
 import GUI.Comp.Panel.PanelUser;
+import GUI.Custom.ButtonImportQuestion;
 import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -86,7 +87,9 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                 case 4:
                     showForm(new PanelExams());
                     break;
-                
+                case 5:
+                    showForm(new ButtonImportQuestion());
+                    break;
                 default:
                     break;
             }
