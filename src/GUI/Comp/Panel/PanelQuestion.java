@@ -8,6 +8,7 @@ import BUS.QuestionBUS;
 import BUS.TopicBUS;
 import DTO.QuestionDTO;
 import DTO.TopicDTO;
+import GUI.Comp.Dialog.DialogDoExam;
 import GUI.Comp.Dialog.DialogQuestion;
 import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
@@ -495,8 +496,10 @@ public class PanelQuestion extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DialogQuestion d = new DialogQuestion(null, true);
-        d.setVisible(true);
+//        DialogQuestion d = new DialogQuestion(null, true);
+//        d.setVisible(true);
+           DialogDoExam a = new DialogDoExam(null, true);
+           a.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
