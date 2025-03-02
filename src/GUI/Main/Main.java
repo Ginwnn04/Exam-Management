@@ -11,6 +11,7 @@ import BUS.ResultBUS;
 import DTO.ResultDTO;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Dialog.DialogTestExam;
+import GUI.Comp.Panel.PanelEnterExams;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTestExam;
 import GUI.Comp.Panel.PanelUser;
@@ -88,7 +89,9 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                 case 4:
                     showForm(new PanelExams());
                     break;
-                
+                case 5:
+                    showForm(new PanelEnterExams());
+                    break;
                 default:
                     break;
             }
