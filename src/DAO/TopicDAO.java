@@ -27,41 +27,7 @@ import java.sql.Statement;
 public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
     
    
-    // public boolean create(TopicDTO topicDTO) {
-    //     String checkQuery = "SELECT COUNT(*) FROM topics WHERE tpID = ?";
-    //     String query ="INSERT INTO topics ( tpTitle, tpParent,tpStatus) VALUE(?,?,?)";
-    //     try (Connection conn = Helper.ConnectDB.getInstance().getConnection();
-    //      PreparedStatement checkpstm = conn.prepareStatement(checkQuery)) {
-
-       
-    //     checkpstm.setString(1, topicDTO.getTitle());
-    //     ResultSet rs = checkpstm.executeQuery();
-    //     if (rs.next() && rs.getInt(1) > 0) {
-           
-    //         return false; 
-    //     }
-
-        
-    //     try (PreparedStatement pstm = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-    //         pstm.setString(1, topicDTO.getTitle());
-    //         pstm.setInt(2, topicDTO.getParent());
-    //         pstm.setInt(3, 1); 
-
-    //         int affectedRows = pstm.executeUpdate();
-    //         if (affectedRows > 0) {
-    //             ResultSet generatedKeys = pstm.getGeneratedKeys();
-    //             if (generatedKeys.next()) {
-    //                 topicDTO.setId(generatedKeys.getInt(1)); 
-    //             }
-    //             return true;
-    //         }
-    //     }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         // TODO: handle exception
-    //     }
-    //     return false;
-    // }
+   
     @Override
      public List<TopicDTO> getAll(boolean active) {
         List<TopicDTO> listtopic = new ArrayList<>();
@@ -127,10 +93,10 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
 
     @Override
     public boolean delete(Integer id) {
-        String query = "DELETE from topics WHERE userID = ?";
+        String query = "DELETE from topics WHERE tpID = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
         .prepareStatement(query)){
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,29 +105,6 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
     }
     
 
-    // @Override
-    // public List<TopicDTO> getAll(boolean active) {
-    //     List<TopicDTO> listTopic = new ArrayList<>();
-    //     String query = "SELECT * FROM topics WHERE tpStatus = ?";
-    //     try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
-    //         pstm.setInt(1, active ? 1 : 0);
-    //         ResultSet rs = pstm.executeQuery();
-    //         while (rs.next()) {
-    //             TopicDTO topic = TopicDTO.builder()
-    //                     .setId(rs.getInt("tpId"))
-    //                     .setTitle(rs.getString("tpTitle"))
-    //                       .setParent(rs.getInt("tpParent"))
-                       
-    //                     .build();
-    //             listTopic.add(topic);
-    //         }
-    //     }
-    //     catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-        
-    //     return listTopic;
-    // }
    
 public TopicDTO findByID(Integer id) {
     String query = "SELECT * FROM topics WHERE tpID = ?";
@@ -170,13 +113,13 @@ public TopicDTO findByID(Integer id) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                TopicDTO user = TopicDTO.builder()
+                TopicDTO topic = TopicDTO.builder()
                 .setId(resultSet.getInt("tpID"))
                 .setTitle(resultSet.getString("tpTitle"))
                 .setParent(resultSet.getString("tpParent"))
-                .setStatus(resultSet.getBoolean("tpStatus"))
+                
                 .build();
-                return user;
+                return topic;
             }
         } catch (Exception e) {
             e.printStackTrace();

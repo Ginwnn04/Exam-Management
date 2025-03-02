@@ -8,11 +8,13 @@ import javax.swing.event.DocumentListener;
 import DTO.TopicDTO;
 // import DTO.UserDTO;
 import BUS.TopicBUS;
+import DAO.TopicDAO;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.event.DocumentListener;
 import GUI.Comp.Dialog.DialogTopic;
+import GUI.Comp.Dialog.DialogTopic1;
 import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
@@ -64,23 +66,64 @@ public class PanelTopic extends javax.swing.JPanel {
     TableActionEvent event = new TableActionEvent() {
         @Override
         public void onDelete(int row){
-            var a =tbChude.getModel().getValueAt(row, 3);
-            
+            DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
+    var a = tbChude.getModel().getValueAt(row, 0); 
+
+    
+    int id = ((Number) a).intValue();
+    int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        boolean isDeleted = new TopicDAO().delete(id);
+        if (isDeleted) {
+            JOptionPane.showMessageDialog(null, "Xóa thành công!");
+            System.out.println("Gọi loadTableData() sau khi xóa...");
+            loadTableData(); 
+        } else {
+            JOptionPane.showMessageDialog(null, "Xóa thất bại! Vui lòng thử lại.");
+        }
+    } 
         
         }
         @Override
         public void onUpdate(int row){
-            var a =tbChude.getModel().getValueAt(row, 3);
-            DialogTopic d3 = new DialogTopic(null, true);
-            d3.setVisible(true);
-              int id = ((Number) a).intValue();
+            var a = tbChude.getModel().getValueAt(row, 0);
+           
+            if (a == null) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy dữ liệu để cập nhật!");
+                return;
+            }       
+            int id = ((Number) a).intValue(); 
+            TopicDTO topic = new TopicDAO().findByID(id);
+            if (topic == null) {
+                JOptionPane.showMessageDialog(null, "Chủ đề không tồn tại trong CSDL!");
+                return;
+            }
+        
+            DialogTopic1 dialog = new DialogTopic1(null, true);
+            dialog.setTopic(topic); 
+            dialog.setVisible(true);
+        
+            
+            if (dialog.isUpdated()) {  
+                loadTableData(); 
+            }
               
            
            
         }
         @Override
         public void onView(int row){
-            var a =tbChude.getModel().getValueAt(row, 3);
+            var a = tbChude.getModel().getValueAt(row, 0);    
+            int id = ((Number) a).intValue();         
+            TopicDTO topic = new TopicDAO().findByID(id);       
+            if (topic == null) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy chủ đề trong CSDL!");
+                return;
+            }
+            DialogTopic dialog = new DialogTopic(null, true);
+            dialog.setTopic(topic);
+            dialog.setVisible(true);
         }
 
         
@@ -107,6 +150,15 @@ public class PanelTopic extends javax.swing.JPanel {
         model.fireTableDataChanged();
         tbChude.setModel(model);
     }
+    private void loadTableData() {
+        DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
+        model.setRowCount(0); // Xóa toàn bộ dữ liệu cũ
+    
+        List<TopicDTO> topics = new TopicDAO().getAll(true); // Lấy danh sách chủ đề mới từ DB
+        for (TopicDTO topic : topics) {
+            model.addRow(new Object[]{topic.getId(), topic.getTitle(), topic.getParent()});
+        }
+    }
     private void filterTable(){
         String query =txtchude.getText().toLowerCase();
         String selectedchude = (String) cbxchude.getSelectedItem();
@@ -114,7 +166,7 @@ public class PanelTopic extends javax.swing.JPanel {
         model.setRowCount(0);
         for (TopicDTO topic : listTopic){
             boolean chude =selectedchude.equals("Chọn")|| topic.getParent().equals(selectedchude);       
-            boolean searchchude = 
+            boolean searchchude =   
                                   topic.getTitle().toLowerCase().contains(query) ||
                                   topic.getParent().toLowerCase().contains(query);
             
@@ -130,11 +182,7 @@ public class PanelTopic extends javax.swing.JPanel {
         model.fireTableDataChanged();
         tbChude.setModel(model);
     }
-    private void updateTableItems(){
-        listTopic = topicBUS.getAllTopic();
-        // listUserTemp = listTopic;
-        render();
-    }
+    
     private void  addComboBoxListeners(){
         cbxchude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt){

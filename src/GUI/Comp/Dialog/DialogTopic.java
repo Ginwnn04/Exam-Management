@@ -20,10 +20,12 @@
   */
  public class DialogTopic extends javax.swing.JDialog {
      
-     private List<String> topicList =new ArrayList<>();
-     private TopicBUS topicBUS = new TopicBUS();
-      private List<TopicDTO> topic = new ArrayList<>();
-      private TopicBUS BUS = new TopicBUS();
+    private List<String> topicList =new ArrayList<>();
+    private TopicBUS topicBUS = new TopicBUS();
+    private List<TopicDTO> topic = new ArrayList<>();
+    private TopicBUS BUS = new TopicBUS();
+
+   
      /**
       * Creates new form DialogUsers
       */
@@ -59,7 +61,7 @@
          setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
  
          jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-         jLabel1.setText("Thêm Chủ đề");
+         jLabel1.setText("Thông tin Chủ đề");
  
          jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
          jLabel2.setText("Tên Chủ đề");
@@ -85,7 +87,7 @@
          );
  
          jButton1.setBackground(new java.awt.Color(225, 99, 73));
-         jButton1.setText("Thêm");
+         jButton1.setText("Lưu");
          jButton1.addActionListener(new java.awt.event.ActionListener() {
              public void actionPerformed(java.awt.event.ActionEvent evt) {
                  jButton1ActionPerformed(evt);
@@ -193,7 +195,13 @@
          );
  
          pack();
-     }// </editor-fold>                        
+     }// </editor-fold>         
+     public void setTopic(TopicDTO topic) {
+        if (topic != null) {
+            jTextField1.setText(topic.getTitle());  
+            jTextField2.setText(topic.getParent()); 
+        }
+    }               
      
  private TopicDTO gatherData(){
          String title =jTextField1.getText().trim();
