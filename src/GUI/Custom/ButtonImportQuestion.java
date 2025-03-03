@@ -3,14 +3,14 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import BUS.QuestionBUS;
 import java.util.ArrayList;
-
+import java.awt.Dimension;
+import java.awt.Font;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import DTO.QuestionDTO;
 import java.io.File;
 import java.io.FileInputStream;
-import java.lang.reflect.Array;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -26,9 +26,14 @@ public class ButtonImportQuestion extends javax.swing.JPanel{
     }
     private void initComponents(){
         btnImport = new GUI.Comp.DateChooser.Button();
-        btnImport.setBackground(new Color(255, 255, 255));
-        btnImport.setForeground(new Color(0, 0, 0));
-        // btnImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Icon/import.png")));
+        btnImport.setBackground(new java.awt.Color(225, 99, 33)); // Màu đỏ đậm hơn
+        btnImport.setFont(new java.awt.Font("Roboto", Font.BOLD, 16));
+        btnImport.setForeground(Color.WHITE); // Chữ trắng
+        btnImport.setPreferredSize(new Dimension(150, 40)); // Kích thước chữ nhật rõ hơn
+        btnImport.setFocusPainted(false); // Bỏ viền khi focus
+        btnImport.setBorderPainted(false); // Không vẽ viền
+        btnImport.setOpaque(true); // Không trong suốt
+        btnImport.setContentAreaFilled(true); // Giữ màu nền
         btnImport.setText("Import");
         add(btnImport);
         initEvent();
