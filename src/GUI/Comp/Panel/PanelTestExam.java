@@ -45,7 +45,7 @@ import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
 import style.MyFont;
-
+import java.awt.Font;
 public class PanelTestExam extends JPanel {
     private final int WIDTH = 1160;
 
@@ -138,7 +138,6 @@ public class PanelTestExam extends JPanel {
     
         container.add(searchAndFilterContainer);
         container.add(buildCreateButtonContainer());
-
         content.add(container);
     }
 
@@ -308,7 +307,7 @@ public class PanelTestExam extends JPanel {
 
             @Override
             public void onView(int row) {
-                
+                showUpdateDialog(row);
             }
             
         };
@@ -332,6 +331,7 @@ public class PanelTestExam extends JPanel {
         dialogTestExam.setVisible(true);
         updateTableItems();
     }
+
 
     private void onDeleteTestExam(int row) {
         int id = (int) table.getValueAt(row, 0);
@@ -377,6 +377,7 @@ public class PanelTestExam extends JPanel {
     private PanelBackground content;
     private PanelBackground searchAndFilterContainer;
     private JButton createButton;
+    private JButton exportExamButton;
     private JTextField searchField;
     private JComboBox<String> searchByCb;
     private JComboBox<TopicDTO> topicFilter;

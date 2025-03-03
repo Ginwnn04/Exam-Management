@@ -7,6 +7,7 @@ package GUI.Comp.Dialog;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,9 +18,13 @@ import java.awt.Component;
 import net.miginfocom.demo.Test;
 import BUS.ExamBUS;
 import BUS.TestExamBUS;
+import BUS.QuestionBUS;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
 import DTO.TestExamDTO;
+import GUI.Custom.ExportDocx;
+import BUS.AnswerBUS;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -29,8 +34,9 @@ public class DialogExams extends javax.swing.JDialog {
     private ArrayList<String> testList = new ArrayList<>();
     private TestExamBUS testExamBUS = new TestExamBUS();
     private ExamBUS BUS = new ExamBUS();
+    private QuestionBUS questionBUS = new QuestionBUS();
     private ArrayList<QuestionDTO> questions = new ArrayList<>();
-
+    private AnswerBUS answerBUS = new AnswerBUS();
     /**
      * Creates new form DialogExams
      */
@@ -42,6 +48,47 @@ public class DialogExams extends javax.swing.JDialog {
         updateLabel();
     }
 
+    /*
+     * View form DialogExams
+     */
+    public DialogExams(java.awt.Frame parent , boolean modal , String TestCode){
+        super(parent, modal);
+        initComponents();
+        setLocationRelativeTo(null);
+        render();
+        updateButton(TestCode);
+        updateLabel();
+    }
+
+    private void updateButton(String examCode){
+        System.out.println("View button");
+        label1.setText("Xem chi tiết đề thi");
+        jButton2.setText("Xuất PDF");
+        // TestExamDTO testExam = testExamBUS.getTestByTestCode(TestCode);
+        // jComboBox1.setSelectedItem(testExam);
+        List<QuestionDTO> temp = questionBUS.getQuestionByExamCode(examCode);
+        for (ActionListener al : jButton2.getActionListeners()) {
+            jButton2.removeActionListener(al); // Xóa action cũ
+        }
+        // Thêm action mới
+        jButton2.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Xuất đề thi dưới dạng PDF "+examCode
+            );
+            for(var i : temp){
+                System.out.println(i.getContent());
+            }
+            exportExam(temp, examCode);
+        }); 
+    }
+
+     // Sự kiện xuất đề thi
+     private void exportExam(List<QuestionDTO> dataList, String examCode) {
+        // Gọi hàm xuất đề thi
+        ExportDocx.exportExamToDocx(examCode, dataList, answerBUS);
+        JOptionPane.showMessageDialog(this, "Xuất đề thi thành công!");
+        dispose(); // Đóng dialog
+    }
+    
     private void render() {
         var testExamBUS = new TestExamBUS();
         var testList = testExamBUS.getAll(true);
@@ -181,6 +228,7 @@ public class DialogExams extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateLabel() {
+        
         TestExamDTO selectedTestExam = (TestExamDTO) jComboBox1.getSelectedItem();
         String selectedOrder = (String) jComboBox2.getSelectedItem();
         jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);

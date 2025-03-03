@@ -35,6 +35,10 @@ public class TestExamBUS {
         return DAO.getAll(isActive);
     }
 
+    public TestExamDTO getTestByTestCode(String testCode) {
+        return DAO.getByTestCode(testCode);
+    }
+
     // delete later when questionBus have method getByTopicId
     public List<QuestionDTO> getByTopicId(int topicId) {
         var listQuestion = questionBUS.getAllQuestion(true);
