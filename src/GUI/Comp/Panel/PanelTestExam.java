@@ -45,7 +45,7 @@ import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
 import style.MyFont;
-
+import java.awt.Font;
 public class PanelTestExam extends JPanel {
     private final int WIDTH = 1160;
 
@@ -237,34 +237,6 @@ public class PanelTestExam extends JPanel {
         var list = BUS.filterByTopic(topic, testExamsTemp);
         setTableItems(new ArrayList<>(list));
     }
-
-    private PanelBackground buildCreateButtonContainer_temp() {
-        // Tạo nút Export
-        exportExamButton = new JButton("Xuất đề thi");
-        exportExamButton.setBackground(new Color(225, 99, 73));
-        exportExamButton.setFont(new Font("Roboto", 1, 16));
-        exportExamButton.setForeground(new Color(255, 255, 255));
-        exportExamButton.setPreferredSize(new Dimension(100, 30));
-    
-        // Tạo nút Create
-        createButton = new JButton("+ Thêm");
-        createButton.setBackground(new Color(225, 99, 73));
-        createButton.setFont(new Font("Roboto", 1, 16));
-        createButton.setForeground(new Color(255, 255, 255));
-        createButton.setPreferredSize(new Dimension(100, 30));
-    
-        assignCreateElement();
-    
-        // Panel chứa 2 nút
-        PanelBackground temp = new PanelBackground();
-        temp.setAbsoluteSize(200, 50); // Điều chỉnh kích thước đủ chứa 2 nút
-        temp.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0)); // Căn phải, có khoảng cách 10px
-        temp.add(exportExamButton);
-        temp.add(createButton);
-    
-        return temp;
-    }
-    
 
     private PanelBackground buildCreateButtonContainer() {
         createButton = new JButton("+ Thêm");

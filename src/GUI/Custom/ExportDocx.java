@@ -1,5 +1,6 @@
 package GUI.Custom;
 import org.apache.poi.xwpf.usermodel.*;
+// import org.w3c.dom.events.MouseEvent;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,7 +11,9 @@ import DTO.AnswerDTO;
 import DTO.QuestionDTO;
 import BUS.TestExamBUS;
 import DTO.TestExamDTO;
-
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 public class ExportDocx {
     public static void exportExamToDocx(String examCode, List<QuestionDTO> questions, AnswerBUS answerBUS) {
         //101A -> 101
@@ -92,7 +95,25 @@ public class ExportDocx {
             }
 
             document.write(out);
-            JOptionPane.showMessageDialog(null, "Xuất đề thi thành công!\nLưu tại: " + fileToSave.getAbsolutePath());
+           
+            // Hiển thị thông báo với đường link
+            JLabel messageLabel = new JLabel("<html>Xuất đề thi thành công!<br>Nhấn <a href=''>vào đây</a> để mở file.</html>");
+            messageLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            messageLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().open(fileToSave);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Lỗi khi mở file: " + ex.getMessage());
+                    }
+                }
+            }
+            );
+
+// Hiển thị JOptionPane với JLabel (có thể nhấn)
+JOptionPane.showMessageDialog(null, messageLabel, "Xuất file", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Lỗi khi xuất đề thi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
