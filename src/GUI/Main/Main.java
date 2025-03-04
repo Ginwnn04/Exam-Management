@@ -50,7 +50,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-        showForm(new PanelTestExam());
+        showForm(new PanelEnterExams());
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
@@ -75,23 +75,23 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             
             switch (index) {
                 case 0:
-                    showForm(new PanelUser());
+                    showForm(new PanelEnterExams());
                     break;
                 case 1:
-                    showForm(new PanelUser());
+                    showForm(new PanelQuestion());
                     break;
                 case 2:
-                    showForm(new PanelQuestion());
+                    showForm(new PanelExams());
                     break;
                 case 3:
                     showForm(new PanelTestExam());
                     break;
 
                 case 4:
-                    showForm(new PanelExams());
+//                    showForm(new PanelExams());
                     break;
                 case 5:
-                    showForm(new PanelEnterExams());
+                    showForm(new PanelUser());
                     break;
                 default:
                     break;

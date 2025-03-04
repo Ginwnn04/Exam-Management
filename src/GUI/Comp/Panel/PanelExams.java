@@ -384,7 +384,7 @@ public class PanelExams extends javax.swing.JPanel {
 
         panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("+ Thêm đề thi");
@@ -458,7 +458,7 @@ public class PanelExams extends javax.swing.JPanel {
         panelBackground11.add(panelBackground14);
 
         cbxMaDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxMaDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn mã đề" }));
+        cbxMaDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn mã đề", "101", "102", "103" }));
         cbxMaDe.setPreferredSize(new java.awt.Dimension(200, 30));
         cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -502,7 +502,7 @@ public class PanelExams extends javax.swing.JPanel {
         panelBackground11.add(panelBackground16);
 
         cbxThuTu.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxThuTu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn thứ tự", "A", "B", "C", "D" }));
+        cbxThuTu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn thứ tự", "A", "B", "C" }));
         cbxThuTu.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxThuTu);
 
@@ -513,7 +513,9 @@ public class PanelExams extends javax.swing.JPanel {
         tbDeThi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         tbDeThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                
+                {"101", "A", "101A", null},
+                {"102", "A", "102A", null},
+                {"102", "B", "102B", null}
             },
             new String [] {
                 "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"

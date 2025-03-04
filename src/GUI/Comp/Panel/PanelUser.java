@@ -200,7 +200,6 @@ public class PanelUser extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         cbxDiemso = new javax.swing.JComboBox<>();
-        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
         panelBackground16 = new GUI.Comp.Swing.PanelBackground();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -448,21 +447,6 @@ public class PanelUser extends javax.swing.JPanel {
         cbxDiemso.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxDiemso);
 
-        panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
-        panelBackground15.setLayout(panelBackground15Layout);
-        panelBackground15Layout.setHorizontalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground15Layout.setVerticalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground15);
-
         panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
 
         javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
@@ -478,7 +462,7 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground16);
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setActionCommand("Thêm người dùng");
@@ -506,18 +490,17 @@ public class PanelUser extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Họ và Tên", "Email", "Phân Quyền", "Hành động","id"
+                "Họ và Tên", "Email", "Phân Quyền", "Hành động"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tbNguoidung.removeColumn(tbNguoidung.getColumnModel().getColumn(4));
         jScrollPane1.setViewportView(tbNguoidung);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -584,7 +567,6 @@ public class PanelUser extends javax.swing.JPanel {
     private GUI.Comp.Swing.PanelBackground panelBackground12;
     private GUI.Comp.Swing.PanelBackground panelBackground13;
     private GUI.Comp.Swing.PanelBackground panelBackground14;
-    private GUI.Comp.Swing.PanelBackground panelBackground15;
     private GUI.Comp.Swing.PanelBackground panelBackground16;
     private GUI.Comp.Swing.PanelBackground panelBackground17;
     private GUI.Comp.Swing.PanelBackground panelBackground18;

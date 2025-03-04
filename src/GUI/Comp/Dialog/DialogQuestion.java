@@ -604,7 +604,7 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground7.add(pnTraLoi5);
 
-        jButton12.setBackground(new java.awt.Color(243, 215, 208));
+        jButton12.setBackground(new java.awt.Color(215, 220, 235));
         jButton12.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jButton12.setText("Thêm câu trả lời");
         jButton12.setPreferredSize(new java.awt.Dimension(50, 23));
@@ -715,7 +715,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground32.setPreferredSize(new java.awt.Dimension(75, 49));
         panelBackground32.setLayout(new java.awt.BorderLayout());
 
-        btnLuu.setBackground(new java.awt.Color(225, 99, 73));
+        btnLuu.setBackground(new java.awt.Color(53, 80, 154));
         btnLuu.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         btnLuu.setForeground(new java.awt.Color(255, 255, 255));
         btnLuu.setText("Lưu");

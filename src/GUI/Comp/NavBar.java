@@ -80,11 +80,10 @@ public class NavBar extends javax.swing.JPanel {
     public void initMenu() {
         addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         addMenuItem("Câu hỏi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Đặt món", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Món ăn", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Hóa đơn", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Giảm giá", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Thể loại", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        addMenuItem("Đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        addMenuItem("Cấu trúc đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        addMenuItem("Chủ đề", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        addMenuItem("Người dùng", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
 //        if (StaffDTO.staffLogging == null) {
 //            return;
 //        }
@@ -120,7 +119,7 @@ public class NavBar extends javax.swing.JPanel {
         btn.setIconTextGap(10);
         btn.setPreferredSize(new Dimension(205, 50));
         if (listButton.size() == 0) {
-            btn.setForeground(ColorConfig.PRIMARY_COLOR);
+            btn.setForeground(ColorConfig.BLUE);
         } 
         else {
             btn.setForeground(ColorConfig.GREY_COLOR_FONT);
@@ -174,7 +173,7 @@ public class NavBar extends javax.swing.JPanel {
             indexCurrent = indexSelected;
             JButton btnSelected = listButton.get(indexSelected);
             btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home_s.png")));
-            btnSelected.setForeground(ColorConfig.PRIMARY_COLOR);
+            btnSelected.setForeground(ColorConfig.BLUE);
 
         }
     }

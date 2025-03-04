@@ -272,7 +272,7 @@ public class PanelQuestion extends javax.swing.JPanel {
         panelBackground10.setPreferredSize(new java.awt.Dimension(150, 30));
         panelBackground10.setLayout(new java.awt.BorderLayout());
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("+ Thêm câu hỏi");
@@ -496,10 +496,9 @@ public class PanelQuestion extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        DialogQuestion d = new DialogQuestion(null, true);
-//        d.setVisible(true);
-           DialogDoExam a = new DialogDoExam(null, true);
-           a.setVisible(true);
+        DialogQuestion d = new DialogQuestion(null, true);
+        d.setVisible(true);
+
         
     }//GEN-LAST:event_jButton1ActionPerformed
 

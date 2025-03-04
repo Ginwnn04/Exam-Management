@@ -53,7 +53,7 @@ public class TestExamBUS {
     }
 
     public TestExamDTO findByTestCode(String testCode) {
-        return DAO.findByTestCode(testCode);
+        return DAO.getByTestCode(testCode);
     }
 
     public TestExamDTO create(TestExamDTO request, int examCount) {

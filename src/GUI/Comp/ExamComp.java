@@ -1,6 +1,7 @@
 package GUI.Comp;
 
 import DTO.TestExamDTO;
+import GUI.Comp.Dialog.DialogDoExam;
 
 /**
  * ExamComp class to display exam details.
@@ -51,9 +52,9 @@ public class ExamComp extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1200, 500));
 
-        jButton2.setBackground(new java.awt.Color(255, 153, 102));
+        jButton2.setBackground(new java.awt.Color(53, 80, 154));
+        jButton2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("VÀO THI");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -62,17 +63,23 @@ public class ExamComp extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel1.setText("TÊN ĐỀ:");
 
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel2.setText("NGÀY GIỜ THI:");
 
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel3.setText("THỜI GIAN THI:");
 
-        jLabel4.setText("");
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel4.setText("CUỐI KÌ CNTT");
 
-        jLabel5.setText("");
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel5.setText("27/02/2005 7PM");
 
-        jLabel6.setText("");
+        jLabel6.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel6.setText("90p");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -83,17 +90,17 @@ public class ExamComp extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel4))
-                .addGap(100, 150, 200)
+                .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5))
-                .addGap(100, 150, 200)
+                .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(jLabel3))
-                .addGap(100, 100, 200)
+                .addGap(70, 70, 70)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,7 +123,8 @@ public class ExamComp extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        DialogDoExam doExam = new DialogDoExam(null, true);
+        doExam.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

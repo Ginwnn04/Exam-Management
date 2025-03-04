@@ -842,7 +842,7 @@
                         <Component class="javax.swing.JButton" name="jButton12">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="d0" green="d7" red="f3" type="rgb"/>
+                              <Color blue="eb" green="dc" red="d7" type="rgb"/>
                             </Property>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Roboto" size="16" style="0"/>
@@ -1081,7 +1081,7 @@
                             <Component class="javax.swing.JButton" name="btnLuu">
                               <Properties>
                                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                  <Color blue="49" green="63" red="e1" type="rgb"/>
+                                  <Color blue="9a" green="50" red="35" type="rgb"/>
                                 </Property>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Roboto" size="16" style="1"/>
