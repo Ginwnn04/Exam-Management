@@ -44,8 +44,8 @@ import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
+import style.ColorConfig;
 import style.MyFont;
-import java.awt.Font;
 public class PanelTestExam extends JPanel {
     private final int WIDTH = 1160;
 
@@ -240,9 +240,9 @@ public class PanelTestExam extends JPanel {
 
     private PanelBackground buildCreateButtonContainer() {
         createButton = new JButton("+ Thêm");
-        createButton.setBackground(new Color(225, 99, 73));
+        createButton.setBackground(ColorConfig.BLUE);
         createButton.setFont(MyFont.fontHeader);
-        createButton.setForeground(new Color(255, 255, 255));
+        createButton.setForeground(Color.WHITE);
         createButton.setPreferredSize(new Dimension(116, 30));
 
         assignCreateElement();
