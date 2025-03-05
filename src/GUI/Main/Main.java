@@ -16,6 +16,7 @@ import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTestExam;
 import GUI.Comp.Panel.PanelUser;
 import GUI.Custom.ButtonImportQuestion;
+import GUI.Custom.ButtonImportUsers;
 import GUI.Comp.Panel.PanelAfterExam;
 import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
@@ -89,6 +90,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 
                 case 4:
 //                    showForm(new PanelExams());
+                    showForm(new ButtonImportUsers());
                     break;
                 case 5:
                     showForm(new PanelUser());
