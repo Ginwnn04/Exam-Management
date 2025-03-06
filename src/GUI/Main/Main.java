@@ -4,45 +4,29 @@
  */
 package GUI.Main;
 
-import Helper.MyListener;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import GUI.Comp.Panel.PanelChinhSua;
-import GUI.Comp.Panel.PanelCreateExam;
+
 import GUI.Comp.Panel.PanelQuestion;
-import GUI.Comp.Panel.PanelTopic;
-import BUS.ResultBUS;
-import DTO.ResultDTO;
-import GUI.Comp.Panel.PanelQuestion;
-import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Panel.PanelEnterExams;
 import GUI.Comp.Panel.PanelTestExam;
 
 import GUI.Comp.Panel.PanelUser;
-import GUI.Custom.ButtonImportQuestion;
-import GUI.Custom.ButtonImportUsers;
-import GUI.Comp.Panel.PanelAfterExam;
+
 import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 
 import DTO.UserDTO;
 
-import java.awt.Color;
-
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.Map;
-import javax.swing.JButton;
+
 import javax.swing.JPanel;
 
-import javax.swing.UIManager;
 import style.ColorConfig;
 import GUI.Comp.Panel.PanelAnalyze;
+import GUI.Comp.Panel.PanelTopic;
 
 /**
  *
@@ -99,11 +83,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                 case 3:
                     showForm(new PanelTestExam());
                     break;
-
                 case 4:
-                   showForm(new PanelAnalyze());
+                   showForm(new PanelTopic());
                     break;
                 case 5:
+                    // Analyze
+                break;
+                case 6:
                     showForm(new PanelUser());
                     break;
                 default:

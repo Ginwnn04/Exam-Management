@@ -9,10 +9,18 @@ package DTO;
 public class TopicDTO {
     private int id;
     private String title;
-    private String parent;
+    private int parent;
     private boolean status;
     public TopicDTO(){
     }
+
+    public TopicDTO(int id, String title, int parent) {
+        this.id = id;
+        this.title = title;
+        this.parent = parent;
+    }
+    
+    
     public TopicDTO setId(int id) {
             this.id = id;
             return this;

@@ -38,7 +38,7 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
                 TopicDTO topic = TopicDTO.builder()
                 .setId(resultSet.getInt("tpID"))
                 .setTitle(resultSet.getString("tpTitle"))
-                .setParent(resultSet.getString("tpParent"))
+                .setParent(resultSet.getInt("tpParent"))
                 // .setStatus(resultSet.getBoolean("tpStatus"))
                 
                 .build();
@@ -56,7 +56,7 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
         .prepareStatement(query)){
             // preparedStatement.setLong(1,userDTO.createId());
             preparedStatement.setString(1, topicDTO.getTitle());
-            preparedStatement.setString(2, topicDTO.getParent());
+            preparedStatement.setInt(2, topicDTO.getParent());
             preparedStatement.setInt(3, 1);
             
             var result = preparedStatement.executeUpdate() > 0;
@@ -77,7 +77,7 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
              PreparedStatement preparedStatement = conn.prepareStatement(query)) {
     
             preparedStatement.setString(1, topicDTO.getTitle());
-            preparedStatement.setString(2, topicDTO.getParent());
+            preparedStatement.setInt(2, topicDTO.getParent());
             preparedStatement.setInt(3, id);
            return preparedStatement.executeUpdate()> 0;
         } catch (SQLException e) {
@@ -111,8 +111,7 @@ public TopicDTO findByID(Integer id) {
                 TopicDTO topic = TopicDTO.builder()
                 .setId(resultSet.getInt("tpID"))
                 .setTitle(resultSet.getString("tpTitle"))
-                .setParent(resultSet.getString("tpParent"))
-                
+                .setParent(resultSet.getInt("tpParent"))
                 .build();
                 return topic;
             }

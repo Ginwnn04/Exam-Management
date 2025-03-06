@@ -165,10 +165,10 @@ public class PanelTopic extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
         model.setRowCount(0);
         for (TopicDTO topic : listTopic){
-            boolean chude =selectedchude.equals("Chọn")|| topic.getParent().equals(selectedchude);       
+            boolean chude = selectedchude.equals("Chọn")|| topic.getParent() == Integer.parseInt(selectedchude);       
             boolean searchchude =   
-                                  topic.getTitle().toLowerCase().contains(query) ||
-                                  topic.getParent().toLowerCase().contains(query);
+                                  topic.getTitle().toLowerCase().contains(query);
+//                                  topic.getParent().contains(query);
             
         if(chude && searchchude){
             model.addRow(new Object[]{
