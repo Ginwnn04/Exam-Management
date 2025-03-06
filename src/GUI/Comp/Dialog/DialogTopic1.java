@@ -226,7 +226,7 @@ public void setUpdated(boolean updated) {
         if (topic != null) {
             jTextField1.setText(String.valueOf(topic.getId()));
             jTextField2.setText(topic.getTitle());  
-            jTextField3.setText(topic.getParent()); 
+            jTextField3.setText(topic.getParent() + ""); 
 
             jTextField1.setEditable(false);
         }
@@ -235,8 +235,8 @@ public void setUpdated(boolean updated) {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int id = Integer.parseInt(jTextField1.getText()); // ID không đổi
         String title = jTextField2.getText();
-        String parent = jTextField3.getText();
-        if (title.trim().isEmpty() || parent.trim().isEmpty()) {
+        int parent = !jTextField3.getText().isEmpty() ? Integer.parseInt(jTextField3.getText()) : -1;
+        if (title.trim().isEmpty() || parent == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }

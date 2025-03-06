@@ -203,7 +203,7 @@
      public void setTopic(TopicDTO topic) {
         if (topic != null) {
             jTextField1.setText(topic.getTitle());  
-            jTextField2.setText(topic.getParent()); 
+            jTextField2.setText(topic.getParent() + ""); 
         }
     }               
      
@@ -216,7 +216,7 @@
          }
          return TopicDTO.builder()
                    .setTitle(title)
-                   .setParent(parent)
+                   .setParent(Integer.parseInt(parent))
                    .build();
  
      }
