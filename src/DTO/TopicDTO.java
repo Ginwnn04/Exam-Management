@@ -11,15 +11,8 @@ public class TopicDTO {
     private String title;
     private String parent;
     private boolean status;
-
     public TopicDTO(){
     }
-    public TopicDTO(int id,String title,String parent){
-       this.id=id;
-        this.title=title;
-        this.parent=parent;
-       
-        }
     public TopicDTO setId(int id) {
             this.id = id;
             return this;
@@ -30,7 +23,8 @@ public class TopicDTO {
         return this;
     }
 
-    public TopicDTO setParent(String parent) {
+
+    public TopicDTO setParent(int parent) {
         this.parent = parent;
         return this;
     }
@@ -57,14 +51,12 @@ public class TopicDTO {
         return title;
     }
 
-    public String getParent() {
+    public int getParent() {
         return parent;
     }
 
     public boolean isStatus() {
         return status;
     }
-    
-   
-
 }
+

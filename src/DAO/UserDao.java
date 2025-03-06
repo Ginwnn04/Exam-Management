@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 import DTO.UserDTO;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 public class UserDao implements BaseDAO<UserDTO, Integer> {
     @Override
     public ArrayList<UserDTO> getAll(boolean active) {
@@ -94,6 +91,7 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
     
         return null; 
     }
+
     @Override
     public UserDTO create(UserDTO userDTO){
         String query = "INSERT INTO users(  userName, userEmail, userPassword, userFullname, isAdmin) VALUES(  ?, ?, ?, ?, ?)";
@@ -145,6 +143,7 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         }
         return false;
     }
+
     public  boolean updatePassword(int id, String newPassword) {
         String query = "UPDATE users SET userPassword = ? WHERE userID = ?";
         try (PreparedStatement ps = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
@@ -156,7 +155,5 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         }
         return false;
     }
-    
-    
-    
+
 }

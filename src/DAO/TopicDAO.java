@@ -5,8 +5,6 @@
 package DAO;
 
 import DTO.TopicDTO;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import Helper.ConnectDB;
@@ -70,6 +68,7 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
         }
         return null;
     }
+
     @Override
     public boolean update(Integer id, TopicDTO topicDTO) {
         String query = "UPDATE topics SET tpTitle = ?, tpParent = ? WHERE tpID = ?";
@@ -80,15 +79,11 @@ public class TopicDAO implements BaseDAO<TopicDTO, Integer>{
             preparedStatement.setString(1, topicDTO.getTitle());
             preparedStatement.setString(2, topicDTO.getParent());
             preparedStatement.setInt(3, id);
-    
            return preparedStatement.executeUpdate()> 0;
-       
-    
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
-       
     }
 
     @Override
@@ -132,4 +127,4 @@ public TopicDTO findByID(Integer id) {
 
    
    
-    
+

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package BUS;
 
 import DAO.UserDao;
@@ -34,6 +31,7 @@ public class UserBus {
     public boolean deleteUser(Integer id) {
         return userDao.delete(id);
     }
+
     public UserDTO login(String name,String password){
         return userDao.loginUser(name, password);
     }
@@ -42,3 +40,5 @@ public class UserBus {
     //     return userDao.updatePassword(id, newPassword); 
     // }
 }
+
+

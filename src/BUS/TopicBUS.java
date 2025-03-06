@@ -2,8 +2,6 @@
 package BUS;
 import DAO.TopicDAO;
 import DTO.TopicDTO;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,16 @@ public class TopicBUS {
         return topicDAO.delete(id);
     }
    
-    
+
+//    public UserDTO findByID(Integer id) {
+//        return topicDAO.findByID(id);
+//    }
+//
+//    public boolean isExist(String fullName) {
+//        return topicDAO.isExist(fullName);
+//    }
+//
+
 }
     
 

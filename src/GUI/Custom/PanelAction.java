@@ -1,3 +1,4 @@
+
 package GUI.Custom;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -57,8 +58,8 @@ public class PanelAction extends javax.swing.JPanel {
         btnDelete.setBackground(new Color(0,0,0,0));
         btnView.setBackground(new Color(0,0,0,0));
         
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("GUI/Comp/Icon/pen.png"))); // NOI18N
-        
+
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/pen.png"))); // NOI18N
         btnUpdate.setToolTipText("");
         btnUpdate.setBorderPainted(false);
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -67,7 +68,8 @@ public class PanelAction extends javax.swing.JPanel {
             }
         });
       
-        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getClassLoader().getResource("GUI/Comp/Icon/bin.png"))); // NOI18N
+
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/bin.png"))); // NOI18N
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
@@ -126,4 +128,6 @@ public class PanelAction extends javax.swing.JPanel {
     private GUI.Comp.DateChooser.Button btnUpdate;
     private GUI.Comp.DateChooser.Button btnView;
     // End of variables declaration//GEN-END:variables
+
 }
+

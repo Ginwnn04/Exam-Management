@@ -37,6 +37,7 @@ import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogDangki;
 import BUS.UserBus;
 import DAO.UserDao;
+import Helper.ConnectDB;
 
 /**
  *
@@ -52,7 +53,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setMinimumSize(new Dimension(920, 500));
-        Helper.ConnectDB.getInstance().openConnect();
+       ConnectDB.getInstance().openConnect();
         
        
     }
@@ -291,7 +292,7 @@ public class Login extends javax.swing.JFrame {
         
         
         UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 16));
-        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
+//        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
         UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
         FlatMacLightLaf.setup();
         

@@ -5,6 +5,7 @@
 package GUI.Comp;
 
 import java.awt.Color;
+import style.ColorConfig;
 
 /**
  *
@@ -17,7 +18,8 @@ public class Sliding extends javax.swing.JPanel  {
      */
     public Sliding() {
         initComponents();
-        panelBackground1.setBackground(new Color(243,215,208));
+        panelBackground1.setBackground(new Color(215, 220, 235));
+        panelBackground5.setBackground(ColorConfig.BLUE);
         
     }
 

@@ -1,0 +1,583 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package GUI.Comp.Panel;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import GUI.Custom.TableActionCellRenderer;
+import GUI.Custom.TableActionEvent;
+import GUI.Utils.Debounce;
+import GUI.Custom.TableActionCellEditor;
+import DTO.ExamDTO;
+import BUS.ExamBUS;
+import GUI.Comp.Dialog.DialogExams;
+import GUI.Utils.Email;
+/**
+ *
+ * @author Minh Phuc
+ */
+public class PanelExams extends javax.swing.JPanel {
+    private ArrayList<ExamDTO> examsList = new ArrayList<>();
+    private ExamBUS examBUS = new ExamBUS();
+    private Set<String> madeSet = new HashSet<>();
+    /**
+     * Creates new form PanelExams
+     */
+    public PanelExams() {
+        initComponents();
+        initTable();
+        render();
+        renderComboBoxMade();
+        addComboBoxListeners();
+        setupSearchFieldEvent();
+    }
+    
+    private void initTable() {
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbDeThi.getTableHeader().getDefaultRenderer();
+        renderer.setHorizontalAlignment(JLabel.LEFT);
+        TableActionEvent event = new TableActionEvent() {
+
+            @Override
+            public void onDelete(int row) {
+                var a = tbDeThi.getModel().getValueAt(row, 4);
+                
+            }
+
+            @Override
+            public void onUpdate(int row) {
+                var a = tbDeThi.getModel().getValueAt(row, 4);
+            }
+
+            @Override
+            public void onView(int row) {
+                var a = tbDeThi.getModel().getValueAt(row, 0);
+                var b = tbDeThi.getModel().getValueAt(row, 2);
+                String TestCode = a.toString();
+                String examCode = b.toString();
+                System.out.println(TestCode);
+                DialogExams d = new DialogExams(null, true,examCode);
+                d.setVisible(true);
+
+            }
+            
+        };
+        tbDeThi.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
+        tbDeThi.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
+        tbDeThi.setRowHeight(30);
+    }
+
+    public void render(){
+        DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
+        model.setRowCount(0);
+        examsList = examBUS.getAllExams();
+        for (ExamDTO exam : examsList) {
+            model.addRow(new Object[]{
+                exam.getTestCode(),
+                exam.getExOrder(),
+                exam.getExCode(),
+                "Hành động"
+            });
+        }
+
+        model.fireTableDataChanged();
+        tbDeThi.setModel(model);
+    }
+
+    private void renderComboBoxMade() {
+        madeSet.clear();
+        cbxMaDe.removeAllItems();
+        cbxMaDe.addItem("Chọn mã đề");
+        
+        for (ExamDTO exam : examsList) {
+            String testCode = exam.getTestCode();
+
+            if (!madeSet.contains(testCode)) cbxMaDe.addItem(exam.getTestCode());         
+            madeSet.add(testCode);
+        }
+    }
+
+    private void addComboBoxListeners() {
+        cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
+
+        cbxThuTu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterTable();
+            }
+        });
+    }
+
+    private void setupSearchFieldEvent() {
+        Debounce onSearch = new Debounce(() -> filterTable(), 500);
+
+        txtToHop.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+        });
+    }
+
+    private void filterTable() {
+        String selectedMaDe = (String) cbxMaDe.getSelectedItem();
+        String selectedThuTu = (String) cbxThuTu.getSelectedItem();
+        if(selectedMaDe == null || selectedThuTu == null) return;
+        String query = txtToHop.getText().toLowerCase();
+
+        DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
+        model.setRowCount(0);
+
+        for (ExamDTO exam : examsList) {
+            boolean matchesMaDe = selectedMaDe.equals("Chọn mã đề") || exam.getTestCode().equals(selectedMaDe);
+            boolean matchesThuTu = selectedThuTu.equals("Chọn thứ tự") || exam.getExOrder().equals(selectedThuTu);
+            boolean matchesSearch = exam.getTestCode().toLowerCase().contains(query) ||
+                                    exam.getExOrder().toLowerCase().contains(query) ||
+                                    exam.getExCode().toLowerCase().contains(query);
+
+            if (matchesMaDe && matchesThuTu && matchesSearch) {
+                model.addRow(new Object[]{
+                    exam.getTestCode(),
+                    exam.getExOrder(),
+                    exam.getExCode(),
+                    "Hành động"
+                });
+            }
+        }
+        model.fireTableDataChanged();
+        tbDeThi.setModel(model);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        panelBackground1 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground2 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground3 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground4 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground5 = new GUI.Comp.Swing.PanelBackground();
+        main = new GUI.Comp.Swing.PanelBackground();
+        panelBackground6 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground7 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground8 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground9 = new GUI.Comp.Swing.PanelBackground();
+        pnCenter = new GUI.Comp.Swing.PanelBackground();
+        pnTop = new GUI.Comp.Swing.PanelBackground();
+        jLabel1 = new javax.swing.JLabel();
+        panelBackground10 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground17 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground18 = new GUI.Comp.Swing.PanelBackground();
+        jButton1 = new javax.swing.JButton();
+        panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        jLabel2 = new javax.swing.JLabel();
+        panelBackground12 = new GUI.Comp.Swing.PanelBackground();
+        txtToHop = new javax.swing.JTextField();
+        panelBackground13 = new GUI.Comp.Swing.PanelBackground();
+        jLabel3 = new javax.swing.JLabel();
+        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
+        cbxMaDe = new javax.swing.JComboBox<>();
+        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
+        jLabel4 = new javax.swing.JLabel();
+        panelBackground16 = new GUI.Comp.Swing.PanelBackground();
+        cbxThuTu = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbDeThi = new javax.swing.JTable();
+
+        setPreferredSize(new java.awt.Dimension(1200, 765));
+        setLayout(new java.awt.BorderLayout());
+
+        panelBackground1.setBackground(new java.awt.Color(247, 247, 247));
+        panelBackground1.setLayout(new java.awt.BorderLayout());
+
+        panelBackground2.setBackground(new java.awt.Color(247, 247, 247));
+        panelBackground2.setPreferredSize(new java.awt.Dimension(20, 725));
+
+        javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
+        panelBackground2.setLayout(panelBackground2Layout);
+        panelBackground2Layout.setHorizontalGroup(
+            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground2Layout.setVerticalGroup(
+            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 602, Short.MAX_VALUE)
+        );
+
+        panelBackground1.add(panelBackground2, java.awt.BorderLayout.LINE_START);
+
+        panelBackground3.setBackground(new java.awt.Color(247, 247, 247));
+        panelBackground3.setPreferredSize(new java.awt.Dimension(1200, 20));
+
+        javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
+        panelBackground3.setLayout(panelBackground3Layout);
+        panelBackground3Layout.setHorizontalGroup(
+            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1177, Short.MAX_VALUE)
+        );
+        panelBackground3Layout.setVerticalGroup(
+            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground1.add(panelBackground3, java.awt.BorderLayout.PAGE_START);
+
+        panelBackground4.setBackground(new java.awt.Color(247, 247, 247));
+        panelBackground4.setPreferredSize(new java.awt.Dimension(20, 725));
+
+        javax.swing.GroupLayout panelBackground4Layout = new javax.swing.GroupLayout(panelBackground4);
+        panelBackground4.setLayout(panelBackground4Layout);
+        panelBackground4Layout.setHorizontalGroup(
+            panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground4Layout.setVerticalGroup(
+            panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 602, Short.MAX_VALUE)
+        );
+
+        panelBackground1.add(panelBackground4, java.awt.BorderLayout.LINE_END);
+
+        panelBackground5.setBackground(new java.awt.Color(247, 247, 247));
+        panelBackground5.setPreferredSize(new java.awt.Dimension(1200, 20));
+
+        javax.swing.GroupLayout panelBackground5Layout = new javax.swing.GroupLayout(panelBackground5);
+        panelBackground5.setLayout(panelBackground5Layout);
+        panelBackground5Layout.setHorizontalGroup(
+            panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1177, Short.MAX_VALUE)
+        );
+        panelBackground5Layout.setVerticalGroup(
+            panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground1.add(panelBackground5, java.awt.BorderLayout.PAGE_END);
+
+        main.setLayout(new java.awt.BorderLayout());
+
+        panelBackground6.setPreferredSize(new java.awt.Dimension(10, 705));
+
+        javax.swing.GroupLayout panelBackground6Layout = new javax.swing.GroupLayout(panelBackground6);
+        panelBackground6.setLayout(panelBackground6Layout);
+        panelBackground6Layout.setHorizontalGroup(
+            panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        panelBackground6Layout.setVerticalGroup(
+            panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 582, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground6, java.awt.BorderLayout.LINE_START);
+
+        panelBackground7.setPreferredSize(new java.awt.Dimension(1160, 10));
+
+        javax.swing.GroupLayout panelBackground7Layout = new javax.swing.GroupLayout(panelBackground7);
+        panelBackground7.setLayout(panelBackground7Layout);
+        panelBackground7Layout.setHorizontalGroup(
+            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1137, Short.MAX_VALUE)
+        );
+        panelBackground7Layout.setVerticalGroup(
+            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground7, java.awt.BorderLayout.PAGE_START);
+
+        panelBackground8.setPreferredSize(new java.awt.Dimension(10, 705));
+
+        javax.swing.GroupLayout panelBackground8Layout = new javax.swing.GroupLayout(panelBackground8);
+        panelBackground8.setLayout(panelBackground8Layout);
+        panelBackground8Layout.setHorizontalGroup(
+            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        panelBackground8Layout.setVerticalGroup(
+            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 582, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground8, java.awt.BorderLayout.LINE_END);
+
+        panelBackground9.setPreferredSize(new java.awt.Dimension(1160, 10));
+
+        javax.swing.GroupLayout panelBackground9Layout = new javax.swing.GroupLayout(panelBackground9);
+        panelBackground9.setLayout(panelBackground9Layout);
+        panelBackground9Layout.setHorizontalGroup(
+            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1137, Short.MAX_VALUE)
+        );
+        panelBackground9Layout.setVerticalGroup(
+            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        main.add(panelBackground9, java.awt.BorderLayout.PAGE_END);
+
+        pnCenter.setLayout(new java.awt.BorderLayout());
+
+        pnTop.setPreferredSize(new java.awt.Dimension(1140, 80));
+        pnTop.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel1.setText("Tìm kiếm");
+        pnTop.add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        panelBackground10.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground10.setLayout(new java.awt.BorderLayout());
+
+        panelBackground17.setPreferredSize(new java.awt.Dimension(150, 22));
+
+        javax.swing.GroupLayout panelBackground17Layout = new javax.swing.GroupLayout(panelBackground17);
+        panelBackground17.setLayout(panelBackground17Layout);
+        panelBackground17Layout.setHorizontalGroup(
+            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        panelBackground17Layout.setVerticalGroup(
+            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+
+        panelBackground10.add(panelBackground17, java.awt.BorderLayout.PAGE_END);
+
+        panelBackground18.setPreferredSize(new java.awt.Dimension(150, 5));
+
+        javax.swing.GroupLayout panelBackground18Layout = new javax.swing.GroupLayout(panelBackground18);
+        panelBackground18.setLayout(panelBackground18Layout);
+        panelBackground18Layout.setHorizontalGroup(
+            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
+        );
+        panelBackground18Layout.setVerticalGroup(
+            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+
+        panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
+
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
+        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("+ Thêm đề thi");
+        jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
+
+        pnTop.add(panelBackground10, java.awt.BorderLayout.LINE_END);
+
+        panelBackground11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
+
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel2.setText("Tổ hợp");
+        panelBackground11.add(jLabel2);
+
+        panelBackground12.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground12Layout = new javax.swing.GroupLayout(panelBackground12);
+        panelBackground12.setLayout(panelBackground12Layout);
+        panelBackground12Layout.setHorizontalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground12Layout.setVerticalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground12);
+
+        txtToHop.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtToHop.setPreferredSize(new java.awt.Dimension(300, 30));
+        panelBackground11.add(txtToHop);
+
+        panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground13Layout = new javax.swing.GroupLayout(panelBackground13);
+        panelBackground13.setLayout(panelBackground13Layout);
+        panelBackground13Layout.setHorizontalGroup(
+            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground13Layout.setVerticalGroup(
+            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground13);
+
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel3.setText("Mã đề");
+        panelBackground11.add(jLabel3);
+
+        panelBackground14.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
+        panelBackground14.setLayout(panelBackground14Layout);
+        panelBackground14Layout.setHorizontalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground14Layout.setVerticalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground14);
+
+        cbxMaDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxMaDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn mã đề", "101", "102", "103" }));
+        cbxMaDe.setPreferredSize(new java.awt.Dimension(200, 30));
+        cbxMaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxMaDeActionPerformed(evt);
+            }
+        });
+        panelBackground11.add(cbxMaDe);
+
+        panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
+        panelBackground15.setLayout(panelBackground15Layout);
+        panelBackground15Layout.setHorizontalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground15Layout.setVerticalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground15);
+
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel4.setText("Thứ tự");
+        panelBackground11.add(jLabel4);
+
+        panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
+        panelBackground16.setLayout(panelBackground16Layout);
+        panelBackground16Layout.setHorizontalGroup(
+            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground16Layout.setVerticalGroup(
+            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground11.add(panelBackground16);
+
+        cbxThuTu.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxThuTu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn thứ tự", "A", "B", "C" }));
+        cbxThuTu.setPreferredSize(new java.awt.Dimension(200, 30));
+        panelBackground11.add(cbxThuTu);
+
+        pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
+
+        pnCenter.add(pnTop, java.awt.BorderLayout.PAGE_START);
+
+        tbDeThi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        tbDeThi.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"101", "A", "101A", null},
+                {"102", "A", "102A", null},
+                {"102", "B", "102B", null}
+            },
+            new String [] {
+                "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"
+            }
+        ));
+        tbDeThi.setCellSelectionEnabled(true);
+        jScrollPane1.setViewportView(tbDeThi);
+        tbDeThi.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        main.add(pnCenter, java.awt.BorderLayout.CENTER);
+
+        panelBackground1.add(main, java.awt.BorderLayout.CENTER);
+
+        add(panelBackground1, java.awt.BorderLayout.CENTER);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cbxMaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaDeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxMaDeActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DialogExams d = new DialogExams(null, true);
+        d.setVisible(true);
+        render();
+        renderComboBoxMade();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbxMaDe;
+    private javax.swing.JComboBox<String> cbxThuTu;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private GUI.Comp.Swing.PanelBackground main;
+    private GUI.Comp.Swing.PanelBackground panelBackground1;
+    private GUI.Comp.Swing.PanelBackground panelBackground10;
+    private GUI.Comp.Swing.PanelBackground panelBackground11;
+    private GUI.Comp.Swing.PanelBackground panelBackground12;
+    private GUI.Comp.Swing.PanelBackground panelBackground13;
+    private GUI.Comp.Swing.PanelBackground panelBackground14;
+    private GUI.Comp.Swing.PanelBackground panelBackground15;
+    private GUI.Comp.Swing.PanelBackground panelBackground16;
+    private GUI.Comp.Swing.PanelBackground panelBackground17;
+    private GUI.Comp.Swing.PanelBackground panelBackground18;
+    private GUI.Comp.Swing.PanelBackground panelBackground2;
+    private GUI.Comp.Swing.PanelBackground panelBackground3;
+    private GUI.Comp.Swing.PanelBackground panelBackground4;
+    private GUI.Comp.Swing.PanelBackground panelBackground5;
+    private GUI.Comp.Swing.PanelBackground panelBackground6;
+    private GUI.Comp.Swing.PanelBackground panelBackground7;
+    private GUI.Comp.Swing.PanelBackground panelBackground8;
+    private GUI.Comp.Swing.PanelBackground panelBackground9;
+    private GUI.Comp.Swing.PanelBackground pnCenter;
+    private GUI.Comp.Swing.PanelBackground pnTop;
+    private javax.swing.JTable tbDeThi;
+    private javax.swing.JTextField txtToHop;
+    // End of variables declaration//GEN-END:variables
+}

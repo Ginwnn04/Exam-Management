@@ -4,12 +4,25 @@
  */
 package GUI.Main;
 
+import Helper.MyListener;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import GUI.Comp.Panel.PanelChinhSua;
 import GUI.Comp.Panel.PanelCreateExam;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTopic;
+import BUS.ResultBUS;
+import DTO.ResultDTO;
+import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Dialog.DialogTestExam;
+import GUI.Comp.Panel.PanelEnterExams;
+import GUI.Comp.Panel.PanelTestExam;
+
 import GUI.Comp.Panel.PanelUser;
+import GUI.Custom.ButtonImportQuestion;
+import GUI.Custom.ButtonImportUsers;
+import GUI.Comp.Panel.PanelAfterExam;
+import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
@@ -49,16 +62,15 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-        Helper.ConnectDB.getInstance().openConnect();
-//         showForm(new PanelQuestion());
-        // showForm(new PanelUser());
-        // showForm(new PanelTopic());
-    //    showForm(new PanelChinhSua());
-
-        panelChinhSua = new PanelChinhSua();
-        
-        panelChinhSua.setUserData(user);
-        showForm(panelChinhSua);
+        showForm(new PanelEnterExams());
+//        FlatMacLightLaf.registerCustomDefaultsSource("style");
+//        UIManager.put("TextField.font", style.MyFont.fontText);
+//        UIManager.put("Label.font", style.MyFont.fontText);
+//        UIManager.put("Button.font", style.MyFont.fontText);
+//        UIManager.put("Table.font", style.MyFont.fontText);
+//       
+//
+//        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
       
@@ -73,17 +85,40 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             int index = (int) evt.getNewValue();
 //            String role = hashMap.keySet().iterator().next();
             
-            
+            switch (index) {
+                case 0:
+                    showForm(new PanelEnterExams());
+                    break;
+                case 1:
+                    showForm(new PanelQuestion());
+                    break;
+                case 2:
+                    showForm(new PanelExams());
+                    break;
+                case 3:
+                    showForm(new PanelTestExam());
+                    break;
+
+                case 4:
+//                    showForm(new PanelExams());
+                    showForm(new ButtonImportUsers());
+                    break;
+                case 5:
+                    showForm(new PanelUser());
+                    break;
+                default:
+                    break;
+            }
             
 //            if (role.equals("admin")) {
 //                System.out.println(role + " " + 1);
-//                switch (index) {
-//                    case 0:
-//                        showForm(new PanelDashbroad());
-//                        break;
-//                    case 1:
-//                        showForm(new QuanLiBan());
-//                        break;
+//               switch (index) {
+//                   case 0:
+//                       showForm(new PanelQuestion());
+//                       break;
+//                   case 1:
+//                       showForm(new PanelTestExam());
+//                       break;
 //                    case 2:
 //                        showForm(new QuanLiDatMon());
 //                        break;
@@ -116,7 +151,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //                        showForm(new QuanLi_Staff());
 //                        break;
 //                }
-//            }
+//           }
 //            else if (role.equals("manager")) {
 //                System.out.println(role + " " + 2);
 //                switch (index) {
@@ -197,15 +232,15 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     }
 
     public void logout() {
-        navBar.btnDangXuat.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new Login().setVisible(true);
-                System.out.println("zzscsdsd");
-            }
+        // navBar.btnDangXuat.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         dispose();
+        //         new Login().setVisible(true);
+        //         System.out.println("zzscsdsd");
+        //     }
 
-        });
+        // });
     }
 
     @SuppressWarnings("unchecked")

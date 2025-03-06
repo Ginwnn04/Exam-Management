@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package DTO;
 public class UserDTO {
-    private Integer id;
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -29,7 +26,8 @@ public class UserDTO {
         this.fullName = fullName;
         this.isAdmin = isAdmin;
     }
-    public Integer getId() {
+
+    public int getId() {
         return id;
     }
     
@@ -59,7 +57,8 @@ public class UserDTO {
         return isDeleted;
     }
 
-    public UserDTO setId(Integer id) {
+
+    public UserDTO setId(int id) {
         this.id = id;
         return this;
     }

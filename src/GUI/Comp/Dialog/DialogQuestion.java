@@ -4,12 +4,44 @@
  */
 package GUI.Comp.Dialog;
 
+import BUS.AnswerBUS;
+import BUS.QuestionBUS;
+import BUS.TopicBUS;
+import DAO.AnswerDAO;
+import DTO.AnswerDTO;
+import DTO.QuestionDTO;
+import DTO.TopicDTO;
+import java.awt.Image;
+import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
+import javax.swing.JFileChooser;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
 /**
  *
  * @author quang
  */
 public class DialogQuestion extends javax.swing.JDialog {
-
+    private AnswerBUS anwserBUS = new AnswerBUS();
+    private QuestionBUS questionBUS = new QuestionBUS();
+    private List<TopicDTO> listTopic = new ArrayList<>();
+    private TopicBUS topicBUS = new TopicBUS();
+    private boolean isUpdate = false;
+    
+    private List<JRadioButton> listRadio = new ArrayList<>();
+    private List<JTextField> listTxt = new ArrayList<>();
     /**
      * Creates new form DialogQuestion
      */
@@ -17,6 +49,60 @@ public class DialogQuestion extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        renderTopic();
+        listRadio.add(rd1);
+        listRadio.add(rd2);
+        listRadio.add(rd3);
+        listRadio.add(rd4);
+        listRadio.add(rd5);
+        
+        listTxt.add(txtAws1);
+        listTxt.add(txtAws2);
+        listTxt.add(txtAws3);
+        listTxt.add(txtAws4);
+        listTxt.add(txtAws5);
+        
+        btnLuu.setEnabled(true);
+    }
+    
+    public void setData(QuestionDTO question, boolean isUpdate) {
+        this.isUpdate = isUpdate;
+        if (isUpdate == true) {
+            btnLuu.setEnabled(true);
+        }
+        System.out.println("hihi");
+        txtCauHoi.setText(question.getContent());
+        Path destinationFile = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + question.getPicture());
+        Image img = new ImageIcon(destinationFile.toString()).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
+        txtImg.setIcon(new ImageIcon(img));
+        txtImg.setName(question.getPicture());
+        for (int i = 0; i < listTopic.size(); i++) {
+            if (listTopic.get(i).getId() == question.getTopicId()) {
+                cbxChuDe.setSelectedIndex(i);
+                break;
+            }
+        }
+        cbxDoKho.setSelectedIndex(question.getLevel().equals("Dễ") ? 0 : 
+                question.getLevel().equals("Trung bình") ? 1 : 2);
+        
+        List<AnswerDTO> listAnsw = anwserBUS.getAnswerByQuestionId(question.getId());
+        System.out.println(listAnsw.size());
+        for(int i = 0; i < listAnsw.size(); i++) {
+            listTxt.get(i).setText(listAnsw.get(i).getContent());
+            if (listAnsw.get(i).isIsRight()) {
+                listRadio.get(i).setSelected(true);
+            }
+        }
+        
+        
+    }
+    
+    private void renderTopic() {
+       listTopic = topicBUS.getAllTopic();
+       cbxChuDe.removeAllItems();
+       for (TopicDTO topic : listTopic) {
+           cbxChuDe.addItem(topic.getTitle());
+       }
     }
 
     /**
@@ -41,40 +127,50 @@ public class DialogQuestion extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         panelBackground6 = new GUI.Comp.Swing.PanelBackground();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtCauHoi = new javax.swing.JTextArea();
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        btnThemAnh = new javax.swing.JButton();
+        txtImg = new javax.swing.JLabel();
         pnAnwser = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
         panelBackground7 = new GUI.Comp.Swing.PanelBackground();
-        panelBackground8 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jTextField1 = new javax.swing.JTextField();
+        pnTraLoi1 = new GUI.Comp.Swing.PanelBackground();
+        rd1 = new javax.swing.JRadioButton();
+        txtAws1 = new javax.swing.JTextField();
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
         jButton2 = new javax.swing.JButton();
         panelBackground9 = new GUI.Comp.Swing.PanelBackground();
         jButton1 = new javax.swing.JButton();
-        panelBackground16 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jTextField3 = new javax.swing.JTextField();
+        pnTraLoi2 = new GUI.Comp.Swing.PanelBackground();
+        rd2 = new javax.swing.JRadioButton();
+        txtAws2 = new javax.swing.JTextField();
         panelBackground17 = new GUI.Comp.Swing.PanelBackground();
         jButton5 = new javax.swing.JButton();
         panelBackground18 = new GUI.Comp.Swing.PanelBackground();
         jButton6 = new javax.swing.JButton();
-        panelBackground19 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jTextField4 = new javax.swing.JTextField();
-        panelBackground20 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi3 = new GUI.Comp.Swing.PanelBackground();
+        rd3 = new javax.swing.JRadioButton();
+        txtAws3 = new javax.swing.JTextField();
+        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
+        jButton3 = new javax.swing.JButton();
+        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
         jButton7 = new javax.swing.JButton();
-        panelBackground21 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi4 = new GUI.Comp.Swing.PanelBackground();
+        rd4 = new javax.swing.JRadioButton();
+        txtAws4 = new javax.swing.JTextField();
+        panelBackground19 = new GUI.Comp.Swing.PanelBackground();
         jButton8 = new javax.swing.JButton();
-        panelBackground22 = new GUI.Comp.Swing.PanelBackground();
-        jRadioButton5 = new javax.swing.JRadioButton();
-        jTextField5 = new javax.swing.JTextField();
-        panelBackground23 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground20 = new GUI.Comp.Swing.PanelBackground();
         jButton9 = new javax.swing.JButton();
-        panelBackground24 = new GUI.Comp.Swing.PanelBackground();
+        pnTraLoi5 = new GUI.Comp.Swing.PanelBackground();
+        rd5 = new javax.swing.JRadioButton();
+        txtAws5 = new javax.swing.JTextField();
+        panelBackground21 = new GUI.Comp.Swing.PanelBackground();
         jButton10 = new javax.swing.JButton();
+        panelBackground22 = new GUI.Comp.Swing.PanelBackground();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         pnBottom = new GUI.Comp.Swing.PanelBackground();
         line = new GUI.Comp.Swing.PanelBackground();
         panelBackground13 = new GUI.Comp.Swing.PanelBackground();
@@ -83,13 +179,13 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground28 = new GUI.Comp.Swing.PanelBackground();
         jLabel6 = new javax.swing.JLabel();
         panelBackground29 = new GUI.Comp.Swing.PanelBackground();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbxChuDe = new javax.swing.JComboBox<>();
         panelBackground30 = new GUI.Comp.Swing.PanelBackground();
         jLabel7 = new javax.swing.JLabel();
         panelBackground31 = new GUI.Comp.Swing.PanelBackground();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        cbxDoKho = new javax.swing.JComboBox<>();
         panelBackground32 = new GUI.Comp.Swing.PanelBackground();
-        jButton4 = new javax.swing.JButton();
+        btnLuu = new javax.swing.JButton();
         panelBackground33 = new GUI.Comp.Swing.PanelBackground();
         panelBackground34 = new GUI.Comp.Swing.PanelBackground();
 
@@ -123,7 +219,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground3Layout.setVerticalGroup(
             panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground3, java.awt.BorderLayout.LINE_START);
@@ -138,7 +234,7 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         panelBackground4Layout.setVerticalGroup(
             panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 650, Short.MAX_VALUE)
+            .addGap(0, 668, Short.MAX_VALUE)
         );
 
         panelBackground1.add(panelBackground4, java.awt.BorderLayout.LINE_END);
@@ -173,11 +269,11 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 96));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtCauHoi.setColumns(20);
+        txtCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtCauHoi.setLineWrap(true);
+        txtCauHoi.setRows(5);
+        jScrollPane1.setViewportView(txtCauHoi);
 
         panelBackground6.add(jScrollPane1);
 
@@ -187,28 +283,34 @@ public class DialogQuestion extends javax.swing.JDialog {
         panelBackground10.setLayout(panelBackground10Layout);
         panelBackground10Layout.setHorizontalGroup(
             panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+            .addGap(0, 19, Short.MAX_VALUE)
         );
         panelBackground10Layout.setVerticalGroup(
             panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 241, Short.MAX_VALUE)
+            .addGap(0, 250, Short.MAX_VALUE)
         );
 
         panelBackground6.add(panelBackground10);
 
-        panelBackground11.setBackground(new java.awt.Color(255, 153, 0));
         panelBackground11.setPreferredSize(new java.awt.Dimension(350, 241));
+        panelBackground11.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout panelBackground11Layout = new javax.swing.GroupLayout(panelBackground11);
-        panelBackground11.setLayout(panelBackground11Layout);
-        panelBackground11Layout.setHorizontalGroup(
-            panelBackground11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
-        );
-        panelBackground11Layout.setVerticalGroup(
-            panelBackground11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 241, Short.MAX_VALUE)
-        );
+        btnThemAnh.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        btnThemAnh.setText("Thêm hình ảnh");
+        btnThemAnh.setPreferredSize(new java.awt.Dimension(137, 35));
+        btnThemAnh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemAnhActionPerformed(evt);
+            }
+        });
+        panelBackground11.add(btnThemAnh, java.awt.BorderLayout.PAGE_END);
+
+        txtImg.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        txtImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/minus-sign-inside-a-black-circle (1).png"))); // NOI18N
+        txtImg.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtImg.setName(""); // NOI18N
+        panelBackground11.add(txtImg, java.awt.BorderLayout.CENTER);
 
         panelBackground6.add(panelBackground11);
 
@@ -222,20 +324,19 @@ public class DialogQuestion extends javax.swing.JDialog {
         jLabel2.setText("Câu trả lời");
         pnAnwser.add(jLabel2, java.awt.BorderLayout.PAGE_START);
 
-        panelBackground7.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
+        panelBackground7.setLayout(new java.awt.GridLayout(6, 1, 0, 5));
 
-        panelBackground8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton1.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground8.add(jRadioButton1);
+        buttonGroup1.add(rd1);
+        rd1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd1.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi1.add(rd1);
 
-        jTextField1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField1.setText("jTextField1");
-        jTextField1.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField1.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground8.add(jTextField1);
+        txtAws1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws1.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws1.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi1.add(txtAws1);
 
         panelBackground12.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -250,12 +351,12 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground8.add(panelBackground12);
+        pnTraLoi1.add(panelBackground12);
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton2.setBorder(null);
         jButton2.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground8.add(jButton2);
+        pnTraLoi1.add(jButton2);
 
         panelBackground9.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -270,27 +371,26 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground8.add(panelBackground9);
+        pnTraLoi1.add(panelBackground9);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         jButton1.setBorder(null);
         jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground8.add(jButton1);
+        pnTraLoi1.add(jButton1);
 
-        panelBackground7.add(panelBackground8);
+        panelBackground7.add(pnTraLoi1);
 
-        panelBackground16.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton3.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground16.add(jRadioButton3);
+        buttonGroup1.add(rd2);
+        rd2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd2.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi2.add(rd2);
 
-        jTextField3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField3.setText("jTextField1");
-        jTextField3.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField3.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground16.add(jTextField3);
+        txtAws2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws2.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws2.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi2.add(txtAws2);
 
         panelBackground17.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -305,12 +405,12 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground16.add(panelBackground17);
+        pnTraLoi2.add(panelBackground17);
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton5.setBorder(null);
         jButton5.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground16.add(jButton5);
+        pnTraLoi2.add(jButton5);
 
         panelBackground18.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -325,27 +425,107 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground16.add(panelBackground18);
+        pnTraLoi2.add(panelBackground18);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
         jButton6.setBorder(null);
         jButton6.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground16.add(jButton6);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        pnTraLoi2.add(jButton6);
 
-        panelBackground7.add(panelBackground16);
+        panelBackground7.add(pnTraLoi2);
 
-        panelBackground19.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnTraLoi3.setEnabled(false);
+        pnTraLoi3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton4.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground19.add(jRadioButton4);
+        buttonGroup1.add(rd3);
+        rd3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd3.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi3.add(rd3);
 
-        jTextField4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField4.setText("jTextField1");
-        jTextField4.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField4.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground19.add(jTextField4);
+        txtAws3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws3.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws3.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi3.add(txtAws3);
+
+        panelBackground14.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
+        panelBackground14.setLayout(panelBackground14Layout);
+        panelBackground14Layout.setHorizontalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground14Layout.setVerticalGroup(
+            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi3.add(panelBackground14);
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
+        jButton3.setBorder(null);
+        jButton3.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi3.add(jButton3);
+
+        panelBackground15.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
+        panelBackground15.setLayout(panelBackground15Layout);
+        panelBackground15Layout.setHorizontalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground15Layout.setVerticalGroup(
+            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi3.add(panelBackground15);
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton7.setBorder(null);
+        jButton7.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi3.add(jButton7);
+
+        panelBackground7.add(pnTraLoi3);
+
+        pnTraLoi4.setEnabled(false);
+        pnTraLoi4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        buttonGroup1.add(rd4);
+        rd4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd4.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi4.add(rd4);
+
+        txtAws4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws4.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws4.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi4.add(txtAws4);
+
+        panelBackground19.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground19Layout = new javax.swing.GroupLayout(panelBackground19);
+        panelBackground19.setLayout(panelBackground19Layout);
+        panelBackground19Layout.setHorizontalGroup(
+            panelBackground19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground19Layout.setVerticalGroup(
+            panelBackground19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi4.add(panelBackground19);
+
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
+        jButton8.setBorder(null);
+        jButton8.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi4.add(jButton8);
 
         panelBackground20.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -360,12 +540,27 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground19.add(panelBackground20);
+        pnTraLoi4.add(panelBackground20);
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
-        jButton7.setBorder(null);
-        jButton7.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground19.add(jButton7);
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton9.setBorder(null);
+        jButton9.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi4.add(jButton9);
+
+        panelBackground7.add(pnTraLoi4);
+
+        pnTraLoi5.setEnabled(false);
+        pnTraLoi5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        buttonGroup1.add(rd5);
+        rd5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        rd5.setPreferredSize(new java.awt.Dimension(25, 30));
+        pnTraLoi5.add(rd5);
+
+        txtAws5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtAws5.setMinimumSize(new java.awt.Dimension(64, 30));
+        txtAws5.setPreferredSize(new java.awt.Dimension(700, 30));
+        pnTraLoi5.add(txtAws5);
 
         panelBackground21.setPreferredSize(new java.awt.Dimension(5, 30));
 
@@ -380,69 +575,40 @@ public class DialogQuestion extends javax.swing.JDialog {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        panelBackground19.add(panelBackground21);
+        pnTraLoi5.add(panelBackground21);
 
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
-        jButton8.setBorder(null);
-        jButton8.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground19.add(jButton8);
-
-        panelBackground7.add(panelBackground19);
-
-        panelBackground22.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        buttonGroup1.add(jRadioButton5);
-        jRadioButton5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jRadioButton5.setPreferredSize(new java.awt.Dimension(25, 30));
-        panelBackground22.add(jRadioButton5);
-
-        jTextField5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jTextField5.setText("jTextField1");
-        jTextField5.setMinimumSize(new java.awt.Dimension(64, 30));
-        jTextField5.setPreferredSize(new java.awt.Dimension(700, 30));
-        panelBackground22.add(jTextField5);
-
-        panelBackground23.setPreferredSize(new java.awt.Dimension(5, 30));
-
-        javax.swing.GroupLayout panelBackground23Layout = new javax.swing.GroupLayout(panelBackground23);
-        panelBackground23.setLayout(panelBackground23Layout);
-        panelBackground23Layout.setHorizontalGroup(
-            panelBackground23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-        panelBackground23Layout.setVerticalGroup(
-            panelBackground23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
-
-        panelBackground22.add(panelBackground23);
-
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
-        jButton9.setBorder(null);
-        jButton9.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground22.add(jButton9);
-
-        panelBackground24.setPreferredSize(new java.awt.Dimension(5, 30));
-
-        javax.swing.GroupLayout panelBackground24Layout = new javax.swing.GroupLayout(panelBackground24);
-        panelBackground24.setLayout(panelBackground24Layout);
-        panelBackground24Layout.setHorizontalGroup(
-            panelBackground24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-        panelBackground24Layout.setVerticalGroup(
-            panelBackground24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
-
-        panelBackground22.add(panelBackground24);
-
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/image.png"))); // NOI18N
         jButton10.setBorder(null);
         jButton10.setPreferredSize(new java.awt.Dimension(30, 30));
-        panelBackground22.add(jButton10);
+        pnTraLoi5.add(jButton10);
 
-        panelBackground7.add(panelBackground22);
+        panelBackground22.setPreferredSize(new java.awt.Dimension(5, 30));
+
+        javax.swing.GroupLayout panelBackground22Layout = new javax.swing.GroupLayout(panelBackground22);
+        panelBackground22.setLayout(panelBackground22Layout);
+        panelBackground22Layout.setHorizontalGroup(
+            panelBackground22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 5, Short.MAX_VALUE)
+        );
+        panelBackground22Layout.setVerticalGroup(
+            panelBackground22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        pnTraLoi5.add(panelBackground22);
+
+        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/delete.png"))); // NOI18N
+        jButton11.setBorder(null);
+        jButton11.setPreferredSize(new java.awt.Dimension(30, 30));
+        pnTraLoi5.add(jButton11);
+
+        panelBackground7.add(pnTraLoi5);
+
+        jButton12.setBackground(new java.awt.Color(215, 220, 235));
+        jButton12.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jButton12.setText("Thêm câu trả lời");
+        jButton12.setPreferredSize(new java.awt.Dimension(50, 23));
+        panelBackground7.add(jButton12);
 
         pnAnwser.add(panelBackground7, java.awt.BorderLayout.CENTER);
 
@@ -500,10 +666,10 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground28.add(panelBackground29);
 
-        jComboBox3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox3.setPreferredSize(new java.awt.Dimension(150, 30));
-        panelBackground28.add(jComboBox3);
+        cbxChuDe.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxChuDe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxChuDe.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground28.add(cbxChuDe);
 
         panelBackground30.setPreferredSize(new java.awt.Dimension(10, 30));
 
@@ -539,21 +705,28 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         panelBackground28.add(panelBackground31);
 
-        jComboBox4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox4.setPreferredSize(new java.awt.Dimension(150, 30));
-        panelBackground28.add(jComboBox4);
+        cbxDoKho.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        cbxDoKho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dễ", "Trung bình", "Khó" }));
+        cbxDoKho.setPreferredSize(new java.awt.Dimension(150, 30));
+        panelBackground28.add(cbxDoKho);
 
         panelBackground27.add(panelBackground28, java.awt.BorderLayout.LINE_START);
 
         panelBackground32.setPreferredSize(new java.awt.Dimension(75, 49));
         panelBackground32.setLayout(new java.awt.BorderLayout());
 
-        jButton4.setBackground(new java.awt.Color(225, 99, 73));
-        jButton4.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Lưu");
-        panelBackground32.add(jButton4, java.awt.BorderLayout.CENTER);
+        btnLuu.setBackground(new java.awt.Color(53, 80, 154));
+        btnLuu.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        btnLuu.setForeground(new java.awt.Color(255, 255, 255));
+        btnLuu.setText("Lưu");
+        btnLuu.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnLuu.setEnabled(false);
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
+        panelBackground32.add(btnLuu, java.awt.BorderLayout.CENTER);
 
         panelBackground33.setPreferredSize(new java.awt.Dimension(100, 5));
 
@@ -603,11 +776,97 @@ public class DialogQuestion extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+            .addComponent(panelBackground1, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+
+        
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void btnThemAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemAnhActionPerformed
+        String regex = "^.+\\.(jpg|jpeg|png|gif|bmp)$";
+        JFileChooser file = new JFileChooser();
+        file.showOpenDialog(this);
+        if (file.getSelectedFile() == null) {
+            return;
+        }
+        String pathSource = file.getSelectedFile().getAbsolutePath();
+        String nameFile = pathSource.substring(pathSource.lastIndexOf("\\") + 1);
+        if (nameFile.matches(regex)) {
+            Path sourceFile = Paths.get(pathSource);
+            Path destinationFile = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + nameFile);
+            System.out.println(sourceFile.toString());
+            System.out.println(destinationFile.toString());
+            try {
+                Files.copy(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                Image img = new ImageIcon(destinationFile.toString()).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
+                txtImg.setIcon(new ImageIcon(img));
+                txtImg.setName(nameFile);
+            } 
+            catch (IOException ex) {
+            }
+
+         
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "File bạn chọn không phải là ẢNH");
+        }
+    }//GEN-LAST:event_btnThemAnhActionPerformed
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+
+        QuestionDTO question = QuestionDTO.builder()
+                .setContent(txtCauHoi.getText())
+                .setPicture(txtImg.getName())
+                .setLevel(cbxDoKho.getSelectedItem().toString())
+                .setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId())
+                .setStatus(true)
+                .build();
+        int idQuestion = questionBUS.createQuestion(question).getId();
+        System.out.println(idQuestion + "");
+       
+        AnswerDTO aws1 = AnswerDTO.builder()
+                .setContent(txtAws1.getText())
+                .setIsRight(rd1.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws1);
+        AnswerDTO aws2 = AnswerDTO.builder()
+                .setContent(txtAws2.getText())
+                .setIsRight(rd2.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws2);
+        AnswerDTO aws3 = AnswerDTO.builder()
+                .setContent(txtAws3.getText())
+                .setIsRight(rd3.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws3);
+        AnswerDTO aws4 = AnswerDTO.builder()
+                .setContent(txtAws4.getText())
+                .setIsRight(rd4.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws4);
+        AnswerDTO aws5 = AnswerDTO.builder()
+                .setContent(txtAws5.getText())
+                .setIsRight(rd5.isSelected())
+                .setQuestionId(idQuestion)
+                .setStatus(true)
+                .build();
+        anwserBUS.createAnwser(aws5);
+        
+        
+    }//GEN-LAST:event_btnLuuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -652,40 +911,36 @@ public class DialogQuestion extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLuu;
+    private javax.swing.JButton btnThemAnh;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cbxChuDe;
+    private javax.swing.JComboBox<String> cbxDoKho;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private GUI.Comp.Swing.PanelBackground line;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
     private GUI.Comp.Swing.PanelBackground panelBackground10;
     private GUI.Comp.Swing.PanelBackground panelBackground11;
     private GUI.Comp.Swing.PanelBackground panelBackground12;
     private GUI.Comp.Swing.PanelBackground panelBackground13;
-    private GUI.Comp.Swing.PanelBackground panelBackground16;
+    private GUI.Comp.Swing.PanelBackground panelBackground14;
+    private GUI.Comp.Swing.PanelBackground panelBackground15;
     private GUI.Comp.Swing.PanelBackground panelBackground17;
     private GUI.Comp.Swing.PanelBackground panelBackground18;
     private GUI.Comp.Swing.PanelBackground panelBackground19;
@@ -693,8 +948,6 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground panelBackground20;
     private GUI.Comp.Swing.PanelBackground panelBackground21;
     private GUI.Comp.Swing.PanelBackground panelBackground22;
-    private GUI.Comp.Swing.PanelBackground panelBackground23;
-    private GUI.Comp.Swing.PanelBackground panelBackground24;
     private GUI.Comp.Swing.PanelBackground panelBackground27;
     private GUI.Comp.Swing.PanelBackground panelBackground28;
     private GUI.Comp.Swing.PanelBackground panelBackground29;
@@ -708,12 +961,28 @@ public class DialogQuestion extends javax.swing.JDialog {
     private GUI.Comp.Swing.PanelBackground panelBackground5;
     private GUI.Comp.Swing.PanelBackground panelBackground6;
     private GUI.Comp.Swing.PanelBackground panelBackground7;
-    private GUI.Comp.Swing.PanelBackground panelBackground8;
     private GUI.Comp.Swing.PanelBackground panelBackground9;
     private GUI.Comp.Swing.PanelBackground pnAnwser;
     private GUI.Comp.Swing.PanelBackground pnBottom;
     private GUI.Comp.Swing.PanelBackground pnCenter;
     private GUI.Comp.Swing.PanelBackground pnQuestion;
     private GUI.Comp.Swing.PanelBackground pnTop;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi1;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi2;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi3;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi4;
+    private GUI.Comp.Swing.PanelBackground pnTraLoi5;
+    private javax.swing.JRadioButton rd1;
+    private javax.swing.JRadioButton rd2;
+    private javax.swing.JRadioButton rd3;
+    private javax.swing.JRadioButton rd4;
+    private javax.swing.JRadioButton rd5;
+    private javax.swing.JTextField txtAws1;
+    private javax.swing.JTextField txtAws2;
+    private javax.swing.JTextField txtAws3;
+    private javax.swing.JTextField txtAws4;
+    private javax.swing.JTextField txtAws5;
+    private javax.swing.JTextArea txtCauHoi;
+    private javax.swing.JLabel txtImg;
     // End of variables declaration//GEN-END:variables
 }

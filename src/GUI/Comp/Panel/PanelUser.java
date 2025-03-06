@@ -1,12 +1,19 @@
 package GUI.Comp.Panel;
 
+import java.util.ArrayList;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
-
-import GUI.Comp.Dialog.DialogQuestion;
-import GUI.Comp.Dialog.DialogUser;
+import javax.swing.table.DefaultTableModel;
+import GUI.Custom.TableActionCellRenderer;
+import GUI.Custom.TableActionEvent;
+import GUI.Utils.Debounce;
+import GUI.Custom.TableActionCellEditor;
+import BUS.UserBus;
+import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogUsers;
-
+import javax.swing.event.DocumentEvent;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -17,16 +24,147 @@ import GUI.Comp.Dialog.DialogUsers;
  * @author nguye
  */
 public class PanelUser extends javax.swing.JPanel {
+    private ArrayList<UserDTO> listUser = new ArrayList<>();
+    private ArrayList<UserDTO> listUserTemp;
+    private UserBus userBus = new UserBus();
 
-    /**
-     * Creates new form PanelUser
-     */
     public PanelUser() {
         initComponents();
+        setupSearchEvent();
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbNguoidung.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
+        TableActionEvent event = new TableActionEvent() {
+
+            @Override
+            public void onDelete(int row) {
+                var a = tbNguoidung.getModel().getValueAt(row, 4);
+                int id = ((Number) a).intValue();
+                confirmAndDeleteUser(id);
+                
+            }
+
+            @Override
+            public void onUpdate(int row) {
+                var a =tbNguoidung.getModel().getValueAt(row, 4);
+                int id = ((Number) a).intValue();
+                DialogUsers d = new DialogUsers(null,userBus,id);
+                d.setVisible(true);
+                updateTableItems();
+                d.dispose();
+            }
+
+            @Override
+            public void onView(int row) {
+                var a = tbNguoidung.getModel().getValueAt(row, 4);
+            }
+            
+        };
+        tbNguoidung.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
+        tbNguoidung.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
         tbNguoidung.setRowHeight(30);
+        updateTableItems();
     }
+
+    private void updateTableItems(){
+        listUser = userBus.getAllUsers();
+        listUserTemp = listUser;
+        render();
+    }
+
+    private void setTableItems(ArrayList<UserDTO> list){
+        this.listUser = list;
+        render();
+    }
+
+    public void render(){
+        // listUser = userBus.getAllUsers();
+        System.out.println("size of listUser: "+listUser.size());
+        DefaultTableModel model = (DefaultTableModel) tbNguoidung.getModel();
+        model.setRowCount(0);
+        for (UserDTO user : listUser) {
+            model.addRow(new Object[]{
+                user.getFullName(),
+                user.getEmail(),
+                user.getIsAdmin() == 1 ? "Admin" : "Người dùng",
+                "Hành động",
+                user.getId()
+            });
+        }
+
+
+        model.fireTableDataChanged();
+        tbNguoidung.setModel(model);
+    }
+
+    private void confirmAndDeleteUser(int id) {
+    int confirm = JOptionPane.showConfirmDialog(
+        null,
+        "Bạn có chắc chắn muốn xóa người dùng này?",
+        "Xác nhận xóa",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        if (userBus.deleteUser(id)) {
+            updateTableItems();
+            JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Xóa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+
+
+    private void setupSearchEvent() {
+        Debounce onSearch = new Debounce(() -> filterUsers(), 500);
+    
+        txtNguoiDung.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+    
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+    
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+        });
+    }
+    
+    private void filterUsers() {
+        ArrayList<UserDTO> usersList = userBus.getAllUsers();
+        String query = txtNguoiDung.getText().trim().toLowerCase();
+        if (query.isEmpty()) {
+            updateTableItems(); // Hiển thị lại danh sách gốc nếu không nhập gì
+            return;
+        }
+        // Lọc danh sách 
+        ArrayList<UserDTO> filteredUsers = new ArrayList<>();
+        for (UserDTO user : usersList) {
+            filteredUsers.addAll(setUpFilter(user, query));
+        }
+        setTableItems(filteredUsers);
+    }
+    
+    private ArrayList<UserDTO> setUpFilter(UserDTO user,String query){
+        ArrayList<UserDTO> listUserTemp = new ArrayList<>();
+        boolean matchName = user.getFullName().toLowerCase().contains(query);
+        boolean matchEmail = user.getEmail().toLowerCase().contains(query);
+        boolean matchRole = user.getIsAdmin() == 1 ? "Admin".toLowerCase().contains(query) 
+        : "Người dùng".toLowerCase().contains(query);
+        if (matchName || matchEmail || matchRole) {
+            listUserTemp.add(user);
+        }
+        return listUserTemp;
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,7 +200,6 @@ public class PanelUser extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         cbxDiemso = new javax.swing.JComboBox<>();
-        panelBackground15 = new GUI.Comp.Swing.PanelBackground();
         panelBackground16 = new GUI.Comp.Swing.PanelBackground();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -310,21 +447,6 @@ public class PanelUser extends javax.swing.JPanel {
         cbxDiemso.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxDiemso);
 
-        panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
-        panelBackground15.setLayout(panelBackground15Layout);
-        panelBackground15Layout.setHorizontalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground15Layout.setVerticalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground15);
-
         panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
 
         javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
@@ -340,7 +462,7 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground16);
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setActionCommand("Thêm người dùng");
@@ -421,11 +543,11 @@ public class PanelUser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DialogUser d1 =new DialogUser(null, true);
-        DialogQuestion d2=new DialogQuestion(null, true);
-        DialogUsers d = new DialogUsers(null,true);
+        UserBus userBus = new UserBus();
+        DialogUsers d = new DialogUsers(null,userBus);
         System.out.println("them nguoi dung");
         d.setVisible(true);
+        updateTableItems();
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -445,7 +567,6 @@ public class PanelUser extends javax.swing.JPanel {
     private GUI.Comp.Swing.PanelBackground panelBackground12;
     private GUI.Comp.Swing.PanelBackground panelBackground13;
     private GUI.Comp.Swing.PanelBackground panelBackground14;
-    private GUI.Comp.Swing.PanelBackground panelBackground15;
     private GUI.Comp.Swing.PanelBackground panelBackground16;
     private GUI.Comp.Swing.PanelBackground panelBackground17;
     private GUI.Comp.Swing.PanelBackground panelBackground18;

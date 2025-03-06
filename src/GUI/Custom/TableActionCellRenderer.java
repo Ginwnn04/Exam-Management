@@ -1,8 +1,10 @@
 package GUI.Custom;
+
 import javax.swing.table.DefaultTableCellRenderer;
 
 import javax.swing.JTable;
 import java.awt.Component;
+import style.ColorConfig;
 
 public class TableActionCellRenderer extends DefaultTableCellRenderer {
     @Override
@@ -10,14 +12,11 @@ public class TableActionCellRenderer extends DefaultTableCellRenderer {
     boolean isSelected, boolean hasFocus, int row, int column) {
         Component com =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         PanelAction action = new PanelAction();
-        if(isSelected==false && row % 2 != 0){
-            action.setBackground(new java.awt.Color(243,215,208));
+        if(isSelected == false){
+            action.setBackground(ColorConfig.WHITE_COLOR_BG);
         }
-        else if(isSelected==true){
-            action.setBackground(new java.awt.Color(225,99,73));
-        }
-        else {
-            action.setBackground(new java.awt.Color(255,255,255));
+        else if(isSelected == true){
+            action.setBackground(ColorConfig.BLUE);
         }
         // action.setBackground(new java.awt.Color(255, 255, 255));
         return action; 
