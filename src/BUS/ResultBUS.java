@@ -38,4 +38,8 @@ public class ResultBUS {
     public boolean delete(int id) {
         return DAO.delete(id);
     }
+
+    public List<ResultDTO> getAllByExam(ExamDTO exam) {
+        return DAO.getAllByTestCode(exam.getTestCode());
+    }
 }

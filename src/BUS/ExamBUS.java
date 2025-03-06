@@ -4,6 +4,7 @@ import DAO.ExamDAO;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
 import DTO.TestExamDTO;
+import Enum.LevelEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,17 @@ public class ExamBUS {
         return ExamDAO.findByExCode(exCode);
     }
 
+    public List<ExamDTO> findByTestCode(String testCode) {
+        return ExamDAO.findByTestCode(testCode);
+    }
+
+    /**
+     * Get the number of exams that are randomly generated
+     */
+    public int getExamCount(String testCode) {
+        return ExamDAO.findByTestCode(testCode).size();
+    }
+
     public boolean generateExam(TestExamDTO testExam, int quantity) {
         List<QuestionDTO> questions = questionBUS.getQuestionByTopicAndLevel(testExam.getTopicId(), "");
         char order = 65;
@@ -94,9 +106,9 @@ public class ExamBUS {
         for (QuestionDTO question : questions) {
             String level = question.getLevel();
             
-            if (level.equals("Dễ") && easyCount < numEasy) easyCount++;
-            else if (level.equals("Trung bình") && mediumCount < numMedium) mediumCount++;
-            else if (level.equals("Khó") && diffCount < numDiff) diffCount++;
+            if (level.equals(LevelEnum.EASY.getDesc()) && easyCount < numEasy) easyCount++;
+            else if (level.equals(LevelEnum.MEDIUM.getDesc()) && mediumCount < numMedium) mediumCount++;
+            else if (level.equals(LevelEnum.HARD.getDesc()) && diffCount < numDiff) diffCount++;
             else continue;
 
             result.add(question);

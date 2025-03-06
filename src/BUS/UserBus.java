@@ -1,7 +1,9 @@
 package BUS;
 import DAO.UserDao;
+import DTO.ExamDTO;
 import DTO.UserDTO;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserBus {
     private UserDao userDao = new UserDao();
@@ -29,5 +31,4 @@ public class UserBus {
     public boolean deleteUser(Integer id) {
         return userDao.delete(id);
     }
-
 }
