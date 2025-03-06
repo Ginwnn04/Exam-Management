@@ -189,6 +189,7 @@ public class NavBar extends javax.swing.JPanel {
         jSeparator2 = new javax.swing.JSeparator();
         pnMenuItem = new GUI.Comp.Swing.PanelBackground();
         imageAvatar1 = new GUI.Comp.ImageAvatar();
+        btnThongTin = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
@@ -227,6 +228,17 @@ public class NavBar extends javax.swing.JPanel {
 
         imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/385514898_1350252949206356_5905706099619149463_n.jpg"))); // NOI18N
 
+        btnThongTin.setBackground(new java.awt.Color(254, 254, 254));
+        btnThongTin.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
+        btnThongTin.setForeground(new java.awt.Color(98, 99, 107));
+        btnThongTin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png"))); // NOI18N
+        btnThongTin.setText(" Thông tin");
+        btnThongTin.setBorderPainted(false);
+        btnThongTin.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnThongTin.setMargin(new java.awt.Insets(2, 5, 2, 14));
+        btnThongTin.setName(""); // NOI18N
+        btnThongTin.setPreferredSize(new java.awt.Dimension(205, 50));
+
         javax.swing.GroupLayout pnContainerLayout = new javax.swing.GroupLayout(pnContainer);
         pnContainer.setLayout(pnContainerLayout);
         pnContainerLayout.setHorizontalGroup(
@@ -237,9 +249,9 @@ public class NavBar extends javax.swing.JPanel {
                         .addGap(16, 16, 16)
                         .addGroup(pnContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pnMenuItem, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnDangXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnThongTin, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDangXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnContainerLayout.createSequentialGroup()
                             .addContainerGap()
@@ -248,7 +260,7 @@ public class NavBar extends javax.swing.JPanel {
                     .addGroup(pnContainerLayout.createSequentialGroup()
                         .addGap(67, 67, 67)
                         .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnContainerLayout.setVerticalGroup(
             pnContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,12 +272,14 @@ public class NavBar extends javax.swing.JPanel {
                 .addGap(5, 5, 5)
                 .addComponent(lbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(pnMenuItem, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
+                .addComponent(pnMenuItem, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnThongTin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDangXuat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                .addGap(28, 28, 28))
         );
 
         add(pnContainer, java.awt.BorderLayout.CENTER);
@@ -274,6 +288,7 @@ public class NavBar extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnDangXuat;
+    public javax.swing.JButton btnThongTin;
     private GUI.Comp.ImageAvatar imageAvatar1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbName;
