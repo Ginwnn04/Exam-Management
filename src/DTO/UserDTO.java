@@ -4,7 +4,7 @@
  */
 package DTO;
 public class UserDTO {
-    private int id;
+    private Integer id;
     private String name;
     private String email;
     private String password;
@@ -29,7 +29,7 @@ public class UserDTO {
         this.fullName = fullName;
         this.isAdmin = isAdmin;
     }
-    public long getId() {
+    public Integer getId() {
         return id;
     }
     
@@ -59,7 +59,7 @@ public class UserDTO {
         return isDeleted;
     }
 
-    public UserDTO setId(int id) {
+    public UserDTO setId(Integer id) {
         this.id = id;
         return this;
     }

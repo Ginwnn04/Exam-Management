@@ -5,6 +5,9 @@
 package GUI.Comp.Panel;
 import DTO.UserDTO;
 import DAO.UserDao;
+
+import javax.swing.JOptionPane;
+
 import BUS.UserBus;
 import GUI.Comp.Dialog.DialogMatkhau;
 
@@ -13,7 +16,8 @@ import GUI.Comp.Dialog.DialogMatkhau;
  * @author 84376
  */
 public class PanelChinhSua extends javax.swing.JPanel {
-
+    private UserDTO user = new UserDTO();
+    private UserDTO currentUser;
     /**
      * Creates new form PanelChinhSua
      */
@@ -132,12 +136,7 @@ public class PanelChinhSua extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     public void setUserData (UserDTO user){
-        if (user == null) {
-            System.out.println("Lỗi: user bị null!");
-            return;
-        }
-     
-
+            this.user = user;
             jTextField1.setText(String.valueOf(user.getId()));
             jTextField2.setText(user.getName());
             jTextField3.setText(user.getEmail());
@@ -149,13 +148,57 @@ public class PanelChinhSua extends javax.swing.JPanel {
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-   
+            
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "Lỗi: Không tìm thấy thông tin người dùng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+       
+            String email = jTextField3.getText().trim();
+            String fullName = jTextField4.getText().trim();
+
+          
+            if (email.isEmpty() || fullName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+            if (user.getPassword() == null || user.getPassword().isEmpty()) {
+                UserDao userDAO = new UserDao();
+                UserDTO userFromDB = userDAO.findByID(user.getId());
+                if (userFromDB != null) {
+                    user.setPassword(userFromDB.getPassword()); 
+                } else {
+                    JOptionPane.showMessageDialog(this, "Lỗi: Không tìm thấy tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+         
+            user.setEmail(email);
+            user.setFullName(fullName); 
+
+            UserDao userDAO = new UserDao();
+            boolean isUpdated = userDAO.update(user.getId(),user);
+
+            if (isUpdated) {
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+                loadUserData(user);  
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+            }
+    }   
+    public void loadUserData(UserDTO user) {
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "Lỗi: Không tìm thấy người dùng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+           
+        }
+        jTextField3.setText(user.getEmail());
+        jTextField4.setText(user.getFullName());
+    }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-                DialogMatkhau dialog = new DialogMatkhau(null, true);
-                dialog.setVisible(true);
+            DialogMatkhau dialog = new DialogMatkhau(null, true,user);
+            dialog.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     

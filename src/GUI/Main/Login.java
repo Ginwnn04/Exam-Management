@@ -240,7 +240,8 @@ public class Login extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
             dispose();
-            Main main = new Main();
+            Main main = new Main(user);
+            main.setVisible(true);
         }
 
     }

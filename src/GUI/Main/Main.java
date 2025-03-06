@@ -37,7 +37,10 @@ import style.ColorConfig;
 public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     private UserDTO user =new UserDTO();
     private PanelChinhSua panelChinhSua;
-    public Main() {
+    private UserDTO currentUser;
+    public Main(UserDTO user) {
+        this.currentUser = user;
+        
         initComponents();
         setLocationRelativeTo(null);
         getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
@@ -49,19 +52,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         Helper.ConnectDB.getInstance().openConnect();
 //         showForm(new PanelQuestion());
         // showForm(new PanelUser());
-        showForm(new PanelTopic());
+        // showForm(new PanelTopic());
     //    showForm(new PanelChinhSua());
-//        FlatMacLightLaf.registerCustomDefaultsSource("style");
-//        UIManager.put("TextField.font", style.MyFont.fontText);
-//        UIManager.put("Label.font", style.MyFont.fontText);
-//        UIManager.put("Button.font", style.MyFont.fontText);
-//        UIManager.put("Table.font", style.MyFont.fontText);
-//       
-//
-//        FlatMacLightLaf.setup();
-        // panelChinhSua = new PanelChinhSua();
-        // panelChinhSua.setUserData(user);
-        // showForm(panelChinhSua);
+
+        panelChinhSua = new PanelChinhSua();
+        
+        panelChinhSua.setUserData(user);
+        showForm(panelChinhSua);
         logout();
         setVisible(true);
       

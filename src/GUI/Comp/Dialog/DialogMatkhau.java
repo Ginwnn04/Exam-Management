@@ -15,14 +15,16 @@ import DAO.UserDao;
  * @author nguye
  */
 public class DialogMatkhau extends javax.swing.JDialog {
-
+    private UserDTO currentUser;
     /**
      * Creates new form DialogUsers
      */
-    public DialogMatkhau(java.awt.Frame parent, boolean modal) {
+    public DialogMatkhau(java.awt.Frame parent, boolean modal,UserDTO user) {
         super(parent, modal);
+        this.currentUser=user;
         initComponents();
          setLocationRelativeTo(null);
+        
     }
 
     /**
@@ -222,50 +224,39 @@ public class DialogMatkhau extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-//     public void changePassword() {
- 
-//     UserDTO user = SessionManager.getCurrentUser();
 
-//     if (user == null) {
-//         JOptionPane.showMessageDialog(this, "Bạn chưa đăng nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//         return;
-//     }
-
-//     String oldPassword = jTextField1.getText();
-//     String newPassword = jTextField2.getText();
-//     String confirmPassword = jTextField3.getText();
-  
-//     if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-//         JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//         return;
-//     }
-   
-//     if (!newPassword.equals(confirmPassword)) {
-//         JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không trùng khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//         return;
-//     } 
-//     if (!user.getPassword().equals(oldPassword)) { 
-//         JOptionPane.showMessageDialog(this, "Mật khẩu cũ không chính xác!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//         return;
-//     }
-
-  
-//     user.setPassword(newPassword);
-//     UserBus userBus = new UserBus();
-//     boolean updateSuccess = userBus.updatePassword(newPassword);
-
-//     if (updateSuccess) {
-//         JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//     } else {
-//         JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//     }
-// }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-           
+        // if (currentUser == null) {
+        //     JOptionPane.showMessageDialog(this, "Lỗi: Người dùng không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        //     return;
+        // }
+        String oldPassword = jTextField1.getText().trim();
+        String newPassword = jTextField2.getText().trim();
+        String confirmPassword = jTextField3.getText().trim();
+        
+       
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        UserDao userDAO = new UserDao();
+        boolean isUpdated = userDAO.updatePassword(currentUser.getId(), newPassword);
+    
+        if (isUpdated) {
+            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();  
+        } else {
+            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại! Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+       
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
   
@@ -302,7 +293,8 @@ public class DialogMatkhau extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DialogMatkhau dialog = new DialogMatkhau(new javax.swing.JFrame(), true);
+                
+                DialogMatkhau dialog = new DialogMatkhau(new javax.swing.JFrame(),true,currentUser);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

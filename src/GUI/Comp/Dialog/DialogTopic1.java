@@ -233,7 +233,24 @@ public void setUpdated(boolean updated) {
     }       
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    
+        int id = Integer.parseInt(jTextField1.getText()); // ID không đổi
+        String title = jTextField2.getText();
+        String parent = jTextField3.getText();
+        if (title.trim().isEmpty() || parent.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        TopicDTO updatedTopic = new TopicDTO(id, title, parent);
+        TopicDAO topicDAO = new TopicDAO();
+        boolean isUpdated = topicDAO.update(id,updatedTopic);
+
+        if (isUpdated) { 
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            isUpdated = true;
+            dispose(); 
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
 }
 //GEN-LAST:event_jButton1ActionPerformed
 

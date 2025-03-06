@@ -24,7 +24,11 @@
     private TopicBUS topicBUS = new TopicBUS();
     private List<TopicDTO> topic = new ArrayList<>();
     private TopicBUS BUS = new TopicBUS();
+    private boolean isUpdated = false;
 
+    public boolean isUpdated() {
+        return isUpdated;
+    }
    
      /**
       * Creates new form DialogUsers

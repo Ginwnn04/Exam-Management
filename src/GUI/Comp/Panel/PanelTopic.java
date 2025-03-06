@@ -67,28 +67,26 @@ public class PanelTopic extends javax.swing.JPanel {
         @Override
         public void onDelete(int row){
             DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
-    var a = tbChude.getModel().getValueAt(row, 0); 
+            var a = tbChude.getModel().getValueAt(row, 0); 
 
     
-    int id = ((Number) a).intValue();
-    int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            int id = ((Number) a).intValue();
+            int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
 
-    if (confirm == JOptionPane.YES_OPTION) {
-        boolean isDeleted = new TopicDAO().delete(id);
-        if (isDeleted) {
-            JOptionPane.showMessageDialog(null, "Xóa thành công!");
-            System.out.println("Gọi loadTableData() sau khi xóa...");
-            loadTableData(); 
-        } else {
-            JOptionPane.showMessageDialog(null, "Xóa thất bại! Vui lòng thử lại.");
-        }
-    } 
-        
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean isDeleted = new TopicDAO().delete(id);
+                if (isDeleted) {
+                    JOptionPane.showMessageDialog(null, "Xóa thành công!");
+                    loadTableData(); 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa thất bại! Vui lòng thử lại.");
+                }
+            } 
+            
         }
         @Override
         public void onUpdate(int row){
             var a = tbChude.getModel().getValueAt(row, 0);
-           
             if (a == null) {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy dữ liệu để cập nhật!");
                 return;
@@ -99,7 +97,6 @@ public class PanelTopic extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Chủ đề không tồn tại trong CSDL!");
                 return;
             }
-        
             DialogTopic1 dialog = new DialogTopic1(null, true);
             dialog.setTopic(topic); 
             dialog.setVisible(true);
@@ -107,6 +104,7 @@ public class PanelTopic extends javax.swing.JPanel {
             
             if (dialog.isUpdated()) {  
                 loadTableData(); 
+                ((DefaultTableModel) tbChude.getModel()).fireTableDataChanged();
             }
               
            
@@ -152,12 +150,14 @@ public class PanelTopic extends javax.swing.JPanel {
     }
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
-        model.setRowCount(0); // Xóa toàn bộ dữ liệu cũ
+        model.setRowCount(0); 
     
-        List<TopicDTO> topics = new TopicDAO().getAll(true); // Lấy danh sách chủ đề mới từ DB
+        List<TopicDTO> topics = new TopicDAO().getAll(true);
+        System.out.println("Số lượng chủ đề sau khi cập nhật: " + topics.size());
         for (TopicDTO topic : topics) {
             model.addRow(new Object[]{topic.getId(), topic.getTitle(), topic.getParent()});
         }
+        model.fireTableDataChanged();
     }
     private void filterTable(){
         String query =txtchude.getText().toLowerCase();
@@ -182,8 +182,8 @@ public class PanelTopic extends javax.swing.JPanel {
         model.fireTableDataChanged();
         tbChude.setModel(model);
     }
-    
-    private void  addComboBoxListeners(){
+        
+    private void addComboBoxListeners(){
         cbxchude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt){
                 filterTable();
@@ -213,72 +213,8 @@ public class PanelTopic extends javax.swing.JPanel {
         
     }
    
-    private void confirmAndDeleteUser(int id) {
-        int confirm = JOptionPane.showConfirmDialog(
-            null,
-            "Bạn có chắc chắn muốn xóa người dùng này?",
-            "Xác nhận xóa",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE
-        );
     
-        if (confirm == JOptionPane.YES_OPTION) {
-            if (topicBUS.deleteTopic(id)) {
-                filterTable();
-                // updateTableItems();
-                JOptionPane.showMessageDialog(null, "Xóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "Xóa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-    //     private void setupSearchEvent() {
-    //     Debounce onSearch = new Debounce(() -> filterTopic(), 500);
-    
-    //     txtchude.getDocument().addDocumentListener(new DocumentListener() {
-    //         @Override
-    //         public void insertUpdate(DocumentEvent e) {
-    //             onSearch.execute();
-    //         }
-    
-    //         @Override
-    //         public void removeUpdate(DocumentEvent e) {
-    //             onSearch.execute();
-    //         }
-    
-    //         @Override
-    //         public void changedUpdate(DocumentEvent e) {
-    //             onSearch.execute();
-    //         }
-    //     });
-    // }
-
-    // private void filterTopic() {
-    //     List<TopicDTO> topicList = topicBUS.getAllTopic();
-    //     String query = txtchude.getText().trim().toLowerCase();
-    //     if (query.isEmpty()) {
-    //         updateTableItems(); // Hiển thị lại danh sách gốc nếu không nhập gì
-    //         return;
-    //     }
-    //     // Lọc danh sách 
-    //     ArrayList<TopicDTO> filteredUsers = new ArrayList<>();
-    //     for (TopicDTO user : topicList) {
-    //         filteredUsers.addAll(setUpFilter(user, query));
-    //     }
-    //     setTableItems(filteredUsers);
-    // }
-    
-    // private ArrayList<TopicDTO> setUpFilter(TopicDTO user,String query){
-    //     ArrayList<UserDTO> listUserTemp = new ArrayList<>();
-    //     boolean matchName = user.getTitle().toLowerCase().contains(query);
-    //     boolean matchEmail = user.getParent().toLowerCase().contains(query);
-       
-    //     if (matchName || matchEmail || matchRole) {
-    //         listUserTemp.add(user);
-    //     }
-    //     return listUserTemp;
-    // }
-    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -633,13 +569,13 @@ public class PanelTopic extends javax.swing.JPanel {
     }// </editor-fold>                        
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // DialogUser d1 =new DialogUser(null, true);
-         TopicBUS topicBUS = new TopicBUS();
-        // DialogQuestion d2=new DialogQuestion(null, true);
-        // DialogUsers d = new DialogUsers(null,true);
+
         DialogTopic d3 = new DialogTopic(null,true);      System.out.println("them nguoi dung");
         d3.setVisible(true);
-        
+        if (d3.isUpdated()) { // Kiểm tra nếu có cập nhật
+            System.out.println("Thêm thành công, gọi loadTableData()..."); 
+            loadTableData(); // Làm mới bảng
+        }
         
     }                                        
     
