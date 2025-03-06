@@ -143,4 +143,26 @@ public class ResultDAO implements BaseDAO<ResultDTO, Integer> {
 
         return false;
     }
+
+    public List<ResultDTO> getAllByTestCode(String testCode) {
+        String query = "SELECT * FROM result WHERE INSTR(exCode, ?) > 0";
+        ArrayList<ResultDTO> result = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
+            ps.setString(1, testCode);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(fetchData(rs));
+            }
+
+            return result;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
 }

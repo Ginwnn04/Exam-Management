@@ -23,6 +23,7 @@ import DTO.UserDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.CircleProgressBar;
 import GUI.Utils.RoundBorder;
+import style.ColorConfig;
 import style.MyFont;
 
 public class PanelAfterExam extends JPanel {
@@ -79,7 +80,7 @@ public class PanelAfterExam extends JPanel {
         PanelBackground container = new PanelBackground();
         container.setAbsoluteSize(WIDTH, 95);
         container.setLayout(new GridBagLayout());
-        container.setBackground(new Color(225, 99, 73));
+        container.setBackground(ColorConfig.BLUE);
         container.setRound(0);
 
         Font font = MyFont.fontHeader.deriveFont(30f);
@@ -124,7 +125,7 @@ public class PanelAfterExam extends JPanel {
 
         Font font = MyFont.fontText.deriveFont(30f);
 
-        circleProgressBar = new CircleProgressBar(new Color(225, 99, 73),  "%.2f / %d", font);
+        circleProgressBar = new CircleProgressBar(ColorConfig.BLUE,  "%.2f / %d", font);
         circleProgressBar.setStringPainted(true);
         circleProgressBar.setValue(result.getRsMark());
         circleProgressBar.setForeground(Color.BLACK);
@@ -195,15 +196,15 @@ public class PanelAfterExam extends JPanel {
         container.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 0));
 
         againButton = new JButton("Thi lại");
-        againButton.setBackground(new Color(225, 99, 73));
+        againButton.setBackground(ColorConfig.BLUE);
         againButton.setFont(MyFont.fontHeader.deriveFont(20f));
-        againButton.setForeground(new Color(255, 255, 255));
+        againButton.setForeground(Color.WHITE);
         againButton.setPreferredSize(new Dimension(150, 50));
 
         container.add(againButton);
 
         homeButton = new JButton("Quay về trang chủ");
-        homeButton.setBackground(new Color(225, 99, 73));
+        homeButton.setBackground(ColorConfig.BLUE);
         homeButton.setFont(MyFont.fontHeader.deriveFont(20f));
         homeButton.setForeground(new Color(255, 255, 255));
         homeButton.setPreferredSize(new Dimension(222, 50));

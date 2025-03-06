@@ -44,33 +44,32 @@ import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
+import style.ColorConfig;
 import style.MyFont;
-import java.awt.Font;
 public class PanelTestExam extends JPanel {
     private final int WIDTH = 1160;
 
     private GridBagConstraintsBuilder gbcBuilder = new GridBagConstraintsBuilder();
     private TestExamBUS BUS;
     private TopicBUS topicBUS;
+
     private ArrayList<TestExamDTO> testExams;
-    private ArrayList<TestExamDTO> testExamsTemp;
+    private ArrayList<TestExamDTO> filterTestExams;
 
     public PanelTestExam() {
         BUS = new TestExamBUS();
         topicBUS = new TopicBUS();
+        testExams = BUS.getAll(true);
 
         initComponents();
     }
 
-    private void updateTableItems() {
-        testExams = BUS.getAll(true);
-        testExamsTemp = testExams;
-        renderTable();
+    private void resetTableItems() {
+        filterTestExams = testExams;
     }
 
-    private void setTableItems(ArrayList<TestExamDTO> testExams) {
-        this.testExams = testExams;
-        renderTable();
+    private void setTableItems(ArrayList<TestExamDTO> list) {
+        filterTestExams = list;
     }
 
     private void initComponents() {
@@ -120,13 +119,13 @@ public class PanelTestExam extends JPanel {
         searchByCb = new JComboBox<>();
         searchByCb.setPreferredSize(new Dimension(150, 30));
         searchByCb.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "Mã đề", "Tiêu đề" }));
-        searchByCb.addActionListener(e -> filtTableItems());
+        searchByCb.addActionListener(e -> filterTableItems());
 
         JLabel topicFilterLabel = new JLabel("Chủ đề: ");
         topicFilter = new JComboBox<>();
         topicFilter.setPreferredSize(new Dimension(150, 30));
         setTopicFilterItems();
-        topicFilter.addActionListener(this::applyTopicFilter);
+        topicFilter.addActionListener(e -> filterTableItems());
 
         searchAndFilterContainer.add(searchByCbLabel);
         searchAndFilterContainer.add(searchByCb);
@@ -164,7 +163,7 @@ public class PanelTestExam extends JPanel {
     }
 
     private void setupSearchFieldEvent() {
-        Debounce onSearch = new Debounce(() -> filtTableItems(), 500);
+        Debounce onSearch = new Debounce(() -> filterTableItems(), 500);
 
         searchField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -185,26 +184,27 @@ public class PanelTestExam extends JPanel {
         });
     }
 
-    private void filtTableItems() {
-        var list = BUS.getAll(true);
+    private void filterTableItems() {
+        resetTableItems();
         String query = searchField.getText().toLowerCase();
 
-        var searchBy = searchByCb.getSelectedItem().toString();
-        List<TestExamDTO> filtList;
+        TopicDTO topic = (TopicDTO) topicFilter.getSelectedItem();
 
-        if (query.isEmpty()){
-            updateTableItems();
-            return;
-        }
+        if (topic.getId() != -1) applyTopicFilter();
+
+        var searchBy = searchByCb.getSelectedItem().toString();
+        List<TestExamDTO> filterList;
 
         Predicate<TestExamDTO> filter = getSearchFilter(searchBy, query);
-        filtList = list.stream().filter(filter).toList();
-
-        setTableItems(new ArrayList<>(filtList));
-        testExamsTemp = testExams;
+        filterList = filterTestExams.stream().filter(filter).toList();
+    
+        setTableItems(new ArrayList<>(filterList));
+        renderTable();
     }
 
     private Predicate<TestExamDTO> getSearchFilter(String searchBy, String query) {
+        if (query.isEmpty()) return testExam -> true;
+
         switch (searchBy) {
             case "ID":
                 return testExam -> {
@@ -227,22 +227,17 @@ public class PanelTestExam extends JPanel {
         }
     }
 
-    private void applyTopicFilter(ActionEvent e) {
+    private void applyTopicFilter() {
         TopicDTO topic = (TopicDTO) topicFilter.getSelectedItem();
-        if (topic.getId() == -1) {
-            setTableItems(testExamsTemp);
-            return;
-        }
-
-        var list = BUS.filterByTopic(topic, testExamsTemp);
+        var list = BUS.filterByTopic(topic, filterTestExams);
         setTableItems(new ArrayList<>(list));
     }
 
     private PanelBackground buildCreateButtonContainer() {
         createButton = new JButton("+ Thêm");
-        createButton.setBackground(new Color(225, 99, 73));
+        createButton.setBackground(ColorConfig.BLUE);
         createButton.setFont(MyFont.fontHeader);
-        createButton.setForeground(new Color(255, 255, 255));
+        createButton.setForeground(Color.WHITE);
         createButton.setPreferredSize(new Dimension(116, 30));
 
         assignCreateElement();
@@ -259,7 +254,7 @@ public class PanelTestExam extends JPanel {
         createButton.addActionListener(e -> {
             DialogTestExam dialogTestExam = new DialogTestExam(BUS, null);
             dialogTestExam.setVisible(true);
-            updateTableItems();
+            resetTableItems();
         });
     }
 
@@ -318,7 +313,8 @@ public class PanelTestExam extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(170);
         table.setRowHeight(30);
 
-        updateTableItems();
+        resetTableItems();
+        renderTable();
 
         JScrollPane scrollPane = new JScrollPane(table);
         content.add(scrollPane);
@@ -329,7 +325,8 @@ public class PanelTestExam extends JPanel {
         DialogTestExam dialogTestExam = new DialogTestExam(id, BUS, null);
 
         dialogTestExam.setVisible(true);
-        updateTableItems();
+        resetTableItems();
+        renderTable();
     }
 
 
@@ -341,7 +338,8 @@ public class PanelTestExam extends JPanel {
         if (response == JOptionPane.NO_OPTION) return;
         
         BUS.delete(id);
-        updateTableItems();
+        resetTableItems();
+        renderTable();
     }
 
     private void renderTable() {
@@ -349,9 +347,9 @@ public class PanelTestExam extends JPanel {
         model.setRowCount(0);
 
         var topics = topicBUS.getAllTopic();
-        if (testExams == null) return;
+        if (filterTestExams == null) return;
 
-        testExams.forEach(testExam -> {
+        filterTestExams.forEach(testExam -> {
             var topic = topics.stream()
                               .filter(item -> item.getId() == testExam.getTopicId())
                               .findFirst()

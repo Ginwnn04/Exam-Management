@@ -2,8 +2,10 @@
 package BUS;
 
 import DAO.UserDao;
+import DTO.ExamDTO;
 import DTO.UserDTO;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserBus {
     private UserDao userDao = new UserDao();
@@ -40,5 +42,3 @@ public class UserBus {
     //     return userDao.updatePassword(id, newPassword); 
     // }
 }
-
-

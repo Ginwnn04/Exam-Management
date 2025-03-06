@@ -264,7 +264,9 @@ public class DialogTestExam extends JDialog {
         easyQuestionCount = new JTextField();
         mediumQuestionCount = new JTextField();
         hardQuestionCount = new JTextField();
-        examCount = new JTextField();
+
+        Integer[] examCountData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        examCount = new JComboBox<>(examCountData);
 
         container.add(new JLabel("Số câu dễ: "), gbcBuilder.setPosition(0, 3).result());
         container.add(easyQuestionCount, gbcBuilder.setPosition(1, 3)
@@ -466,7 +468,7 @@ public class DialogTestExam extends JDialog {
     }
 
     private TestExamDTO create(TestExamDTO data) {
-        return BUS.create(data, Integer.parseInt(examCount.getText()));
+        return BUS.create(data, (int) examCount.getSelectedItem());
     }
 
     private boolean update(TestExamDTO data) {
@@ -518,7 +520,7 @@ public class DialogTestExam extends JDialog {
     private JTextField easyQuestionCount;
     private JTextField mediumQuestionCount;
     private JTextField hardQuestionCount;
-    private JTextField examCount;
+    private JComboBox<Integer> examCount;
     private JTable questionTable;
     private JScrollPane questionTableScrollPane;
     private JButton saveButton;

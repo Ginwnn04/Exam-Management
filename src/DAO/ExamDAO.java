@@ -1,7 +1,10 @@
 package DAO;
 
 import DTO.ExamDTO;
+import Helper.ConnectDB;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -138,6 +141,33 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public List<ExamDTO> findByTestCode(String testCode) {
+        String query = "SELECT * FROM exams WHERE testCode = " + testCode;
+        ArrayList<ExamDTO> result = new ArrayList<>();
+
+       try {
+            PreparedStatement ps = ConnectDB.getInstance().getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                ExamDTO exam = ExamDTO.builder()
+                                      .setTestCode(rs.getString("testCode"))
+                                      .setExOrder(rs.getString("exOrder"))
+                                      .setExCode(rs.getString("exCode"))
+                                      .build();
+
+                result.add(exam);
+            }
+
+            return result;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return null;
     }
 }
