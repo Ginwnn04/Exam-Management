@@ -195,7 +195,6 @@ public class PanelExams extends javax.swing.JPanel {
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
         panelBackground17 = new GUI.Comp.Swing.PanelBackground();
         panelBackground18 = new GUI.Comp.Swing.PanelBackground();
-        jButton1 = new javax.swing.JButton();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
@@ -385,18 +384,6 @@ public class PanelExams extends javax.swing.JPanel {
 
         panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
 
-        jButton1.setBackground(new java.awt.Color(53, 80, 154));
-        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("+ Thêm đề thi");
-        jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
-
         pnTop.add(panelBackground10, java.awt.BorderLayout.LINE_END);
 
         panelBackground11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
@@ -539,18 +526,21 @@ public class PanelExams extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxMaDeActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DialogExams d = new DialogExams(null, true);
-        d.setVisible(true);
-        render();
-        renderComboBoxMade();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    // private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    //     DialogExams d = new DialogExams(null, true);
+    //     d.setVisible(true);
+    //     render();
+    //     renderComboBoxMade();
+
+    // }//GEN-LAST:event_jButton1ActionPerformed
+
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbxMaDe;
     private javax.swing.JComboBox<String> cbxThuTu;
-    private javax.swing.JButton jButton1;
+    // private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

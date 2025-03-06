@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 
 import javax.swing.UIManager;
 import style.ColorConfig;
+import GUI.Comp.Panel.PanelAnalyze;
 
 /**
  *
@@ -100,8 +101,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                     break;
 
                 case 4:
-//                    showForm(new PanelExams());
-                    showForm(new ButtonImportUsers());
+                   showForm(new PanelAnalyze());
                     break;
                 case 5:
                     showForm(new PanelUser());
