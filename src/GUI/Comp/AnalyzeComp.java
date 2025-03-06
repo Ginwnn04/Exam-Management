@@ -13,14 +13,14 @@ import GUI.Comp.Dialog.DialogDoExam;
  * 
  * Author: Minh Phuc
  */
-public class ExamComp extends javax.swing.JPanel {
+public class AnalyzeComp extends javax.swing.JPanel {
 
     private TestExamDTO exam;
 
     /**
      * Creates new form ExamComp
      */
-    public ExamComp(TestExamDTO exam) {
+    public AnalyzeComp(TestExamDTO exam) {
         this.exam = exam;
         initComponents();
         loadExamData(exam);
@@ -65,10 +65,13 @@ public class ExamComp extends javax.swing.JPanel {
         jButton2.setBackground(new java.awt.Color(53, 80, 154));
         jButton2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("VÀO THI");
+        jButton2.setText("XEM THỐNG KÊ");
+        jButton2.setPreferredSize(new java.awt.Dimension(300, 50));
+        jButton2.setMinimumSize(new java.awt.Dimension(300, 50));
+        jButton2.setMaximumSize(new java.awt.Dimension(300, 50));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+            jButton2ActionPerformed(evt);
             }
         });
 
@@ -108,7 +111,7 @@ public class ExamComp extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jLabel3))
                 .addGap(50, 50, 50)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -135,8 +138,8 @@ public class ExamComp extends javax.swing.JPanel {
     LocalDate currentDate = LocalDate.now();
     LocalDate examDate = exam.getTestDate().toLocalDate();
 
-    if (currentDate.isAfter(examDate)) {
-        JOptionPane.showMessageDialog(this, "Ngày thi đã qua, bạn không thể vào thi.");
+    if (currentDate.isBefore(examDate)) {
+        JOptionPane.showMessageDialog(this, "Đề thi chưa có thống kê");
     } else {
         DialogDoExam doExam = new DialogDoExam(null, true);
         doExam.setVisible(true);
