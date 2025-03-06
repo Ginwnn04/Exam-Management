@@ -1,4 +1,6 @@
+
 package BUS;
+
 import DAO.UserDao;
 import DTO.ExamDTO;
 import DTO.UserDTO;
@@ -31,4 +33,12 @@ public class UserBus {
     public boolean deleteUser(Integer id) {
         return userDao.delete(id);
     }
+
+    public UserDTO login(String name,String password){
+        return userDao.loginUser(name, password);
+    }
+    // public boolean changePassword(int id, String newPassword) {
+       
+    //     return userDao.updatePassword(id, newPassword); 
+    // }
 }

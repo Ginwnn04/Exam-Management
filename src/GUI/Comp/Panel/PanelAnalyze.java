@@ -1,6 +1,6 @@
 package GUI.Comp.Panel;
 
-import GUI.Comp.ExamComp;
+import GUI.Comp.AnalyzeComp;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -25,19 +25,19 @@ import java.util.List;
  * 
  * Author: Minh Phuc
  */
-public class PanelEnterExams extends javax.swing.JPanel {
+public class PanelAnalyze extends javax.swing.JPanel {
     private JDateChooser startDateChooser;
     private JDateChooser endDateChooser;
     private TestExamBUS testExamBUS = new TestExamBUS();
     private List<TestExamDTO> examList;
-    private List<ExamComp> examComponents;
+    private List<AnalyzeComp> examComponents;
     private JTextField searchField;
     private javax.swing.JScrollPane scrollPane;
 
     /**
      * Creates new form PanelEnterExams
      */
-    public PanelEnterExams() {
+    public PanelAnalyze() {
         initComponents();
         initSearchField();
         loadExamComponents();
@@ -49,7 +49,7 @@ public class PanelEnterExams extends javax.swing.JPanel {
         jPanel5.setLayout(new BoxLayout(jPanel5, BoxLayout.Y_AXIS)); // Use BoxLayout for vertical alignment
 
         for (TestExamDTO exam : examList) {
-            ExamComp examComp = new ExamComp(exam);
+            AnalyzeComp examComp = new AnalyzeComp(exam);
             examComp.setPreferredSize(new Dimension(jPanel5.getWidth(), 100)); // Adjust height as needed
             jPanel5.add(examComp);
             examComponents.add(examComp); // Add examComp to examComponents list
@@ -108,7 +108,7 @@ public class PanelEnterExams extends javax.swing.JPanel {
         Date endDate = endDateChooser.getDate();
     
         jPanel5.removeAll();
-        for (ExamComp exComp : examComponents) {
+        for (AnalyzeComp exComp : examComponents) {
             boolean matchesQuery = query == null || exComp.getExamTitle().toLowerCase().contains(query);
             boolean matchesDate = true;
     

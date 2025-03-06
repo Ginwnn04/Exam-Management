@@ -9,6 +9,10 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import BUS.ExamBUS;
 import BUS.QuestionBUS;
+import GUI.Comp.Panel.PanelChinhSua;
+import GUI.Comp.Panel.PanelCreateExam;
+import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Panel.PanelTopic;
 import BUS.ResultBUS;
 import BUS.TestExamBUS;
 import DTO.ResultDTO;
@@ -16,14 +20,18 @@ import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Dialog.Statistics.DialogStatistics;
 import GUI.Comp.Panel.PanelEnterExams;
-import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTestExam;
+
 import GUI.Comp.Panel.PanelUser;
 import GUI.Custom.ButtonImportQuestion;
+import GUI.Custom.ButtonImportUsers;
 import GUI.Comp.Panel.PanelAfterExam;
 import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
+import DTO.UserDTO;
+
 import java.awt.Color;
 
 import java.awt.Font;
@@ -38,14 +46,19 @@ import javax.swing.JPanel;
 
 import javax.swing.UIManager;
 import style.ColorConfig;
+import GUI.Comp.Panel.PanelAnalyze;
 
 /**
  *
  * @author quang
  */
 public class Main extends javax.swing.JFrame implements PropertyChangeListener {
-
-    public Main() {
+    private UserDTO user =new UserDTO();
+    private PanelChinhSua panelChinhSua;
+    private UserDTO currentUser;
+    public Main(UserDTO user) {
+        this.currentUser = user;
+        
         initComponents();
         setLocationRelativeTo(null);
         getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
@@ -65,7 +78,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
-
+      
         setResizable(false);
     }
 
@@ -92,7 +105,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                     break;
 
                 case 4:
-//                    showForm(new PanelExams());
+                   showForm(new PanelAnalyze());
                     break;
                 case 5:
                     showForm(new PanelUser());

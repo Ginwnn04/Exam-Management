@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class UserDao implements BaseDAO<UserDTO, Integer> {
     @Override
     public ArrayList<UserDTO> getAll(boolean active) {
@@ -66,6 +68,31 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         }
         return false;
     }
+        public UserDTO loginUser(String username, String password) {
+        String query = "SELECT * FROM users WHERE userName = ? AND userPassword = ?";
+        try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
+        .prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) { 
+                UserDTO user = new UserDTO();
+                user.setId(rs.getInt("userID"));
+                user.setName(rs.getString("userName"));
+                user.setEmail(rs.getString("userEmail"));
+                // user.setPassword(rs.getString("userPassword"));
+                user.setFullName(rs.getString("userFullName")) ;    
+               
+             
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return null; 
+    }
+
     @Override
     public UserDTO create(UserDTO userDTO){
         String query = "INSERT INTO users(  userName, userEmail, userPassword, userFullname, isAdmin) VALUES(  ?, ?, ?, ?, ?)";
@@ -117,4 +144,17 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         }
         return false;
     }
+
+    public  boolean updatePassword(int id, String newPassword) {
+        String query = "UPDATE users SET userPassword = ? WHERE userID = ?";
+        try (PreparedStatement ps = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

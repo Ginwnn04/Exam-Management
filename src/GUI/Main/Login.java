@@ -33,6 +33,10 @@ import javax.swing.JComponent;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import DTO.UserDTO;
+import GUI.Comp.Dialog.DialogDangki;
+import BUS.UserBus;
+import DAO.UserDao;
 import Helper.ConnectDB;
 
 /**
@@ -40,7 +44,7 @@ import Helper.ConnectDB;
  * @author vuled
  */
 public class Login extends javax.swing.JFrame {
-
+    private UserBus userBus = new UserBus();
 
     public Login() {
         initComponents();
@@ -168,6 +172,12 @@ public class Login extends javax.swing.JFrame {
         gbc.gridx = 1;
         gbc.gridy = 1;
         logSection_panel_mid.add(passwordField, gbc);
+        JButton dangkiBtn = new JButton("ĐĂNG KÍ");
+        dangkiBtn.setPreferredSize(new Dimension(300, 35));
+        
+       
+        dangkiBtn.setBackground(new Color(50, 168, 82));
+        dangkiBtn.setForeground(Color.white);
 
         //Login Btn
         JButton loginBtn = new JButton("ĐĂNG NHẬP");
@@ -181,6 +191,7 @@ public class Login extends javax.swing.JFrame {
         
         logSection_panel_bot.add(new JLabel("                    "));
         logSection_panel_bot.add(loginBtn);
+        logSection_panel_bot.add(dangkiBtn);
         
         
 
@@ -192,7 +203,12 @@ public class Login extends javax.swing.JFrame {
                 loginButtonActionPerformed(usernameField, passwordField);
             }
         });
-
+        dangkiBtn.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e){
+                dangkiDialog();
+            }
+        });
         JLabel login_lbl = new JLabel("Đăng nhập", SwingConstants.CENTER);
         login_lbl.setFont(new Font("Roboto", Font.BOLD, 40));
         login_lbl.setForeground(new Color(50, 168, 82));
@@ -205,21 +221,29 @@ public class Login extends javax.swing.JFrame {
 //        usernameField.setText("quangdeptrai");
 //        passwordField.setText("1234");
     }
-
+    private void dangkiDialog(){
+        DialogDangki dangki =new DialogDangki(null,true);
+        dangki.setVisible(true);
+    }
     private void loginButtonActionPerformed(JTextField usernameField, JTextField passwordField) {
-//        String username = usernameField.getText();
-//        String password = passwordField.getText();
-//        StaffDTO staff = staffBUS.isExists(username, password);
-//        if (staff == null) {
-//            JOptionPane.showMessageDialog(rootPane, "Sai tài khoản hoặc mật khẩu");
-//            return;
-//        } else {
-//            StaffDTO.staffLogging = staff;
-//
-//            dispose();
-//            Main main = new Main();
-//        }
-        Main main = new Main();
+       String username = usernameField.getText();
+        String password = passwordField.getText();
+        UserDTO user = userBus.login(username,password);
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(user == null){
+            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu");
+            return;
+        }
+        else{
+            
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+            dispose();
+            Main main = new Main(user);
+            main.setVisible(true);
+        }
 
     }
 

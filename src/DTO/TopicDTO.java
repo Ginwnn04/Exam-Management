@@ -3,23 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DTO;
 
+package DTO;
 
 public class TopicDTO {
     private int id;
     private String title;
-    private int parent;
+    private String parent;
     private boolean status;
-
     public TopicDTO(){
     }
-    public TopicDTO(String title,int parent){
-       
-        this.title=title;
-        this.parent=parent;
-       
-        }
     public TopicDTO setId(int id) {
             this.id = id;
             return this;
@@ -29,6 +22,7 @@ public class TopicDTO {
         this.title = title;
         return this;
     }
+
 
     public TopicDTO setParent(int parent) {
         this.parent = parent;
@@ -64,7 +58,5 @@ public class TopicDTO {
     public boolean isStatus() {
         return status;
     }
-    
-   
-
 }
+

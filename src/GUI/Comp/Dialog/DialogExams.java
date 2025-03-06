@@ -15,7 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 import java.awt.Component;
-import net.miginfocom.demo.Test;
 import BUS.ExamBUS;
 import BUS.TestExamBUS;
 import BUS.QuestionBUS;
@@ -61,25 +60,37 @@ public class DialogExams extends javax.swing.JDialog {
     }
 
     private void updateButton(String examCode){
-        System.out.println("View button");
-        label1.setText("Xem chi tiết đề thi");
-        jButton2.setText("Xuất PDF");
-        // TestExamDTO testExam = testExamBUS.getTestByTestCode(TestCode);
-        // jComboBox1.setSelectedItem(testExam);
-        List<QuestionDTO> temp = questionBUS.getQuestionByExamCode(examCode);
-        for (ActionListener al : jButton2.getActionListeners()) {
-            jButton2.removeActionListener(al); // Xóa action cũ
-        }
-        // Thêm action mới
-        jButton2.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Xuất đề thi dưới dạng PDF "+examCode
-            );
-            for(var i : temp){
-                System.out.println(i.getContent());
-            }
-            exportExam(temp, examCode);
-        }); 
+    label1.setText("Xem chi tiết đề thi");
+    label1.setFont(new java.awt.Font("Roboto", java.awt.Font.BOLD, 18)); // NOI18N
+    jButton2.setText("Xuất PDF");
+    List<QuestionDTO> temp = questionBUS.getQuestionByExamCode(examCode);
+    for (ActionListener al : jButton2.getActionListeners()) {
+        jButton2.removeActionListener(al); // Xóa action cũ
     }
+    // Thêm action mới
+    jButton2.addActionListener(e -> {
+        JOptionPane.showMessageDialog(this, "Xuất đề thi dưới dạng PDF "+examCode);
+        for(var i : temp){
+            System.out.println(i.getContent());
+        }
+        exportExam(temp, examCode);
+    });
+
+    // Fetch questions based on the exam code
+    List<QuestionDTO> questions = questionBUS.getQuestionByExamCode(examCode);
+
+    // Clear the table
+    DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
+    model.setRowCount(0);
+
+    // Add questions to the table
+    for (QuestionDTO question : questions) {
+        model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+    }
+
+    model.fireTableDataChanged();
+    tbCauHoi.setModel(model);
+}
 
      // Sự kiện xuất đề thi
      private void exportExam(List<QuestionDTO> dataList, String examCode) {
@@ -134,8 +145,8 @@ public class DialogExams extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        label1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        label1.setText("Tạo đề thi");
+        // label1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        // label1.setText("Tạo đề thi");
 
         label2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         label2.setText("Tổ hợp:");
