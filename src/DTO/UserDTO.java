@@ -1,5 +1,5 @@
-package DTO;
 
+package DTO;
 public class UserDTO {
     private int id;
     private String name;
@@ -26,7 +26,8 @@ public class UserDTO {
         this.fullName = fullName;
         this.isAdmin = isAdmin;
     }
-    public long getId() {
+
+    public int getId() {
         return id;
     }
     
@@ -55,6 +56,7 @@ public class UserDTO {
     public Boolean getIsDeleted() {
         return isDeleted;
     }
+
 
     public UserDTO setId(int id) {
         this.id = id;

@@ -18,7 +18,6 @@ public class TableActionCellRenderer extends DefaultTableCellRenderer {
         else if(isSelected == true){
             action.setBackground(ColorConfig.BLUE);
         }
-
         // action.setBackground(new java.awt.Color(255, 255, 255));
         return action; 
     }
