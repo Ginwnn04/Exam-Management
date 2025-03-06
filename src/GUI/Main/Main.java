@@ -7,13 +7,17 @@ package GUI.Main;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
+import GUI.Comp.Panel.PanelChinhSua;
+import GUI.Comp.Panel.PanelCreateExam;
+import GUI.Comp.Panel.PanelQuestion;
+import GUI.Comp.Panel.PanelTopic;
 import BUS.ResultBUS;
 import DTO.ResultDTO;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Dialog.DialogTestExam;
 import GUI.Comp.Panel.PanelEnterExams;
-import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTestExam;
+
 import GUI.Comp.Panel.PanelUser;
 import GUI.Custom.ButtonImportQuestion;
 import GUI.Custom.ButtonImportUsers;
@@ -21,6 +25,9 @@ import GUI.Comp.Panel.PanelAfterExam;
 import GUI.Comp.Panel.PanelExams;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
+import DTO.UserDTO;
+
 import java.awt.Color;
 
 import java.awt.Font;
@@ -41,8 +48,12 @@ import style.ColorConfig;
  * @author quang
  */
 public class Main extends javax.swing.JFrame implements PropertyChangeListener {
-
-    public Main() {
+    private UserDTO user =new UserDTO();
+    private PanelChinhSua panelChinhSua;
+    private UserDTO currentUser;
+    public Main(UserDTO user) {
+        this.currentUser = user;
+        
         initComponents();
         setLocationRelativeTo(null);
         getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
@@ -62,7 +73,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
-
+      
         setResizable(false);
     }
 
