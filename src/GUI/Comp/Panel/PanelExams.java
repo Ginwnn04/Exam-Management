@@ -19,6 +19,7 @@ import GUI.Custom.TableActionCellEditor;
 import DTO.ExamDTO;
 import BUS.ExamBUS;
 import GUI.Comp.Dialog.DialogExams;
+import GUI.Utils.Email;
 /**
  *
  * @author Minh Phuc
@@ -543,7 +544,6 @@ public class PanelExams extends javax.swing.JPanel {
         d.setVisible(true);
         render();
         renderComboBoxMade();
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
