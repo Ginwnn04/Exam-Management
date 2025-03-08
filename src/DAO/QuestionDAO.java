@@ -5,6 +5,8 @@
 package DAO;
 
 import DTO.QuestionDTO;
+import DTO.TestStructureDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import Helper.ConnectDB;
@@ -210,5 +212,4 @@ public class QuestionDAO implements BaseDAO<QuestionDTO, Integer>{
         
         return listTopicID;
     }
-    
 }
