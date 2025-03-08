@@ -2,9 +2,11 @@ package DAO;
 import DTO.UserDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class UserDao implements BaseDAO<UserDTO, Integer> {
     @Override
@@ -52,6 +54,45 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public UserDTO findByUsername(String username){
+        String query = "SELECT * FROM users WHERE userName = ?";
+        try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
+        .prepareStatement(query)){
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                UserDTO user = UserDTO.builder()
+                .setId(resultSet.getInt("userID"))
+                .setName(resultSet.getString("userName"))
+                .setEmail(resultSet.getString("userEmail"))
+                .setPassword(resultSet.getString("userPassword"))
+                .setFullName(resultSet.getString("userFullName"))
+                .setIsAdmin(resultSet.getInt("isAdmin"))
+                .setOtp(resultSet.getString("otp_code"))
+                .setExpiredTime(resultSet.getTimestamp("expired_time"))
+                .build();
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean update_OTP_expiredTime(String otp, Date expired_time,String email){
+        String query = "UPDATE users SET otp_code = ?, expired_time = ? WHERE userEmail = ?";
+        try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
+        .prepareStatement(query)){
+            preparedStatement.setString(1, otp);
+            preparedStatement.setTimestamp(2, new Timestamp(expired_time.getTime()));
+            preparedStatement.setString(3, email);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean isExist(String fullName){

@@ -30,6 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -38,14 +39,15 @@ import GUI.Comp.Dialog.DialogDangki;
 import BUS.UserBus;
 import DAO.UserDao;
 import Helper.ConnectDB;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import GUI.Comp.Dialog.DialogSendOTP;
 /**
  *
  * @author vuled
  */
 public class Login extends javax.swing.JFrame {
     private UserBus userBus = new UserBus();
-
     public Login() {
         initComponents();
         LoginLayout();
@@ -209,22 +211,44 @@ public class Login extends javax.swing.JFrame {
                 dangkiDialog();
             }
         });
+
+        JLabel forgotPasswordLabel = new JLabel("<html><u>Quên mật khẩu</u></html>");
+        forgotPasswordLabel.setForeground(Color.WHITE);
+        forgotPasswordLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        forgotPasswordLabel.setPreferredSize(new Dimension(300, 35));
+        forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                forgotPasswordLabelMouseClicked(usernameField);
+            }
+        });
+
         JLabel login_lbl = new JLabel("Đăng nhập", SwingConstants.CENTER);
         login_lbl.setFont(new Font("Roboto", Font.BOLD, 40));
         login_lbl.setForeground(new Color(50, 168, 82));
 
         logSection_panel_top.add(login_lbl, BorderLayout.SOUTH);
         logSection_panel_top.setBackground(new Color(35, 35, 35));
-        
-        
+        logSection_panel_bot.add(forgotPasswordLabel);
+    }
 //        
 //        usernameField.setText("quangdeptrai");
 //        passwordField.setText("1234");
+
+    private void forgotPasswordLabelMouseClicked(JTextField usernameField) {
+        String username = usernameField.getText();
+        if(username.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản");
+            return;
+        }
+        JDialog dialogOTP = new DialogSendOTP(null, true,username);
+        dialogOTP.setVisible(true);
     }
+
     private void dangkiDialog(){
         DialogDangki dangki =new DialogDangki(null,true);
         dangki.setVisible(true);
     }
+
     private void loginButtonActionPerformed(JTextField usernameField, JTextField passwordField) {
        String username = usernameField.getText();
         String password = passwordField.getText();
