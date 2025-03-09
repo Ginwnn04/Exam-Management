@@ -82,7 +82,7 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
                 user.setEmail(rs.getString("userEmail"));
                 // user.setPassword(rs.getString("userPassword"));
                 user.setFullName(rs.getString("userFullName")) ;    
-               
+               user.setIsAdmin(rs.getInt("isAdmin"));
              
                 return user;
             }

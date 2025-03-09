@@ -66,5 +66,9 @@ public class TopicDTO {
     public boolean isStatus() {
         return status;
     }
+    @Override
+    public String toString() {
+        return title;
+    }
 }
 

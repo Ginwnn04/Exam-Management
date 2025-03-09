@@ -35,6 +35,7 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogDangki;
+import GUI.Utils.UserSession;
 import BUS.UserBus;
 import DAO.UserDao;
 import Helper.ConnectDB;
@@ -72,7 +73,7 @@ public class Login extends javax.swing.JFrame {
         background.add(panel_left);
         background.add(panel_right);
 
-        panel_right.setBackground(new Color(35, 35, 35));
+        panel_right.setBackground(new Color(255,255,255));
 
         ImageIcon image = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/log.png"));
         JLabel lbImage = new JLabel(image) {
@@ -84,26 +85,26 @@ public class Login extends javax.swing.JFrame {
         };
         panel_right.add(lbImage);
 
-        panel_left.setBackground(new Color(35, 35, 35));
+        panel_left.setBackground(new Color(255,255,255));
 
         panel_left.setLayout(new BorderLayout());
 
         JPanel panel_north = new JPanel();
         panel_north.setPreferredSize(new Dimension(400, 50));
-        panel_north.setBackground(new Color(35, 35, 35));
+        panel_north.setBackground(new Color(255,255,255));
 
         JPanel panel_center = new JPanel();
 
         JPanel panel_south = new JPanel();
-        panel_south.setBackground(new Color(35, 35, 35));
+        panel_south.setBackground(new Color(255,255,255));
         panel_south.setPreferredSize(new Dimension(400, 50));
 
         JPanel panel_east = new JPanel();
-        panel_east.setBackground(new Color(35, 35, 35));
+        panel_east.setBackground(new Color(255,255,255));
         panel_east.setPreferredSize(new Dimension(25, 400));
 
         JPanel panel_west = new JPanel();
-        panel_west.setBackground(new Color(35, 35, 35));
+        panel_west.setBackground(new Color(255,255,255));
         panel_west.setPreferredSize(new Dimension(25, 400));
 
         panel_left.add(panel_north, BorderLayout.NORTH);
@@ -115,10 +116,10 @@ public class Login extends javax.swing.JFrame {
         JPanel logSection_panel_top = new JPanel();
         logSection_panel_top.setPreferredSize(new Dimension(350, 100));
         JPanel logSection_panel_mid = new JPanel();
-        logSection_panel_mid.setBackground(new Color(35, 35, 35));
+        logSection_panel_mid.setBackground(new Color(255,255,255));
         JPanel logSection_panel_bot = new JPanel();
         logSection_panel_bot.setPreferredSize(new Dimension(200, 170));
-        logSection_panel_bot.setBackground(new Color(35, 35, 35));
+        logSection_panel_bot.setBackground(new Color(255,255,255));
 
         panel_center.setLayout(new BorderLayout());
         panel_center.add(logSection_panel_bot, BorderLayout.SOUTH);
@@ -127,16 +128,16 @@ public class Login extends javax.swing.JFrame {
 
         JLabel usernameLabel = new JLabel("Username:");
         JLabel passwordLabel = new JLabel("Password:");
-        usernameLabel.setForeground(Color.WHITE);
-        passwordLabel.setForeground(Color.WHITE);
+        usernameLabel.setForeground(Color.BLACK);
+        passwordLabel.setForeground(Color.BLACK);
         JTextField usernameField = new JTextField(20);
        
-        usernameField.setBackground(new Color(35, 35, 35));
+        usernameField.setBackground(new Color(255,255,255));
         JPasswordField passwordField = new JPasswordField(20);
-        passwordField.setBackground(new Color(35, 35, 35));
+        passwordField.setBackground(new Color(255,255,255));
 
-        usernameField.setForeground(Color.WHITE);
-        passwordField.setForeground(Color.WHITE);
+        usernameField.setForeground(Color.BLACK);
+        passwordField.setForeground(Color.BLACK);
 
         usernameField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tài khoản");
         passwordField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu");
@@ -214,7 +215,7 @@ public class Login extends javax.swing.JFrame {
         login_lbl.setForeground(new Color(50, 168, 82));
 
         logSection_panel_top.add(login_lbl, BorderLayout.SOUTH);
-        logSection_panel_top.setBackground(new Color(35, 35, 35));
+        logSection_panel_top.setBackground(new Color(255,255,255));
         
         
 //        
@@ -233,19 +234,25 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(user == null){
-            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu");
-            return;
-        }
-        else{
-            
+        if (user != null) {
+            UserSession.getInstance().setCurrentUser(user); 
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-            dispose();
+           
             Main main = new Main(user);
             main.setVisible(true);
+            main.updateNavBar();
+            dispose(); 
+            return ;
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!");
+            return;
+        }
+            
+            
         }
 
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
