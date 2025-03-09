@@ -81,8 +81,13 @@ public class DialogResetPassword extends JDialog {
     private void updatePasswordButtonActionPerformed(ActionEvent e) {
         String newPassword = new String(newPasswordField.getPassword());
         String confirmPassword = new String(confirmPasswordField.getPassword());
-        validatePassword(newPassword, confirmPassword);
-        updatePassword(user_id, newPassword);
+        if(validatePassword(newPassword, confirmPassword))
+            updatePassword(user_id, newPassword);
+        else{
+            newPasswordField.setText("");
+            confirmPasswordField.setText("");
+        }
+        
         dispose();
     }
 
@@ -95,16 +100,17 @@ public class DialogResetPassword extends JDialog {
         }
     }
 
-    private void validatePassword(String newPassword, String confirmPassword) {
+    private boolean validatePassword(String newPassword, String confirmPassword) {
         if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
 
-        if (!newPassword.equals(confirmPassword)) {
+        else if (!newPassword.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
+        return true;
     }
 
     public static void main(String[] args) {

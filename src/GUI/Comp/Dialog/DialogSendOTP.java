@@ -44,56 +44,68 @@ public class DialogSendOTP extends JDialog {
 
     private void initComponents() {
         setTitle("Send OTP");
-        setSize(400, 200);
+        setSize(600, 250); // Increase the size of the dialog
         setLayout(new GridBagLayout());
         setLocationRelativeTo(null);
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
-        // Email field
-        emailField = new JTextField(20);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+        // Email label
+        JLabel emailLabel = new JLabel("Email:");
         gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        add(emailField, gbc);
-        // Send OTP button
-        sendOtpButton = new JButton("Gửi OTP");
-        gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.weightx = 0;
+        add(emailLabel, gbc);
+    
+        // Email field
+        emailField = new JTextField(20); // Increase width
+        emailField.putClientProperty("JTextField.placeholderText", "Nhập email");
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Make text field wider
+        add(emailField, gbc);
+    
+        // Send OTP button (same row, different column)
+        sendOtpButton = new JButton("Gửi OTP");
+        sendOtpButton.setBackground(new Color(50, 168, 82));
+        sendOtpButton.setForeground(Color.WHITE);
+        sendOtpButton.setPreferredSize(new Dimension(160, 30));
+        gbc.gridx = 3; // Move to next column
+        gbc.gridy = 0; // Stay in the same row
+        gbc.gridwidth = 1; // Occupy only 1 column
         add(sendOtpButton, gbc);
-        // OTP field
-        otpField = new JTextField(20);
+    
+        // OTP label
+        JLabel otpLabel = new JLabel("OTP:");
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 3;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
+        gbc.gridwidth = 1;
+        add(otpLabel, gbc);
+    
+        // OTP field
+        otpField = new JTextField(20); // Increase width
+        otpField.putClientProperty("JTextField.placeholderText", "Nhập mã OTP");
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
         add(otpField, gbc);
+    
         // Confirm button
         confirmButton = new JButton("Xác nhận");
-        gbc.gridx = 0;
+        confirmButton.setBackground(new Color(50, 168, 82));
+        confirmButton.setForeground(Color.WHITE);
+        gbc.gridx = 1;
         gbc.gridy = 2;
-        gbc.gridwidth = 3;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.weightx = 0;
+        gbc.gridwidth = 2;
         add(confirmButton, gbc);
-        sendOtpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendOtpButtonActionPerformed(e);
-            }
-        });
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmButtonActionPerformed(e);
-            }
-        });
+    
+        // Action listeners
+        sendOtpButton.addActionListener(e -> sendOtpButtonActionPerformed(e));
+        confirmButton.addActionListener(e -> confirmButtonActionPerformed(e));
     }
+    
 
     private void sendOtpButtonActionPerformed(ActionEvent e) {
         String emailText = emailField.getText();
