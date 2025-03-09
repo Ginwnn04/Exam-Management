@@ -31,6 +31,7 @@ import javax.swing.border.TitledBorder;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.TestBUS;
+import BUS.TestStructureBUS;
 import BUS.TopicBUS;
 import DTO.TestDTO;
 import DTO.TestStructureDTO;
@@ -47,8 +48,11 @@ import style.MyFont;
 public class DialogTest extends JDialog {
     private boolean isUpdateDialog;
     private int selectedTestExamId;
+
     private TestBUS BUS;
     private TopicBUS topicBUS = new TopicBUS();
+    private TestStructureBUS testStructureBUS = new TestStructureBUS();
+
     private ArrayList<TestStructurePanel> testStructurePanels = new ArrayList<>();
     private List<TopicDTO> topics;
 
@@ -108,7 +112,9 @@ public class DialogTest extends JDialog {
         initSaveButton();
 
         addScroll();
-        fixedContentHeight(-20);
+
+        int fixedHeightValue = isUpdateDialog ? 0 : -20;
+        fixedContentHeight(fixedHeightValue);
 
         if (isUpdateDialog) setModel();
         add(main);
@@ -174,6 +180,16 @@ public class DialogTest extends JDialog {
         var date = model.getTestDate().toLocalDate();
         SelectedDate testDate = new SelectedDate(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
         testDateChooser.setSelectedDate(testDate);
+
+        addTestStructuresModelItems(model);
+    }
+
+    public void addTestStructuresModelItems(TestDTO model) {
+        var list = testStructureBUS.getAllByTestCode(model.getTestCode());
+
+        for (var testStructure : list) {
+            addTestStructure(testStructure);
+        }
     }
 
     //#endregion
@@ -312,6 +328,23 @@ public class DialogTest extends JDialog {
         if (testStructurePanels.size() > 1) fixedContentHeight(210);
     }
 
+    private void addTestStructure(TestStructureDTO model) {
+        TestStructurePanel testStructurePanel = new TestStructurePanel(WIDTH, 200, topics, model.getTestCode());
+        testStructurePanel.setModel(model);
+        testStructurePanel.setEditable(!isUpdateDialog);
+
+        int height = (int) testStructureContainer.getPreferredSize().getHeight() + 210;
+        testStructureContainer.setAbsoluteSize(WIDTH, height);
+
+        testStructurePanels.add(testStructurePanel);
+        testStructureContainer.add(testStructurePanel);
+        
+        testStructureContainer.validate();
+        testStructureContainer.repaint();
+
+        if (testStructurePanels.size() > 1) fixedContentHeight(210);
+    }
+
     private void deleteTestStructure(TestStructurePanel panel) {
         if (testStructurePanels.size() <= 1) return;
 
@@ -340,10 +373,10 @@ public class DialogTest extends JDialog {
 
         testStructureContainer.add(labelContainer);
 
-        addTestStructure();
+        if (!isUpdateDialog) addTestStructure();
         content.add(testStructureContainer);
 
-        initAddNewTestStructureButton();
+        if (!isUpdateDialog) initAddNewTestStructureButton();
     }
 
     private void initAddNewTestStructureButton() {

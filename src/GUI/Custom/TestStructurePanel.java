@@ -37,6 +37,7 @@ public class TestStructurePanel extends PanelBackground {
     private List<TopicDTO> topics;
     private String testCode;
     private ArrayList<Consumer<TestStructurePanel>> onDeleteListeners = new ArrayList<>();
+    private boolean isEditable = false;
 
     public TestStructurePanel(int width, int height, List<TopicDTO> topics, String testCode) {
         this.topics = topics;
@@ -45,6 +46,32 @@ public class TestStructurePanel extends PanelBackground {
         this.testCode = testCode;
 
         initComponents();
+    }
+
+    public void setEditable(boolean isEditable) {
+        this.isEditable = isEditable;
+
+        disableForm();
+    }
+
+    public void setModel(TestStructureDTO testStructure) {
+        int topicId = testStructure.getTopicID();
+        var topicOpt = topics.stream().filter(item -> item.getId() == topicId).findFirst();
+        var topic = topicOpt.get();
+        
+        topicCb.setSelectedItem(topic);
+        numEasyField.setText(String.valueOf(testStructure.getNumDiff()));
+        numMediumField.setText(String.valueOf(testStructure.getNumMedium()));
+        numDiffField.setText(String.valueOf(testStructure.getNumDiff()));
+    }
+
+    private void disableForm() {
+        topicCb.setEditable(false);
+        numEasyField.setEditable(false);
+        numMediumField.setEditable(false);
+        numDiffField.setEditable(false);
+
+        deleteButton.setEnabled(false);
     }
 
     private void initComponents() {
@@ -144,14 +171,14 @@ public class TestStructurePanel extends PanelBackground {
         container.setAbsoluteSize(80, height - 40);
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JButton button = new JButton("Xóa");
-        button.setBackground(Color.RED);
-        button.setForeground(Color.WHITE);
-        button.addActionListener(e -> {
+        deleteButton = new JButton("Xóa");
+        deleteButton.setBackground(Color.RED);
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.addActionListener(e -> {
             onDelete();
         });
 
-        container.add(button);
+        container.add(deleteButton);
 
         add(container);
     }
@@ -234,4 +261,5 @@ public class TestStructurePanel extends PanelBackground {
     private JTextField numEasyField;
     private JTextField numMediumField;
     private JTextField numDiffField;
+    private JButton deleteButton;
 }
