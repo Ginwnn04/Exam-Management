@@ -89,8 +89,8 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         for (int i = 0; i < questions.size(); i++) {
             String value;
 
-            if (i < questions.size() - 1) value = "(%d, %s), ";
-            else value = "(%d, %s);";
+            if (i < questions.size() - 1) value = "(%d, '%s'), ";
+            else value = "(%d, '%s');";
 
             var question = questions.get(i);
             query += String.format(value, question.getId(), exCode);

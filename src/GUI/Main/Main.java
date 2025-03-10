@@ -100,10 +100,10 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                    showForm(new PanelTopic());
                     break;
                 case 5:
-                    showForm(new PanelAnalyze());
+                    showForm(new PanelUser());
                 break;
                 case 6:
-                    showForm(new PanelUser());
+                    showForm(new PanelAnalyze());
                     break;
                 default:
                     break;

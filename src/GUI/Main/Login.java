@@ -214,7 +214,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         JLabel forgotPasswordLabel = new JLabel("<html><u>Quên mật khẩu</u></html>");
-        forgotPasswordLabel.setForeground(Color.WHITE);
+        forgotPasswordLabel.setForeground(Color.BLACK);
         forgotPasswordLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         forgotPasswordLabel.setPreferredSize(new Dimension(300, 35));
         forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -237,10 +237,16 @@ public class Login extends javax.swing.JFrame {
 
     private void forgotPasswordLabelMouseClicked(JTextField usernameField) {
         String username = usernameField.getText();
-        if(username.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản");
+        UserDTO user = userBus.findByUsername(username);
+        if (username.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
             return;
         }
+        else if(user == null){
+            JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+            return;
+        }
+        
         JDialog dialogOTP = new DialogSendOTP(null, true,username);
         dialogOTP.setVisible(true);
     }
