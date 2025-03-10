@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.border.Border;
@@ -33,9 +34,13 @@ public class RoundBorder implements Border {
      */
     public boolean BOTTOM_RIGHT = true;
 
-    public RoundBorder(Color borderColor, int radius){
+    public RoundBorder(Color borderColor, int radius) {
         this.borderColor = borderColor;
         this.radius = radius;
+    }
+
+    public int getRadius() {
+        return radius;
     }
 
     @Override
@@ -77,7 +82,7 @@ public class RoundBorder implements Border {
         int y2 = BOTTOM_LEFT ? y + height - radius * 2 : y + height - 1;
 
         y2 += TOP_LEFT ? 0 : radius;
-        
+
         g.drawLine(x, y, x, y2);
     }
 

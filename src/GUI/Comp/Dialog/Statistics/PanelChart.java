@@ -28,10 +28,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import BUS.ExamBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import Enum.TestResultEnum;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.RoundBorder;
@@ -42,9 +42,9 @@ public class PanelChart extends PanelBackground {
     private final int WIDTH = 1200;
     private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
 
-    private TestExamBUS testExamBUS = new TestExamBUS();
+    private TestBUS testExamBUS = new TestBUS();
 
-    private TestExamDTO testExam;
+    private TestDTO testExam;
     private List<ResultDTO> listResult;
 
     private ExamBUS examBUS = new ExamBUS();
@@ -53,9 +53,9 @@ public class PanelChart extends PanelBackground {
     private HashMap<Integer, ResultDTO> resultData = new HashMap<>();
     private int passCount = 0, failCount = 0;
 
-    public PanelChart(ExamDTO exam, List<ResultDTO> listResult) {
+    public PanelChart(TestDTO testExam, List<ResultDTO> listResult) {
         this.listResult = listResult;
-        testExam = testExamBUS.findByTestCode(exam.getTestCode());
+        this.testExam = testExam;
         
         prepareData();
         initComponents();
