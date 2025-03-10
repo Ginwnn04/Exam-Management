@@ -6,6 +6,8 @@ package GUI.Comp.Panel;
 import DTO.UserDTO;
 import DAO.UserDao;
 
+import java.awt.Color;
+
 import javax.swing.JOptionPane;
 
 import BUS.UserBus;
@@ -64,6 +66,8 @@ public class PanelChinhSua extends javax.swing.JPanel {
       
 
         jButton1.setText("Cập nhật");
+        jButton1.setBackground(new java.awt.Color(53,80,154));
+        jButton1.setForeground(Color.WHITE);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -71,6 +75,8 @@ public class PanelChinhSua extends javax.swing.JPanel {
         });
 
         jButton2.setText("Đổi mật khẩu");
+        jButton2.setForeground(Color.WHITE);
+        jButton2.setBackground(new java.awt.Color(53,80,154));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

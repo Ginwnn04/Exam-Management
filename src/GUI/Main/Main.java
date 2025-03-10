@@ -11,14 +11,14 @@ import GUI.Comp.Panel.PanelChinhSua;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelTopic;
 import BUS.ResultBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import DTO.ResultDTO;
 import GUI.Comp.Panel.PanelQuestion;
-import GUI.Comp.Dialog.DialogTestExam;
+import GUI.Comp.Dialog.DialogTest;
 import GUI.Comp.Dialog.Statistics.DialogStatistics;
 import GUI.Comp.Panel.PanelQuestion;
 import GUI.Comp.Panel.PanelEnterExams;
-import GUI.Comp.Panel.PanelTestExam;
+import GUI.Comp.Panel.PanelTest;
 
 import GUI.Comp.Panel.PanelUser;
 
@@ -36,6 +36,8 @@ import javax.swing.JPanel;
 import style.ColorConfig;
 import GUI.Comp.Panel.PanelAnalyze;
 import GUI.Comp.Panel.PanelTopic;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -51,7 +53,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         initComponents();
         setLocationRelativeTo(null);
         getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
-        
+       
 //        navBar.setInformation(fullName, role);
         MyListener.getInstance().addPropertyChangeListener(this);
 
@@ -67,10 +69,12 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
-      
+        thongtin();
         setResizable(false);
     }
-
+    public void updateNavBar() {
+        navBar.updateUserInfo(); 
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("ItemMenu")) {
@@ -90,13 +94,13 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                     showForm(new PanelExams());
                     break;
                 case 3:
-                    showForm(new PanelTestExam());
+                    showForm(new PanelTest());
                     break;
                 case 4:
                    showForm(new PanelTopic());
                     break;
                 case 5:
-                    // Analyze
+                    showForm(new PanelAnalyze());
                 break;
                 case 6:
                     showForm(new PanelUser());
@@ -227,17 +231,28 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     }
 
     public void logout() {
-        // navBar.btnDangXuat.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         dispose();
-        //         new Login().setVisible(true);
-        //         System.out.println("zzscsdsd");
-        //     }
+        navBar.btnDangXuat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Login().setVisible(true);
+                
+            }
 
-        // });
+        });
     }
+    public void thongtin() {
+        navBar.btnThongTin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            PanelChinhSua panel =new PanelChinhSua();
+            panel.setUserData(currentUser);
+            showForm(panel);
+            
+            }
 
+        });
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
