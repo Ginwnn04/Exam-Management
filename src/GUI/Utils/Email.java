@@ -36,7 +36,7 @@ public class Email {
     }
     
     public static long getExpiredTime() {
-        return new Date().getTime() + (5 * 60 * 1000); // 5 mins
+        return new Date().getTime() + (1 * 60 * 1000); // 1 mins
     }
     
     public static boolean isExpired(long time) {
