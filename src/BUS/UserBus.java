@@ -37,8 +37,5 @@ public class UserBus {
     public UserDTO login(String name,String password){
         return userDao.loginUser(name, password);
     }
-    // public boolean changePassword(int id, String newPassword) {
-       
-    //     return userDao.updatePassword(id, newPassword); 
-    // }
+   
 }

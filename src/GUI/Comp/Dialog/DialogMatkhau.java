@@ -4,7 +4,9 @@
  */
 package GUI.Comp.Dialog;
 import DTO.UserDTO;
-import GUI.Utils.SessionManager;
+import GUI.Utils.UserSession;
+
+import java.awt.Color;
 
 import javax.swing.JOptionPane;
 
@@ -134,7 +136,8 @@ public class DialogMatkhau extends javax.swing.JDialog {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53,80,154));
+        jButton1.setForeground(Color.WHITE);
         jButton1.setText("Xác nhận");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

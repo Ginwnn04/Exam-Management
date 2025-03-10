@@ -13,7 +13,7 @@ import DAO.TopicDAO;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.event.DocumentListener;
-import GUI.Comp.Dialog.DialogTopic;
+import GUI.Comp.Dialog.DialogTopic11;
 import GUI.Comp.Dialog.DialogTopic1;
 import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
@@ -119,7 +119,7 @@ public class PanelTopic extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy chủ đề trong CSDL!");
                 return;
             }
-            DialogTopic dialog = new DialogTopic(null, true);
+            DialogTopic1 dialog = new DialogTopic1(null, true);
             dialog.setTopic(topic);
             dialog.setVisible(true);
         }
@@ -128,7 +128,15 @@ public class PanelTopic extends javax.swing.JPanel {
     };
     tbChude.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer() );
     tbChude.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
-  
+    renderTopic();
+    }
+    public void renderTopic(){
+        listTopic = topicBUS.getAllTopic();
+       cbxchude.removeAllItems();
+       cbxchude.addItem("Tất cả");
+       for (TopicDTO topic : listTopic) {
+           cbxchude.addItem(String.valueOf(topic.getId()));
+       }
     }
     public void render(){
         
@@ -165,7 +173,7 @@ public class PanelTopic extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
         model.setRowCount(0);
         for (TopicDTO topic : listTopic){
-            boolean chude = selectedchude.equals("Chọn")|| topic.getParent() == Integer.parseInt(selectedchude);       
+            boolean chude = selectedchude.equals("Chọn")|| topic.getId() == Integer.parseInt(selectedchude);       
             boolean searchchude =   
                                   topic.getTitle().toLowerCase().contains(query);
 //                                  topic.getParent().contains(query);
@@ -490,7 +498,7 @@ public class PanelTopic extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground16);
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53,80,154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("+ Thêm Chủ đề");
@@ -570,12 +578,9 @@ public class PanelTopic extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
 
-        DialogTopic d3 = new DialogTopic(null,true);      System.out.println("them nguoi dung");
+        DialogTopic11 d3 = new DialogTopic11(null,true);      System.out.println("them nguoi dung");
         d3.setVisible(true);
-        if (d3.isUpdated()) { // Kiểm tra nếu có cập nhật
-            System.out.println("Thêm thành công, gọi loadTableData()..."); 
-            loadTableData(); // Làm mới bảng
-        }
+      
         
     }                                        
     

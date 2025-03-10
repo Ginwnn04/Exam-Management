@@ -1,6 +1,7 @@
 
 package DTO;
 public class UserDTO {
+    
     private int id;
     private String name;
     private String email;
@@ -8,6 +9,7 @@ public class UserDTO {
     private String fullName;
     private int isAdmin;
     private boolean isDeleted;
+   
     public UserDTO() {
     }
     public UserDTO(int id, String name, String email, String password, String fullName, int isAdmin , Boolean isDeleted) {
@@ -101,4 +103,5 @@ public class UserDTO {
     public UserDTO build(){
         return this;
     }
+    
 }

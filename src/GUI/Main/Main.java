@@ -36,6 +36,8 @@ import javax.swing.JPanel;
 import style.ColorConfig;
 import GUI.Comp.Panel.PanelAnalyze;
 import GUI.Comp.Panel.PanelTopic;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -51,7 +53,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         initComponents();
         setLocationRelativeTo(null);
         getContentPane().setBackground(ColorConfig.WHITE_COLOR_BG);
-        
+       
 //        navBar.setInformation(fullName, role);
         MyListener.getInstance().addPropertyChangeListener(this);
 
@@ -67,10 +69,12 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 //        FlatMacLightLaf.setup();
         logout();
         setVisible(true);
-      
+        thongtin();
         setResizable(false);
     }
-
+    public void updateNavBar() {
+        navBar.updateUserInfo(); 
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("ItemMenu")) {
@@ -227,17 +231,28 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
     }
 
     public void logout() {
-        // navBar.btnDangXuat.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         dispose();
-        //         new Login().setVisible(true);
-        //         System.out.println("zzscsdsd");
-        //     }
+        navBar.btnDangXuat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Login().setVisible(true);
+                
+            }
 
-        // });
+        });
     }
+    public void thongtin() {
+        navBar.btnThongTin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            PanelChinhSua panel =new PanelChinhSua();
+            panel.setUserData(currentUser);
+            showForm(panel);
+            
+            }
 
+        });
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

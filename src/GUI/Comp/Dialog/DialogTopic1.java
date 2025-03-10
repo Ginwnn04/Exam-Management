@@ -4,6 +4,8 @@
  */
 package GUI.Comp.Dialog;
 
+import java.awt.Color;
+
 import javax.swing.JOptionPane;
 
 import DAO.TopicDAO;
@@ -142,8 +144,9 @@ public void setUpdated(boolean updated) {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
+        jButton1.setBackground(new java.awt.Color(53,80,154));
         jButton1.setText("Cập nhật");
+        jButton1.setForeground(Color.WHITE);
         jButton1.setPreferredSize(new java.awt.Dimension(72, 25));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
