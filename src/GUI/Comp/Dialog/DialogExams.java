@@ -16,11 +16,11 @@ import java.util.List;
 
 import java.awt.Component;
 import BUS.ExamBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import BUS.QuestionBUS;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import GUI.Custom.ExportDocx;
 import BUS.AnswerBUS;
 import java.awt.event.ActionListener;
@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
  */
 public class DialogExams extends javax.swing.JDialog {
     private ArrayList<String> testList = new ArrayList<>();
-    private TestExamBUS testExamBUS = new TestExamBUS();
+    private TestBUS testExamBUS = new TestBUS();
     private ExamBUS BUS = new ExamBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
     private ArrayList<QuestionDTO> questions = new ArrayList<>();
@@ -101,7 +101,7 @@ public class DialogExams extends javax.swing.JDialog {
     }
     
     private void render() {
-        var testExamBUS = new TestExamBUS();
+        var testExamBUS = new TestBUS();
         var testList = testExamBUS.getAll(true);
         for (var test : testList) {
             jComboBox1.addItem(test);
@@ -112,8 +112,8 @@ public class DialogExams extends javax.swing.JDialog {
                     boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                if (value instanceof TestExamDTO) {
-                    TestExamDTO topic = (TestExamDTO) value;
+                if (value instanceof TestDTO) {
+                    TestDTO topic = (TestDTO) value;
                     setText(topic.getTestCode());
                 }
 
@@ -157,7 +157,7 @@ public class DialogExams extends javax.swing.JDialog {
         label4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         label4.setText("Thứ tự:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestExamDTO[] {  }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestDTO[] {  }));
         jComboBox1.addActionListener(e -> updateLabel());
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
@@ -240,45 +240,45 @@ public class DialogExams extends javax.swing.JDialog {
 
     private void updateLabel() {
         
-        TestExamDTO selectedTestExam = (TestExamDTO) jComboBox1.getSelectedItem();
+        TestDTO selectedTestExam = (TestDTO) jComboBox1.getSelectedItem();
         String selectedOrder = (String) jComboBox2.getSelectedItem();
         jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);
 
         // Fetch questions based on the topic ID
-        int topicId = selectedTestExam.getTopicId();
-        List<QuestionDTO> temp = testExamBUS.getByTopicId(topicId);
-        questions = BUS.shuffleQuestions(temp);
+        // int topicId = selectedTestExam.getTopicId();
+        // List<QuestionDTO> temp = testExamBUS.getByTopicId(topicId);
+        // questions = BUS.shuffleQuestions(temp);
 
         // Clear the table
         DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
         model.setRowCount(0);
 
         // Add questions to the table based on the number of questions for each level
-        int numEasy = selectedTestExam.getEasyQuestionCount();
-        int numMedium = selectedTestExam.getMediumQuestionCount();
-        int numDiff = selectedTestExam.getDiffQuestionCount();
+        // int numEasy = selectedTestExam.getEasyQuestionCount();
+        // int numMedium = selectedTestExam.getMediumQuestionCount();
+        // int numDiff = selectedTestExam.getDiffQuestionCount();
 
-        int easyCount = 0, mediumCount = 0, diffCount = 0;
+        // int easyCount = 0, mediumCount = 0, diffCount = 0;
 
-        for (QuestionDTO question : questions) {
-            if (question.getLevel().equals("Dễ") && easyCount < numEasy) {
-                model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-                easyCount++;
-            } else if (question.getLevel().equals("Trung bình") && mediumCount < numMedium) {
-                model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-                mediumCount++;
-            } else if (question.getLevel().equals("Khó") && diffCount < numDiff) {
-                model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-                diffCount++;
-            }
-        }
+        // for (QuestionDTO question : questions) {
+        //     if (question.getLevel().equals("Dễ") && easyCount < numEasy) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         easyCount++;
+        //     } else if (question.getLevel().equals("Trung bình") && mediumCount < numMedium) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         mediumCount++;
+        //     } else if (question.getLevel().equals("Khó") && diffCount < numDiff) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         diffCount++;
+        //     }
+        // }
 
         model.fireTableDataChanged();
         tbCauHoi.setModel(model);
     }
 
     private ExamDTO gatherData() {
-        var testExam = (TestExamDTO) jComboBox1.getSelectedItem();
+        var testExam = (TestDTO) jComboBox1.getSelectedItem();
 
         return ExamDTO.builder()
                       .setTestCode(testExam.getTestCode())
@@ -347,7 +347,7 @@ public class DialogExams extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<TestExamDTO> jComboBox1;
+    private javax.swing.JComboBox<TestDTO> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

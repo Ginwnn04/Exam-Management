@@ -13,7 +13,7 @@ public class ConnectDB {
     private static final String PORT = "3306";
 
     private static final String DB_NAME = "exammanagement";
-    private static final String USERNAME = "quang";
+    private static final String USERNAME = "root";
     private static final String PASSWORD = "";
 
 

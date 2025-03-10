@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import javax.swing.JOptionPane;
 
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import GUI.Comp.Dialog.DialogDoExam;
 
 /**
@@ -15,18 +15,18 @@ import GUI.Comp.Dialog.DialogDoExam;
  */
 public class ExamComp extends javax.swing.JPanel {
 
-    private TestExamDTO exam;
+    private TestDTO exam;
 
     /**
      * Creates new form ExamComp
      */
-    public ExamComp(TestExamDTO exam) {
+    public ExamComp(TestDTO exam) {
         this.exam = exam;
         initComponents();
         loadExamData(exam);
     }
 
-    private void loadExamData(TestExamDTO exam) {
+    private void loadExamData(TestDTO exam) {
         jLabel1.setText("TÊN ĐỀ: ");
         jLabel2.setText("NGÀY GIỜ THI: ");
         jLabel3.setText("THỜI GIAN THI: ");
