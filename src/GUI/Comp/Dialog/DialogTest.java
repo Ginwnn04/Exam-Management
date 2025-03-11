@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.Box;
@@ -33,6 +34,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import BUS.TestBUS;
 import BUS.TestStructureBUS;
 import BUS.TopicBUS;
+import DTO.QuestionDTO;
 import DTO.TestDTO;
 import DTO.TestStructureDTO;
 import DTO.TopicDTO;
@@ -55,6 +57,7 @@ public class DialogTest extends JDialog {
 
     private ArrayList<TestStructurePanel> testStructurePanels = new ArrayList<>();
     private List<TopicDTO> topics;
+    private HashMap<Integer, List<QuestionDTO>> questions = new HashMap<>();
 
     private final int WIDTH = 1180;
 
@@ -87,6 +90,10 @@ public class DialogTest extends JDialog {
 
         setResizable(false);
         setLocationRelativeTo(null);
+    }
+
+    private void prepareData() {
+        
     }
     
     private void initComponents() {
@@ -153,7 +160,7 @@ public class DialogTest extends JDialog {
         container.setBorder(new EmptyBorder(0, 10, 0, 10));
 
         idLabel = new JLabel();
-        idLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        idLabel.setFont(MyFont.fontText.deriveFont(16f));
         idLabel.setText("ID cấu trúc đề thi: " + selectedTestExamId);
 
         container.add(idLabel);

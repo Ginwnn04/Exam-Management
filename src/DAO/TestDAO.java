@@ -133,7 +133,7 @@ public class TestDAO implements BaseDAO<TestDTO, Integer> {
 
     @Override
     public boolean delete(Integer id) {
-        String query = "DELETE FROM test WHERE testID = " + id;
+        String query = "UPDATE test SET testStatus = 0 WHERE testID = " + id;
 
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);

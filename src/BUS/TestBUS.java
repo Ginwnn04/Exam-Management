@@ -72,7 +72,9 @@ public class TestBUS {
         return DAO.update(id, request);
     }
 
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id, String testCode) {
+        examBUS.deleteExam(testCode);
+        testStructureBUS.delete(testCode);
         return DAO.delete(id);
     }
 }

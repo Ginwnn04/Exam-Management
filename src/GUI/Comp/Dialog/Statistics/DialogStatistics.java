@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import BUS.ResultBUS;
 import DTO.ExamDTO;
@@ -28,7 +29,8 @@ public class DialogStatistics extends JDialog {
         setLocationRelativeTo(null);
     }
 
-    public DialogStatistics(TestDTO testExam) {
+    public DialogStatistics(TestDTO testExam, JFrame parent, boolean modal) {
+        super(parent, modal);
         this.testExam = testExam;
         listResult = resultBUS.getAllByTestExam(testExam);
 

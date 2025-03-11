@@ -291,12 +291,13 @@ public class PanelTest extends JPanel {
 
     private void onDeleteTestExam(int row) {
         int id = (int) table.getValueAt(row, 0);
+        String testCode = (String) table.getValueAt(row, 1);
         String message = "Bạn có muốn xóa cấu trúc đề thi với Id " + id + " không";
         
         int response = JOptionPane.showConfirmDialog(this, message, "Xóa cấu trúc đề thi", JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.NO_OPTION) return;
         
-        BUS.delete(id);
+        BUS.delete(id, testCode);
         resetTableItems(true);
         renderTable();
     }

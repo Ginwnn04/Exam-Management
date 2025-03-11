@@ -285,6 +285,7 @@ public class DialogExams extends javax.swing.JDialog {
                       .setExCode(jLabel1.getText())
                       .setExOrder((String)jComboBox2.getSelectedItem())
                       .setQuestions(questions)
+                      .setStatus(true)
                       .build();
     }
 
