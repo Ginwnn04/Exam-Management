@@ -36,6 +36,7 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogDangki;
+import GUI.Utils.Encryptor;
 import GUI.Utils.UserSession;
 import BUS.UserBus;
 import DAO.UserDao;
@@ -257,30 +258,38 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void loginButtonActionPerformed(JTextField usernameField, JTextField passwordField) {
-       String username = usernameField.getText();
-        String password = passwordField.getText();
-        UserDTO user = userBus.login(username,password);
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
+       String textUsername = usernameField.getText();
+       String textPassword = passwordField.getText();
+       if (textUsername.isEmpty() || textPassword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
         }
-        if (user != null) {
-            UserSession.getInstance().setCurrentUser(user); 
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-           
-            Main main = new Main(user);
-            main.setVisible(true);
-            main.updateNavBar();
-            dispose(); 
-            return ;
-            
-        } else {
-            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!");
-            return;
+        UserDTO user = userBus.findByUsername(textUsername);
+        if(user == null){
+              JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+              return;
         }
+        String password = user.getPassword();
+        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
+            if(decryptedPassword.equals(textPassword)){
+                UserSession.getInstance().setCurrentUser(user); 
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+                Main main = new Main(user);
+                main.setVisible(true);
+                main.updateNavBar();
+                dispose(); 
+                return ;
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
+                return;
+            }
+            
+    } 
+        
             
             
-        }
+    
 
     
 
