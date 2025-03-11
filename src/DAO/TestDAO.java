@@ -91,7 +91,7 @@ public class TestDAO implements BaseDAO<TestDTO, Integer> {
             ps.setString(1, request.getTestCode());
             ps.setString(2, request.getTitle());
             ps.setShort(3, request.getTestLimit());
-            ps.setInt(4, request.getTestTime());
+            ps.setLong(4, request.getTestTime());
             ps.setDate(5, request.getTestDate());
             ps.setBoolean(6, request.isTestStatus());
 
@@ -116,7 +116,7 @@ public class TestDAO implements BaseDAO<TestDTO, Integer> {
             ps.setString(1, request.getTestCode()); 
             ps.setString(2, request.getTitle());
             ps.setShort(3, request.getTestLimit());
-            ps.setInt(4, request.getTestTime());
+            ps.setLong(4, request.getTestTime());
             ps.setDate(5, request.getTestDate());
             ps.setBoolean(6, request.isTestStatus());
             ps.setInt(7, id);

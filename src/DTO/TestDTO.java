@@ -7,7 +7,7 @@ public class TestDTO {
     private String testCode;
     private String title;
     private short testLimit;
-    private int testTime;
+    private long testTime;
     private Date testDate;
     private boolean testStatus;
 
@@ -51,11 +51,11 @@ public class TestDTO {
         return this;
     }
 
-    public int getTestTime() {
+    public long getTestTime() {
         return testTime;
     }
 
-    public TestDTO setTestTime(int testTime) {
+    public TestDTO setTestTime(long testTime) {
         this.testTime = testTime;
         return this;
     }

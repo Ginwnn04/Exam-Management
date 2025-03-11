@@ -44,7 +44,6 @@ public class PanelAnswers extends javax.swing.JPanel {
             Image img = new ImageIcon(path).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
             this.lbImg.setIcon(new ImageIcon(img));
         }
-    
     }
     
     public boolean isSelected() {
@@ -70,6 +69,14 @@ public class PanelAnswers extends javax.swing.JPanel {
             main.setBackground(ColorConfig.GREY_COLOR_BG);
 
         }
+    }
+    
+    public char getOrder() {
+        return order;
+    }
+    
+    public String getAnsw() {
+        return answ;
     }
 
     /**

@@ -65,6 +65,10 @@ public class ExamBUS {
     public List<ExamDTO> findByTestCode(String testCode) {
         return ExamDAO.findByTestCode(testCode);
     }
+    
+    public ExamDTO randomExamByTestCode(String testCode) {
+        return ExamDAO.randomExamByTestCode(testCode);
+    }
 
     /**
      * Get the number of exams that are randomly generated
