@@ -477,13 +477,10 @@ public class DialogTest extends JDialog {
         return BUS.update(selectedTestExamId, data);
     }
 
-    private Pair<Boolean, String> canSave() {
-        boolean result = false;
-        
+    private Pair<Boolean, String> canSave() { 
         try {
-            result = !examTitle.getText().isEmpty();
-            result = !testLimit.getText().isEmpty();
-            result = !time.getText().isEmpty();
+            if (examTitle.getText().isEmpty() && time.getText().isEmpty() && testLimit.getText().isEmpty())
+                return new Pair<>(false, "Vui lòng nhập đầy đủ thông tin");
 
             var _ = Short.parseShort(testLimit.getText());
             var _ = Integer.parseInt(time.getText());
@@ -492,7 +489,7 @@ public class DialogTest extends JDialog {
             return new Pair<>(false, "Thời gian và Số lượt thi chỉ được nhập số");
         }
 
-        return new Pair<>(result, "Vui lòng nhập đầy đủ thông tin");
+        return new Pair<Boolean,String>(true, "");
     }
 
     private TestDTO gatherFormData() {
