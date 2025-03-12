@@ -108,11 +108,15 @@ public class PanelTest extends JPanel {
         searchAndFilterContainer.setAbsoluteSize(964, 50);
         searchAndFilterContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
+        JLabel searchLabel = new JLabel("Tìm kiếm: ");
+        searchLabel.setFont(MyFont.fontHeader);
+
         searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(350, 30));
         searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
         setupSearchFieldEvent();
 
+        searchAndFilterContainer.add(searchLabel);
         searchAndFilterContainer.add(searchField);
         searchAndFilterContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 

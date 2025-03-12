@@ -39,7 +39,7 @@ import style.ColorConfig;
 import style.MyFont;
 
 public class PanelChart extends PanelBackground {
-    private final int WIDTH = 1200;
+    private final int WIDTH = 1180;
     private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
 
     private TestDTO testExam;

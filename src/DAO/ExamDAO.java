@@ -80,6 +80,8 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
             e.printStackTrace();
             return null;
         }
+
+        System.out.println(query);
         
         var questions = examDTO.getQuestions();
         createMultipleExamQuestion(examDTO.getExCode(), questions);
@@ -104,6 +106,8 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
                                    model.getExCode(), 
                                    model.getStatus() ? 1 : 0);
         }
+
+        System.out.println(query);
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             result = preparedStatement.executeUpdate() > 0;
@@ -134,6 +138,8 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
             var question = questions.get(i);
             query += String.format(value, question.getId(), exCode, 1);
         }
+
+        System.out.println(query);
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             return preparedStatement.executeUpdate() > 0;

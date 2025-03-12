@@ -1,6 +1,7 @@
 package GUI.Comp.Dialog.Statistics;
 
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -43,6 +44,7 @@ public class DialogStatistics extends JDialog {
     private void initComponents() {
         setMinimumSize(DIALOG_SIZE);
         setPreferredSize(DIALOG_SIZE);
+        setLayout(new GridBagLayout());
 
         chart = new PanelChart(testExam, listResult);
         chart.addOnChangeTabListener(this::changeTab);
@@ -51,6 +53,7 @@ public class DialogStatistics extends JDialog {
         studentStatistics.addOnChangeTabListener(this::changeTab);
 
         main = new PanelBackground();
+        main.setAbsoluteSize(1180, 720);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.add(chart);
 
