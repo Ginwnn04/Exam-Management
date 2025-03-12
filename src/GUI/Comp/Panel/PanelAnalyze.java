@@ -76,15 +76,17 @@ public class PanelAnalyze extends javax.swing.JPanel {
         }
     });
 
-    JLabel startDateLabel = new JLabel("Start Date:");
+    JLabel startDateLabel = new JLabel("Ngày bắt đầu:");
     startDateLabel.setPreferredSize(new Dimension(100, 30));
+    startDateLabel.setFont(new java.awt.Font("Roboto", 0, 14));
 
     startDateChooser = new JDateChooser();
     startDateChooser.setPreferredSize(new Dimension(150, 30));
     startDateChooser.addPropertyChangeListener("date", evt -> filterExamComponents());
 
-    JLabel endDateLabel = new JLabel("End Date:");
+    JLabel endDateLabel = new JLabel("Ngày kết thúc:");
     endDateLabel.setPreferredSize(new Dimension(100, 30));
+    endDateLabel.setFont(new java.awt.Font("Roboto", 0, 14));
 
     endDateChooser = new JDateChooser();
     endDateChooser.setPreferredSize(new Dimension(150, 30));

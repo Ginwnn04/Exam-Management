@@ -130,16 +130,16 @@ public class DialogExams extends javax.swing.JDialog {
         label1.setFont(new java.awt.Font("Roboto", 1, 18));
         label1.setText("Xem chi tiết đề thi");
 
-        label2.setFont(new java.awt.Font("Arial", 0, 14));
+        label2.setFont(new java.awt.Font("Roboto", 0, 14));
         label2.setText("Tên tổ hợp:");
 
-        label3.setFont(new java.awt.Font("Arial", 0, 14));
+        label3.setFont(new java.awt.Font("Roboto", 0, 14));
         label3.setText("Ngày thi:");
 
-        label4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        label4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         label4.setText("Thứ tự:");
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14));
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14));
         jLabel1.setText(examCode);
 
         tbCauHoi.setFont(new java.awt.Font("Roboto", 0, 16));
@@ -154,14 +154,14 @@ public class DialogExams extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tbCauHoi);
 
         jButton2.setBackground(new java.awt.Color(53, 80, 154));
-        jButton2.setFont(new java.awt.Font("Arial", 1, 14));
+        jButton2.setFont(new java.awt.Font("Roboto", 1, 14));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Xuất PDF");
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 14));
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14));
         jLabel2.setText("");
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 14));
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14));
         jLabel3.setText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
