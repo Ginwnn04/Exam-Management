@@ -482,8 +482,8 @@ public class DialogTest extends JDialog {
             if (examTitle.getText().isEmpty() || time.getText().isEmpty() || testLimit.getText().isEmpty())
                 return new Pair<>(false, "Vui lòng nhập đầy đủ thông tin");
 
-            var _ = Short.parseShort(testLimit.getText());
-            var _ = Integer.parseInt(time.getText());
+            // var _ = Short.parseShort(testLimit.getText());
+            // var _ = Integer.parseInt(time.getText());
         }
         catch (NumberFormatException ignore) {
             return new Pair<>(false, "Thời gian và Số lượt thi chỉ được nhập số");

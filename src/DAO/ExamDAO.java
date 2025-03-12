@@ -12,9 +12,9 @@ import java.sql.ResultSet;
 public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
     @Override
     public ArrayList<ExamDTO> getAll(boolean active) {
-        int isGet = active ? 1 : 0;
+        // int isGet = active ? 1 : 0;
         ArrayList<ExamDTO> list_exams = new ArrayList<ExamDTO>();
-        String query = "SELECT * FROM exams WHERE status = " + isGet;
+        String query = "SELECT * FROM exams";
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
