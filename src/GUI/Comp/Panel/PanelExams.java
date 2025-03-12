@@ -64,10 +64,10 @@ public class PanelExams extends javax.swing.JPanel {
             public void onView(int row) {
                 var a = tbDeThi.getModel().getValueAt(row, 0);
                 var b = tbDeThi.getModel().getValueAt(row, 2);
-                String TestCode = a.toString();
+                String testCode = a.toString();
                 String examCode = b.toString();
-                System.out.println(TestCode);
-                DialogExams d = new DialogExams(null, true,examCode);
+                System.out.println(testCode);
+                DialogExams d = new DialogExams(null, true,examCode, testCode);
                 d.setVisible(true);
 
             }
@@ -504,9 +504,7 @@ public class PanelExams extends javax.swing.JPanel {
         tbDeThi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         tbDeThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"101", "A", "101A", null},
-                {"102", "A", "102A", null},
-                {"102", "B", "102B", null}
+
             },
             new String [] {
                 "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"

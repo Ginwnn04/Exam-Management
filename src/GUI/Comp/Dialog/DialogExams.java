@@ -1,20 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package GUI.Comp.Dialog;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-import java.util.List;
-
-import java.awt.Component;
 import BUS.ExamBUS;
 import BUS.TestBUS;
 import BUS.QuestionBUS;
@@ -24,6 +15,7 @@ import DTO.TestDTO;
 import GUI.Custom.ExportDocx;
 import BUS.AnswerBUS;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -34,92 +26,82 @@ public class DialogExams extends javax.swing.JDialog {
     private TestBUS testExamBUS = new TestBUS();
     private ExamBUS BUS = new ExamBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
-    private ArrayList<QuestionDTO> questions = new ArrayList<>();
     private AnswerBUS answerBUS = new AnswerBUS();
+    private String examCode;
+    private String testCode;
+    private List<QuestionDTO> questions;
+
     /**
      * Creates new form DialogExams
+     * 
+     * @param testCode
      */
-    public DialogExams(java.awt.Frame parent, boolean modal) {
+    public DialogExams(java.awt.Frame parent, boolean modal, String examCode, String testCode) {
         super(parent, modal);
+        this.examCode = examCode;
+        this.testCode = testCode;
         initComponents();
+        loadTestDetails();
         setLocationRelativeTo(null);
-        render();
-        updateLabel();
+        updateButton();
     }
 
-    /*
-     * View form DialogExams
-     */
-    public DialogExams(java.awt.Frame parent , boolean modal , String TestCode){
-        super(parent, modal);
-        initComponents();
-        setLocationRelativeTo(null);
-        render();
-        updateButton(TestCode);
-        updateLabel();
-    }
-
-    private void updateButton(String examCode){
-    label1.setText("Xem chi tiết đề thi");
-    label1.setFont(new java.awt.Font("Roboto", java.awt.Font.BOLD, 18)); // NOI18N
-    jButton2.setText("Xuất PDF");
-    List<QuestionDTO> temp = questionBUS.getQuestionByExamCode(examCode);
-    for (ActionListener al : jButton2.getActionListeners()) {
-        jButton2.removeActionListener(al); // Xóa action cũ
-    }
-    // Thêm action mới
-    jButton2.addActionListener(e -> {
-        JOptionPane.showMessageDialog(this, "Xuất đề thi dưới dạng PDF "+examCode);
-        for(var i : temp){
-            System.out.println(i.getContent());
+    private void loadTestDetails() {
+        TestDTO testExam = testExamBUS.findByTestCode(testCode);
+        if (testExam != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            jLabel2.setText(dateFormat.format(testExam.getTestDate()));
+            jLabel3.setText(testExam.getTestTime() + " phút");
         }
-        exportExam(temp, examCode);
-    });
-
-    // Fetch questions based on the exam code
-    List<QuestionDTO> questions = questionBUS.getQuestionByExamCode(examCode);
-
-    // Clear the table
-    DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
-    model.setRowCount(0);
-
-    // Add questions to the table
-    for (QuestionDTO question : questions) {
-        model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
     }
 
-    model.fireTableDataChanged();
-    tbCauHoi.setModel(model);
-}
+    private void updateButton() {
+        label1.setText("Xem chi tiết đề thi");
+        label1.setFont(new java.awt.Font("Roboto", java.awt.Font.BOLD, 18));
+        jButton2.setText("Xuất PDF");
+        questions = questionBUS.getQuestionByExamCode(examCode);
 
-     // Sự kiện xuất đề thi
-     private void exportExam(List<QuestionDTO> dataList, String examCode) {
+        for (ActionListener al : jButton2.getActionListeners()) {
+            jButton2.removeActionListener(al); // Xóa action cũ
+        }
+        // Thêm action mới
+        jButton2.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Xuất đề thi dưới dạng PDF " + examCode);
+            exportExam(questions, examCode);
+        });
+
+        // Clear the table
+        DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
+        model.setRowCount(0);
+
+        // Add questions to the table
+        for (QuestionDTO question : questions) {
+            model.addRow(new Object[] { question.getId(), question.getContent(), formatLevel(question.getLevel()) });
+        }
+
+        model.fireTableDataChanged();
+        tbCauHoi.setModel(model);
+    }
+
+    private String formatLevel(String level) {
+        switch (level) {
+            case "easy":
+                return "Dễ";
+            case "medium":
+                return "Trung bình";
+            case "diff":
+                return "Khó";
+            default:
+                return "";
+        }
+    }
+
+    // Sự kiện xuất đề thi
+    private void exportExam(List<QuestionDTO> dataList, String examCode) {
         // Gọi hàm xuất đề thi
         ExportDocx.exportExamToDocx(examCode, dataList, answerBUS);
         JOptionPane.showMessageDialog(this, "Xuất đề thi thành công!");
         dispose(); // Đóng dialog
-    }
-    
-    private void render() {
-        var testExamBUS = new TestBUS();
-        var testList = testExamBUS.getAll(true);
-        for (var test : testList) {
-            jComboBox1.addItem(test);
-        }
-        jComboBox1.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                if (value instanceof TestDTO) {
-                    TestDTO topic = (TestDTO) value;
-                    setText(topic.getTestCode());
-                }
-
-                return this;
-            }
-        });
     }
 
     /**
@@ -129,171 +111,127 @@ public class DialogExams extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         label1 = new java.awt.Label();
         label2 = new java.awt.Label();
         label3 = new java.awt.Label();
         label4 = new java.awt.Label();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbCauHoi = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        // label1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        // label1.setText("Tạo đề thi");
+        label1.setFont(new java.awt.Font("Roboto", 1, 18));
+        label1.setText("Xem chi tiết đề thi");
 
-        label2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        label2.setText("Tổ hợp:");
+        label2.setFont(new java.awt.Font("Roboto", 0, 14));
+        label2.setText("Tên tổ hợp:");
 
-        label3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        label3.setText("Mã đề:");
+        label3.setFont(new java.awt.Font("Roboto", 0, 14));
+        label3.setText("Ngày thi:");
 
-        label4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        label4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         label4.setText("Thứ tự:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestDTO[] {  }));
-        jComboBox1.addActionListener(e -> updateLabel());
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel1.setText(examCode);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
-
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText("101A");
-
-        tbCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        tbCauHoi.setFont(new java.awt.Font("Roboto", 0, 16));
         tbCauHoi.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "STT", "Câu hỏi", "Độ khó"
-            }
-        ));
+                },
+                new String[] {
+                        "STT", "Câu hỏi", "Độ khó"
+                }));
         tbCauHoi.setCellSelectionEnabled(true);
         jScrollPane1.setViewportView(tbCauHoi);
 
-        jButton2.setBackground(new java.awt.Color(225, 99, 73));
-        jButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton2.setBackground(new java.awt.Color(53, 80, 154));
+        jButton2.setFont(new java.awt.Font("Roboto", 1, 14));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Tạo đề thi");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jButton2.setText("Xuất PDF");
+
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel2.setText("");
+
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel3.setText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1))
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel1)
+                                                        .addComponent(jLabel2)
+                                                        .addComponent(jLabel3)))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 583,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 250,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(27, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(label2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2)
+                                .addContainerGap(27, Short.MAX_VALUE)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void updateLabel() {
-        
-        TestDTO selectedTestExam = (TestDTO) jComboBox1.getSelectedItem();
-        String selectedOrder = (String) jComboBox2.getSelectedItem();
-        jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);
-
-        // Fetch questions based on the topic ID
-        // int topicId = selectedTestExam.getTopicId();
-        // List<QuestionDTO> temp = testExamBUS.getByTopicId(topicId);
-        // questions = BUS.shuffleQuestions(temp);
-
-        // Clear the table
-        DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
-        model.setRowCount(0);
-
-        // Add questions to the table based on the number of questions for each level
-        // int numEasy = selectedTestExam.getEasyQuestionCount();
-        // int numMedium = selectedTestExam.getMediumQuestionCount();
-        // int numDiff = selectedTestExam.getDiffQuestionCount();
-
-        // int easyCount = 0, mediumCount = 0, diffCount = 0;
-
-        // for (QuestionDTO question : questions) {
-        //     if (question.getLevel().equals("Dễ") && easyCount < numEasy) {
-        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-        //         easyCount++;
-        //     } else if (question.getLevel().equals("Trung bình") && mediumCount < numMedium) {
-        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-        //         mediumCount++;
-        //     } else if (question.getLevel().equals("Khó") && diffCount < numDiff) {
-        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
-        //         diffCount++;
-        //     }
-        // }
-
-        model.fireTableDataChanged();
-        tbCauHoi.setModel(model);
-    }
-
-    private ExamDTO gatherData() {
-        var testExam = (TestDTO) jComboBox1.getSelectedItem();
-
-        return ExamDTO.builder()
-                      .setTestCode(testExam.getTestCode())
-                      .setExCode(jLabel1.getText())
-                      .setExOrder((String)jComboBox2.getSelectedItem())
-                      .setQuestions(questions)
-                      .build();
-    }
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
-        ExamDTO exam = gatherData();
-        if (BUS.addExam(exam) == null) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
-        else JOptionPane.showMessageDialog(this, "Tạo đề thi thành công");
-        this.dispose();
-    }// GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -329,27 +267,13 @@ public class DialogExams extends javax.swing.JDialog {
                     ex);
         }
         // </editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DialogExams dialog = new DialogExams(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<TestDTO> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label label1;
     private java.awt.Label label2;
