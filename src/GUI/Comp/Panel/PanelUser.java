@@ -175,6 +175,7 @@ public class PanelUser extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panelBackground12 = new GUI.Comp.Swing.PanelBackground();
         jPanel1 = new javax.swing.JPanel();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         panelBackground2 = new GUI.Comp.Swing.PanelBackground();
@@ -188,22 +189,28 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground9 = new GUI.Comp.Swing.PanelBackground();
         pnCenter = new GUI.Comp.Swing.PanelBackground();
         pnTop = new GUI.Comp.Swing.PanelBackground();
+        panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        jButton1 = new javax.swing.JButton();
+        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         jLabel1 = new javax.swing.JLabel();
         panelBackground10 = new GUI.Comp.Swing.PanelBackground();
-        panelBackground17 = new GUI.Comp.Swing.PanelBackground();
-        panelBackground18 = new GUI.Comp.Swing.PanelBackground();
-        panelBackground11 = new GUI.Comp.Swing.PanelBackground();
         jLabel2 = new javax.swing.JLabel();
-        panelBackground12 = new GUI.Comp.Swing.PanelBackground();
         txtNguoiDung = new javax.swing.JTextField();
-        panelBackground13 = new GUI.Comp.Swing.PanelBackground();
-        jLabel3 = new javax.swing.JLabel();
-        panelBackground14 = new GUI.Comp.Swing.PanelBackground();
-        cbxDiemso = new javax.swing.JComboBox<>();
-        panelBackground16 = new GUI.Comp.Swing.PanelBackground();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbNguoidung = new javax.swing.JTable();
+
+        panelBackground12.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout panelBackground12Layout = new javax.swing.GroupLayout(panelBackground12);
+        panelBackground12.setLayout(panelBackground12Layout);
+        panelBackground12Layout.setHorizontalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelBackground12Layout.setVerticalGroup(
+            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1200, 765));
@@ -342,125 +349,8 @@ public class PanelUser extends javax.swing.JPanel {
         pnTop.setPreferredSize(new java.awt.Dimension(1140, 80));
         pnTop.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
-        jLabel1.setText("Tìm kiếm");
-        pnTop.add(jLabel1, java.awt.BorderLayout.PAGE_START);
-
-        panelBackground10.setPreferredSize(new java.awt.Dimension(150, 30));
-        panelBackground10.setLayout(new java.awt.BorderLayout());
-
-        panelBackground17.setPreferredSize(new java.awt.Dimension(150, 22));
-
-        javax.swing.GroupLayout panelBackground17Layout = new javax.swing.GroupLayout(panelBackground17);
-        panelBackground17.setLayout(panelBackground17Layout);
-        panelBackground17Layout.setHorizontalGroup(
-            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-        panelBackground17Layout.setVerticalGroup(
-            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
-
-        panelBackground10.add(panelBackground17, java.awt.BorderLayout.PAGE_END);
-
-        panelBackground18.setPreferredSize(new java.awt.Dimension(150, 5));
-
-        javax.swing.GroupLayout panelBackground18Layout = new javax.swing.GroupLayout(panelBackground18);
-        panelBackground18.setLayout(panelBackground18Layout);
-        panelBackground18Layout.setHorizontalGroup(
-            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-        panelBackground18Layout.setVerticalGroup(
-            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
-
-        panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
-
-        pnTop.add(panelBackground10, java.awt.BorderLayout.LINE_END);
-
         panelBackground11.setPreferredSize(new java.awt.Dimension(993, 30));
-        panelBackground11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
-
-        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel2.setText("Người dùng");
-        panelBackground11.add(jLabel2);
-
-        panelBackground12.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground12Layout = new javax.swing.GroupLayout(panelBackground12);
-        panelBackground12.setLayout(panelBackground12Layout);
-        panelBackground12Layout.setHorizontalGroup(
-            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground12Layout.setVerticalGroup(
-            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground12);
-
-        txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
-        panelBackground11.add(txtNguoiDung);
-
-        panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground13Layout = new javax.swing.GroupLayout(panelBackground13);
-        panelBackground13.setLayout(panelBackground13Layout);
-        panelBackground13Layout.setHorizontalGroup(
-            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground13Layout.setVerticalGroup(
-            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground13);
-
-        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel3.setText("Điểm số");
-        panelBackground11.add(jLabel3);
-
-        panelBackground14.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
-        panelBackground14.setLayout(panelBackground14Layout);
-        panelBackground14Layout.setHorizontalGroup(
-            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground14Layout.setVerticalGroup(
-            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground14);
-
-        cbxDiemso.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxDiemso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "Item 2", "Item 3", "Item 4" }));
-        cbxDiemso.setToolTipText("");
-        cbxDiemso.setPreferredSize(new java.awt.Dimension(200, 30));
-        panelBackground11.add(cbxDiemso);
-
-        panelBackground16.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
-        panelBackground16.setLayout(panelBackground16Layout);
-        panelBackground16Layout.setHorizontalGroup(
-            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelBackground16Layout.setVerticalGroup(
-            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelBackground11.add(panelBackground16);
+        panelBackground11.setLayout(new java.awt.BorderLayout(100, 0));
 
         jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
@@ -475,7 +365,36 @@ public class PanelUser extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        panelBackground11.add(jButton1);
+        panelBackground11.add(jButton1, java.awt.BorderLayout.LINE_END);
+
+        panelBackground14.setLayout(new java.awt.GridLayout(2, 0, 1, 0));
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel1.setText("Tìm kiếm");
+        panelBackground14.add(jLabel1);
+
+        javax.swing.GroupLayout panelBackground10Layout = new javax.swing.GroupLayout(panelBackground10);
+        panelBackground10.setLayout(panelBackground10Layout);
+        panelBackground10Layout.setHorizontalGroup(
+            panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        panelBackground10Layout.setVerticalGroup(
+            panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 29, Short.MAX_VALUE)
+        );
+
+        panelBackground14.add(panelBackground10);
+
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel2.setText("Người dùng");
+        panelBackground14.add(jLabel2);
+
+        txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
+        panelBackground14.add(txtNguoiDung);
+
+        panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);
 
         pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
 
@@ -553,11 +472,9 @@ public class PanelUser extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cbxDiemso;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private GUI.Comp.Swing.PanelBackground main;
@@ -565,11 +482,7 @@ public class PanelUser extends javax.swing.JPanel {
     private GUI.Comp.Swing.PanelBackground panelBackground10;
     private GUI.Comp.Swing.PanelBackground panelBackground11;
     private GUI.Comp.Swing.PanelBackground panelBackground12;
-    private GUI.Comp.Swing.PanelBackground panelBackground13;
     private GUI.Comp.Swing.PanelBackground panelBackground14;
-    private GUI.Comp.Swing.PanelBackground panelBackground16;
-    private GUI.Comp.Swing.PanelBackground panelBackground17;
-    private GUI.Comp.Swing.PanelBackground panelBackground18;
     private GUI.Comp.Swing.PanelBackground panelBackground2;
     private GUI.Comp.Swing.PanelBackground panelBackground3;
     private GUI.Comp.Swing.PanelBackground panelBackground4;

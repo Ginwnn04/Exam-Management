@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.ExamDTO;
+import DTO.QuestionDTO;
 import Helper.ConnectDB;
 
 import java.util.ArrayList;
@@ -77,24 +78,31 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         }
         
         var questions = examDTO.getQuestions();
-
-        for (var question : questions) {
-            if (!createExamQuestion(question.getId(), examDTO)) return null;
-        }
+        createMultipleExamQuestion(examDTO.getExCode(), questions);
 
         return examDTO;
     }
 
-    private boolean createExamQuestion(int questionId, ExamDTO examDTO) {
-        String query = "INSERT INTO exam_question(question_id, exCode) VALUES(?, ?)";
+    private boolean createMultipleExamQuestion(String exCode, List<QuestionDTO> questions) {
+        String query = "INSERT INTO exam_question (question_id, exCode) VALUES ";
+
+        for (int i = 0; i < questions.size(); i++) {
+            String value;
+
+            if (i < questions.size() - 1) value = "(%d, '%s'), ";
+            else value = "(%d, '%s');";
+
+            var question = questions.get(i);
+            query += String.format(value, question.getId(), exCode);
+        }
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
-            preparedStatement.setInt(1, questionId);
-            preparedStatement.setString(2, examDTO.getExCode());
             return preparedStatement.executeUpdate() > 0;
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
+
         return false;
     }
 

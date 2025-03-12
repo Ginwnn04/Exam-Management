@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 
 import DTO.UserDTO;
-
+import GUI.Utils.Encryptor;
 import BUS.UserBus;
  import java.awt.event.ActionEvent;
  import java.util.ArrayList;
@@ -249,10 +249,11 @@ public class DialogDangki extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 ký tự trở lên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+        String hash_password = Encryptor.encrypt("Bar12345Bar12345", "RandomInitVector", password);
         return UserDTO.builder()
                 .setName(username)
                 .setEmail(email)
-                .setPassword(password)
+                .setPassword(hash_password)
                 .setFullName(fullname)
                 .build();
 
