@@ -104,15 +104,15 @@ public class ExamComp extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel1)
                                         .addComponent(jLabel4))
-                                .addGap(100, 100, 100)
+                                .addGap(200, 200, 200)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel5))
-                                .addGap(100, 100, 100)
+                                .addGap(200, 200, 200)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel6)
                                         .addComponent(jLabel3))
-                                .addGap(50, 50, 50)
+                                .addGap(200, 200, 200)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(41, Short.MAX_VALUE)));

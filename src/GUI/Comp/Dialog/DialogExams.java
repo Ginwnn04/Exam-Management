@@ -47,7 +47,7 @@ public class DialogExams extends javax.swing.JDialog {
     }
 
     private void loadTestDetails() {
-        TestExamDTO testExam = testExamBUS.findByTestCode(testCode);
+        TestDTO testExam = testExamBUS.findByTestCode(testCode);
         if (testExam != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             jLabel2.setText(dateFormat.format(testExam.getTestDate()));
@@ -76,11 +76,24 @@ public class DialogExams extends javax.swing.JDialog {
 
         // Add questions to the table
         for (QuestionDTO question : questions) {
-            model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+            model.addRow(new Object[] { question.getId(), question.getContent(), formatLevel(question.getLevel()) });
         }
 
         model.fireTableDataChanged();
         tbCauHoi.setModel(model);
+    }
+
+    private String formatLevel(String level) {
+        switch (level) {
+            case "easy":
+                return "Dễ";
+            case "medium":
+                return "Trung bình";
+            case "diff":
+                return "Khó";
+            default:
+                return "";
+        }
     }
 
     // Sự kiện xuất đề thi
@@ -89,28 +102,6 @@ public class DialogExams extends javax.swing.JDialog {
         ExportDocx.exportExamToDocx(examCode, dataList, answerBUS);
         JOptionPane.showMessageDialog(this, "Xuất đề thi thành công!");
         dispose(); // Đóng dialog
-    }
-    
-    private void render() {
-        var testExamBUS = new TestBUS();
-        var testList = testExamBUS.getAll(true);
-        for (var test : testList) {
-            jComboBox1.addItem(test);
-        }
-        jComboBox1.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                if (value instanceof TestDTO) {
-                    TestDTO topic = (TestDTO) value;
-                    setText(topic.getTestCode());
-                }
-
-                return this;
-            }
-        });
     }
 
     /**
@@ -147,11 +138,6 @@ public class DialogExams extends javax.swing.JDialog {
 
         label4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         label4.setText("Thứ tự:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestDTO[] {  }));
-        jComboBox1.addActionListener(e -> updateLabel());
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14));
         jLabel1.setText(examCode);
@@ -281,22 +267,6 @@ public class DialogExams extends javax.swing.JDialog {
                     ex);
         }
         // </editor-fold>
-
-
-        // /* Create and display the dialog */
-        // java.awt.EventQueue.invokeLater(new Runnable() {
-        //     public void run() {
-        //         DialogExams dialog = new DialogExams(new javax.swing.JFrame(), true, exCode, testCode); // Example
-        //                                                                                                   // exam code
-        //         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-        //             @Override
-        //             public void windowClosing(java.awt.event.WindowEvent e) {
-        //                 System.exit(0);
-        //             }
-        //         });
-        //         dialog.setVisible(true);
-        //     }
-        // });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

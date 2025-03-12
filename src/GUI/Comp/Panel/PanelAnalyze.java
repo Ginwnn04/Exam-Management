@@ -50,7 +50,7 @@ public class PanelAnalyze extends javax.swing.JPanel {
 
         for (TestDTO exam : examList) {
             AnalyzeComp examComp = new AnalyzeComp(exam);
-            examComp.setPreferredSize(new Dimension(jPanel5.getWidth(), 100)); // Adjust height as needed
+            examComp.setPreferredSize(new Dimension((int)jPanel5.getPreferredSize().getWidth(), 100)); // Adjust height as needed
             jPanel5.add(examComp);
             examComponents.add(examComp); // Add examComp to examComponents list
         }
