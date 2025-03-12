@@ -3,10 +3,12 @@ package BUS;
 import DAO.ExamDAO;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
+import DTO.TestStructureDTO;
 import Enum.LevelEnum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -71,15 +73,17 @@ public class ExamBUS {
         return ExamDAO.findByTestCode(testCode).size();
     }
 
-    public boolean generateExam(TestExamDTO testExam, int quantity) {
-        List<QuestionDTO> questions = questionBUS.getQuestionByTopicAndLevel(testExam.getTopicId(), "");
+    // need optimize
+    public boolean generateExam(TestDTO testExam, int quantity, List<TestStructureDTO> listTestStructure) {
+        ArrayList<TestStructureQuestion> testStructureQuestions = getQuestionsByTestStructure(listTestStructure);
+
         char order = 65;
         boolean result = false;
         
         for (int i = 0; i < quantity; i++) {
             if (order > 'Z') return false;
 
-            var list = getQuestionsByCondition(testExam, shuffleQuestions(questions));
+            var list = getShuffleQuestion(testStructureQuestions);
 
             ExamDTO model = ExamDTO.builder()
                                    .setTestCode(testExam.getTestCode())
@@ -93,27 +97,77 @@ public class ExamBUS {
 
         return result;
     }
-    
-    public ArrayList<QuestionDTO> getQuestionsByCondition(TestExamDTO testExam, List<QuestionDTO> questions) {
+
+    private ArrayList<QuestionDTO> getShuffleQuestion(List<TestStructureQuestion> testStructureQuestions) {
         ArrayList<QuestionDTO> result = new ArrayList<>();
 
-        int numEasy = testExam.getEasyQuestionCount();
-        int numMedium = testExam.getMediumQuestionCount();
-        int numDiff = testExam.getDiffQuestionCount();
-
-        int easyCount = 0, mediumCount = 0, diffCount = 0;
-
-        for (QuestionDTO question : questions) {
-            String level = question.getLevel();
-            
-            if (level.equals(LevelEnum.EASY.getDesc()) && easyCount < numEasy) easyCount++;
-            else if (level.equals(LevelEnum.MEDIUM.getDesc()) && mediumCount < numMedium) mediumCount++;
-            else if (level.equals(LevelEnum.HARD.getDesc()) && diffCount < numDiff) diffCount++;
-            else continue;
-
-            result.add(question);
+        for (var testStructureQuestion : testStructureQuestions) {
+            var questions = testStructureQuestion.getRandomWithCondition();
+            result.addAll(questions);
         }
 
         return result;
+    }
+
+    private ArrayList<TestStructureQuestion> getQuestionsByTestStructure(List<TestStructureDTO> listTestStructure) {
+        ArrayList<TestStructureQuestion> result = new ArrayList<>();
+
+        for (TestStructureDTO testStructure : listTestStructure) {
+            TestStructureQuestion topicQuestion = new TestStructureQuestion(testStructure, questionBUS);
+            result.add(topicQuestion);
+        }
+
+        return result;
+    }
+
+    private class TestStructureQuestion {
+        private TestStructureDTO testStructure;
+        private List<QuestionDTO> questions;
+
+        public TestStructureQuestion(TestStructureDTO testStructure, QuestionBUS questionBUS) {
+            this.testStructure = testStructure;
+            questions = questionBUS.getQuestionByTopicAndLevel(testStructure.getTopicID(), "");
+        }
+
+        private ArrayList<QuestionDTO> shuffleQuestions() {
+            int n = questions.size();
+            Random rand = new Random();
+    
+            var result = new ArrayList<>(questions);
+    
+            while (n > 1) {
+                n--;
+                int index = rand.nextInt(n);
+    
+                QuestionDTO temp = result.get(n);
+                result.set(n, result.get(index));
+                result.set(index, temp);
+            }
+    
+            return result;
+        }
+
+        public List<QuestionDTO> getRandomWithCondition() {
+            shuffleQuestions();
+
+            ArrayList<QuestionDTO> result = new ArrayList<>();
+            int easyCount = 0, mediumCount = 0, diffCount = 0;
+
+            int easyTarget = testStructure.getNumEasy(), mediumTarget = testStructure.getNumMedium();
+            int diffTarget = testStructure.getNumDiff();
+            
+            for (var question : questions) {
+                String level = question.getLevel().trim();
+            
+                if (level.equals("easy") && easyCount < easyTarget) easyCount++;
+                else if (level.equals("medium") && mediumCount < mediumTarget) mediumCount++;
+                else if (level.equals("diff") && diffCount < diffTarget) diffCount++;
+                else continue;
+
+                result.add(question);
+            }
+
+            return result;
+        }
     }
 }

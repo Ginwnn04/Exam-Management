@@ -9,8 +9,8 @@ import java.util.List;
 import BUS.AnswerBUS;
 import DTO.AnswerDTO;
 import DTO.QuestionDTO;
-import BUS.TestExamBUS;
-import DTO.TestExamDTO;
+import BUS.TestBUS;
+import DTO.TestDTO;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,8 +18,8 @@ public class ExportDocx {
     public static void exportExamToDocx(String examCode, List<QuestionDTO> questions, AnswerBUS answerBUS) {
         //101A -> 101
         String testCode = examCode.substring(0, examCode.length() - 1);
-        TestExamBUS testExamBUS = new TestExamBUS();
-        TestExamDTO testExam = testExamBUS.getTestByTestCode(testCode);
+        TestBUS testExamBUS = new TestBUS();
+        TestDTO testExam = testExamBUS.getTestByTestCode(testCode);
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Chọn nơi lưu file");
         fileChooser.setSelectedFile(new File(examCode + ".docx")); // Tên file mặc định

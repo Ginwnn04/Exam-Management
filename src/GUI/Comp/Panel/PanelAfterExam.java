@@ -14,11 +14,11 @@ import javax.swing.border.EmptyBorder;
 
 import BUS.ExamBUS;
 import BUS.ResultBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import BUS.UserBus;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import DTO.UserDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.CircleProgressBar;
@@ -35,11 +35,11 @@ public class PanelAfterExam extends JPanel {
     private ResultBUS resultBUS = new ResultBUS();
     private UserBus userBUS = new UserBus();
     private ExamBUS examBUS = new ExamBUS();
-    private TestExamBUS testExamBUS = new TestExamBUS();
+    private TestBUS testExamBUS = new TestBUS();
 
     private UserDTO student;
     private ExamDTO exam;
-    private TestExamDTO test;
+    private TestDTO test;
     private ResultDTO result;
 
     public PanelAfterExam() {

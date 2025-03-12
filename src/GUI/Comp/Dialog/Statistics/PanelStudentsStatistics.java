@@ -31,11 +31,11 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ExamBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import BUS.UserBus;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import DTO.UserDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.Debounce;
@@ -48,17 +48,17 @@ public class PanelStudentsStatistics extends PanelBackground {
 
     private List<ResultDTO> listResult;
     private List<ResultDTO> filterListResult;
-    private TestExamDTO testExam;
+    private TestDTO testExam;
 
     private HashMap<Integer, UserDTO> users = new HashMap<>();
 
     private UserBus userBUS = new UserBus();
-    private TestExamBUS testExamBUS = new TestExamBUS();
+    private TestBUS testExamBUS = new TestBUS();
     private ExamBUS examBUS = new ExamBUS();
 
-    public PanelStudentsStatistics(List<ResultDTO> listResult, ExamDTO exam) {
+    public PanelStudentsStatistics(TestDTO testExam, List<ResultDTO> listResult) {
         this.listResult = listResult;
-        testExam = testExamBUS.getTestByTestCode(exam.getTestCode());
+        this.testExam = testExam;
         
         fetchUsers();
         initComponents();

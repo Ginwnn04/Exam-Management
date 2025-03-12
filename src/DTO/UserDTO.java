@@ -1,6 +1,9 @@
-
 package DTO;
+
+import java.util.Date;
+
 public class UserDTO {
+    
     private int id;
     private String name;
     private String email;
@@ -8,6 +11,9 @@ public class UserDTO {
     private String fullName;
     private int isAdmin;
     private boolean isDeleted;
+    private String otp;
+    private Date expired_time;
+   
     public UserDTO() {
     }
     public UserDTO(int id, String name, String email, String password, String fullName, int isAdmin , Boolean isDeleted) {
@@ -93,6 +99,23 @@ public class UserDTO {
         return this;
     }
     
+    public UserDTO setOtp(String otp) {
+        this.otp = otp;
+        return this;
+    }
+
+    public UserDTO setExpiredTime(Date expired_time) {
+        this.expired_time = expired_time;
+        return this;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public Date getExpiredTime() {
+        return expired_time;
+    }
 
     public static UserDTO builder(){
         return new UserDTO();
@@ -101,4 +124,5 @@ public class UserDTO {
     public UserDTO build(){
         return this;
     }
+    
 }

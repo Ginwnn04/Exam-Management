@@ -6,8 +6,9 @@ import java.time.LocalDate;
 
 import javax.swing.JOptionPane;
 
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import GUI.Comp.Dialog.DialogDoExam;
+import GUI.Comp.Dialog.Statistics.DialogStatistics;
 import GUI.Comp.Dialog.Statistics.DialogStatistics;
 
 /**
@@ -17,18 +18,18 @@ import GUI.Comp.Dialog.Statistics.DialogStatistics;
  */
 public class AnalyzeComp extends javax.swing.JPanel {
 
-    private TestExamDTO exam;
+    private TestDTO exam;
 
     /**
      * Creates new form ExamComp
      */
-    public AnalyzeComp(TestExamDTO exam) {
+    public AnalyzeComp(TestDTO exam) {
         this.exam = exam;
         initComponents();
         loadExamData(exam);
     }
 
-    private void loadExamData(TestExamDTO exam) {
+    private void loadExamData(TestDTO exam) {
         jLabel1.setText("TÊN ĐỀ: ");
         jLabel2.setText("NGÀY GIỜ THI: ");
         jLabel3.setText("THỜI GIAN THI: ");
@@ -146,13 +147,14 @@ public class AnalyzeComp extends javax.swing.JPanel {
         LocalDate currentDate = LocalDate.now();
         LocalDate examDate = exam.getTestDate().toLocalDate();
 
-        if (currentDate.isBefore(examDate)) {
-            JOptionPane.showMessageDialog(this, "Đề thi chưa có thống kê");
-        } else {
-            //  DialogStatistics statistics = new DialogStatistics(exam);
-            // statistics.setVisible(true);
-        }
-    }// GEN-LAST:event_jButton2ActionPerformed
+    if (currentDate.isBefore(examDate)) {
+        JOptionPane.showMessageDialog(this, "Đề thi chưa có thống kê");
+    } else {
+        DialogStatistics statistics = new DialogStatistics(exam);
+        statistics.setVisible(true);
+    }
+}//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

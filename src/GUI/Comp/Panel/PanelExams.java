@@ -20,6 +20,7 @@ import DTO.ExamDTO;
 import BUS.ExamBUS;
 import GUI.Comp.Dialog.DialogExams;
 import GUI.Utils.Email;
+import com.formdev.flatlaf.FlatClientProperties;
 /**
  *
  * @author Minh Phuc
@@ -38,6 +39,8 @@ public class PanelExams extends javax.swing.JPanel {
         renderComboBoxMade();
         addComboBoxListeners();
         setupSearchFieldEvent();
+        txtToHop.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+
     }
     
     private void initTable() {

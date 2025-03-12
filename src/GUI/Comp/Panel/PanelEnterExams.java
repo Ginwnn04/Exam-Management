@@ -15,8 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
-import BUS.TestExamBUS;
-import DTO.TestExamDTO;
+import BUS.TestBUS;
+import DTO.TestDTO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +28,8 @@ import java.util.List;
 public class PanelEnterExams extends javax.swing.JPanel {
     private JDateChooser startDateChooser;
     private JDateChooser endDateChooser;
-    private TestExamBUS testExamBUS = new TestExamBUS();
-    private List<TestExamDTO> examList;
+    private TestBUS testExamBUS = new TestBUS();
+    private List<TestDTO> examList;
     private List<ExamComp> examComponents;
     private JTextField searchField;
     private javax.swing.JScrollPane scrollPane;
@@ -48,7 +48,7 @@ public class PanelEnterExams extends javax.swing.JPanel {
         examComponents = new ArrayList<>(); // Initialize examComponents as an empty list
         jPanel5.setLayout(new BoxLayout(jPanel5, BoxLayout.Y_AXIS)); // Use BoxLayout for vertical alignment
 
-        for (TestExamDTO exam : examList) {
+        for (TestDTO exam : examList) {
             ExamComp examComp = new ExamComp(exam);
             examComp.setPreferredSize(new Dimension(jPanel5.getWidth(), 100)); // Adjust height as needed
             jPanel5.add(examComp);

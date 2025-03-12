@@ -12,15 +12,21 @@ import DTO.UserDTO;
  */
 
     
-public class SessionManager {
-    private static UserDTO currentUser; // Lưu user đang đăng nhập
-
-    // Lưu thông tin user vào session
+public class UserSession {
+    private static UserSession instance;
+    private static UserDTO currentUser; 
+    public static UserSession getInstance() {
+        if (instance == null) {
+            instance = new UserSession();
+        }
+        return instance;
+    }
+   
     public static void setCurrentUser(UserDTO user) {
         currentUser = user;
     }
 
-    // Lấy user hiện tại
+   
     public static UserDTO getCurrentUser() {
         return currentUser;
     }

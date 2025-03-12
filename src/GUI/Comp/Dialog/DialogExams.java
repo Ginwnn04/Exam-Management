@@ -7,11 +7,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import BUS.ExamBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import BUS.QuestionBUS;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import GUI.Custom.ExportDocx;
 import BUS.AnswerBUS;
 import java.awt.event.ActionListener;
@@ -22,7 +22,8 @@ import java.text.SimpleDateFormat;
  * @author Minh Phuc
  */
 public class DialogExams extends javax.swing.JDialog {
-    private TestExamBUS testExamBUS = new TestExamBUS();
+    private ArrayList<String> testList = new ArrayList<>();
+    private TestBUS testExamBUS = new TestBUS();
     private ExamBUS BUS = new ExamBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
     private AnswerBUS answerBUS = new AnswerBUS();
@@ -89,6 +90,28 @@ public class DialogExams extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(this, "Xuất đề thi thành công!");
         dispose(); // Đóng dialog
     }
+    
+    private void render() {
+        var testExamBUS = new TestBUS();
+        var testList = testExamBUS.getAll(true);
+        for (var test : testList) {
+            jComboBox1.addItem(test);
+        }
+        jComboBox1.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof TestDTO) {
+                    TestDTO topic = (TestDTO) value;
+                    setText(topic.getTestCode());
+                }
+
+                return this;
+            }
+        });
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -122,8 +145,13 @@ public class DialogExams extends javax.swing.JDialog {
         label3.setFont(new java.awt.Font("Arial", 0, 14));
         label3.setText("Ngày thi:");
 
-        label4.setFont(new java.awt.Font("Arial", 0, 14));
-        label4.setText("Giờ thi:");
+        label4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        label4.setText("Thứ tự:");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new TestDTO[] {  }));
+        jComboBox1.addActionListener(e -> updateLabel());
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14));
         jLabel1.setText(examCode);

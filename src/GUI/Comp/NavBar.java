@@ -21,6 +21,9 @@ import javax.swing.SwingConstants;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import DTO.UserDTO;
+import GUI.Utils.UserSession;
 import style.ColorConfig;
 
 /**
@@ -76,7 +79,16 @@ public class NavBar extends javax.swing.JPanel {
 //            System.out.println("manager");
 //        }
     }
-
+    public void updateUserInfo() {
+         UserDTO user = UserSession.getInstance().getCurrentUser();
+       
+        if (user != null) {
+            System.out.println("User role: " + user.getIsAdmin());
+            String role = user.getIsAdmin() == 1 ? "Admin" : "User";
+            lbName.setText(user.getFullName());
+            lbRole.setText(role);
+    }
+}
     public void initMenu() {
         addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         addMenuItem("Câu hỏi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
@@ -84,6 +96,7 @@ public class NavBar extends javax.swing.JPanel {
         addMenuItem("Cấu trúc đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         addMenuItem("Chủ đề", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         addMenuItem("Người dùng", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        addMenuItem("Thống kê", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
 //        if (StaffDTO.staffLogging == null) {
 //            return;
 //        }

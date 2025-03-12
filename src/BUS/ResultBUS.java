@@ -5,7 +5,7 @@ import java.util.List;
 import DAO.ResultDAO;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import DTO.UserDTO;
 
 public class ResultBUS {
@@ -19,7 +19,7 @@ public class ResultBUS {
         return DAO.getAll(true);
     }
 
-    public int getTakeExamTime(UserDTO user, TestExamDTO test) {
+    public int getTakeExamTime(UserDTO user, TestDTO test) {
         return DAO.getTakeExamTime((int)user.getId(), test.getTestCode());
     }
 
@@ -39,7 +39,7 @@ public class ResultBUS {
         return DAO.delete(id);
     }
 
-    public List<ResultDTO> getAllByExam(ExamDTO exam) {
-        return DAO.getAllByTestCode(exam.getTestCode());
+    public List<ResultDTO> getAllByTestExam(TestDTO testExam) {
+        return DAO.getAllByTestCode(testExam.getTestCode());
     }
 }
