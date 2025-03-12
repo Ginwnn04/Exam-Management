@@ -20,4 +20,8 @@ public class ColorConfig {
     public static Color BLUE = new Color(53, 80, 154);
     public static Color LIGHT_BLUE = new Color(215, 220, 235);
     public static Color BLACK = new Color(0, 0 ,0);
+    public static Color LIGHT_GREEN = new Color(192, 232, 213);
+    public static Color GREEN = new Color(45, 62, 47);
+
+
 }

@@ -48,8 +48,8 @@ public class DialogDoExam extends javax.swing.JDialog {
     private List<JButton> listBtnQuestion = new ArrayList<>();
     private QuestionBUS questionBUS = new QuestionBUS();
     private AnswerBUS answerBUS = new AnswerBUS();
-    private HashMap<String, Set<Character>> trackingQuestion = new HashMap<>();
-    private boolean isMultiChoice = false;
+    private HashMap<Integer, Set<Character>> trackingQuestion = new HashMap<>();
+    private Boolean isMultiChoice = false; // Lưu những câu nào đang là only choice hoặc multi choice
 
     /**
      * Creates new form DialogDoExam
@@ -83,7 +83,7 @@ public class DialogDoExam extends javax.swing.JDialog {
     
 
     private void initDataButtonQuestion() {
-        for (int i = 0; i < listQuestion.size(); i++) {
+        for (int i = 0; i < listQuestion.size(); i++) {            
             JButton btn = new JButton((i + 1) + "");
             btn.setMargin(new Insets(5, 5, 5, 5));
             btn.setPreferredSize(new Dimension(35, 35));
@@ -93,7 +93,9 @@ public class DialogDoExam extends javax.swing.JDialog {
                 public void actionPerformed(ActionEvent e) {
                     int numberQuestion = Integer.parseInt(btn.getText());
                     nbQuestionCurrent = numberQuestion;
+                    lbNbQuestion.setText("Câu " + nbQuestionCurrent);
                     renderQuestion();
+                    
                 }
             });
             listBtnQuestion.add(btn);
@@ -110,25 +112,42 @@ public class DialogDoExam extends javax.swing.JDialog {
     private void renderQuestion() {
         QuestionDTO questionDTO = listQuestion.get(nbQuestionCurrent - 1);
         lbQuestion.setText("<html>" + questionDTO.getContent() + "</html>");
-        listQuestion.get(nbQuestionCurrent - 1).setContent(lbQuestion.getText());
+//        System.out.println(questionDTO.getId() + " " + questionDTO.getContent());
         if (!questionDTO.getPicture().isEmpty()) {
             String pathImage = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + questionDTO.getPicture()).toString();
             Image img = new ImageIcon(pathImage).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
             lbQuestion.setIcon(new ImageIcon(img));
         }
-        renderAnsw();
+        revalidate();
+        repaint();
+        renderMultiChoice();
+        renderAnsw(trackingQuestion.get(nbQuestionCurrent));
     }
     
 
+    private void renderMultiChoice() {
+        listAnsw = answerBUS.getAnswerByQuestionId(listQuestion.get(nbQuestionCurrent - 1).getId());
+        int cnt = 0;
+        for (AnswerDTO answ : listAnsw) {
+            if(answ.isIsRight()) {
+                cnt++;
+            }
+        }
+
+        if (cnt >= 2) {
+                isMultiChoice = true;
+            }
+            else {
+                isMultiChoice = false;
+            }
+        }
     
-    
-    private void renderAnsw() {
+    private void renderAnsw(Set<Character> trackingAnsw) {
         listAnswComponent.clear();
         pnAnsw.removeAll();
         listAnsw = answerBUS.getAnswerByQuestionId(listQuestion.get(nbQuestionCurrent - 1).getId());
         char order = 'E';
         for (AnswerDTO answ : listAnsw) {
-            PanelAnswers pnAnswItem = new PanelAnswers();
             if (order == 'A') order = 'B';
             else if (order == 'B') order = 'C';
             else if (order == 'C') order = 'D';
@@ -138,7 +157,9 @@ public class DialogDoExam extends javax.swing.JDialog {
             if (!answ.getPicture().isEmpty()) {
                 pathImg = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + answ.getPicture()).toString();
             }
+            PanelAnswers pnAnswItem = new PanelAnswers();
             pnAnswItem.setData(order, "<html>" + answ.getContent() + "</html>", pathImg);
+//            System.out.println(order + " " + answ.getContent());
             if (pnAnswItem.getPath() == null || pnAnswItem.getPath().isEmpty()) {
                 pnAnswItem.setPreferredSize(new Dimension(1020, 60));
             }
@@ -146,45 +167,64 @@ public class DialogDoExam extends javax.swing.JDialog {
                 pnAnswItem.setPreferredSize(new Dimension(1020, 200));
 
             }
+            if (trackingAnsw == null) {
+                        pnAnswItem.selected(false, isMultiChoice);
+                    }
+            else {
+                trackingAnsw.forEach(value -> {
+                    System.out.println(value + " " + pnAnswItem.getOrder());
+                    if (value == pnAnswItem.getOrder())
+                        pnAnswItem.selected(true, isMultiChoice);
+                });
+            }
             pnAnswItem.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    removeAllSelect();
-                    boolean isSelected = pnAnswItem.isSelected();
-                    pnAnswItem.selected(!isSelected);
+                    if (!isMultiChoice) {
+                        removeAllSelect();
+                    }
+                    pnAnswItem.selected(true, isMultiChoice);
+                    
                     listBtnQuestion.get(nbQuestionCurrent - 1).setBackground(ColorConfig.BLUE);
-                    listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);
+                    listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);    
                     
-                    String contentQuestion = listQuestion.get(nbQuestionCurrent - 1).getContent();
-                    
-                    if (!trackingQuestion.containsKey(contentQuestion)) {
+                    if (!trackingQuestion.containsKey(nbQuestionCurrent)) {
                         Set<Character> listChoice = new HashSet<>();
                         listChoice.add(pnAnswItem.getOrder());
-                        trackingQuestion.put(contentQuestion, listChoice);
+                        trackingQuestion.put(nbQuestionCurrent, listChoice);
                     }
                     else {
-                        Set<Character> listChoice = trackingQuestion.get(contentQuestion);
-                        listChoice.add(pnAnswItem.getOrder());
-                        trackingQuestion.put(contentQuestion, listChoice);
+                        Set<Character> listChoice = trackingQuestion.get(nbQuestionCurrent);
+                        if (isMultiChoice) {
+                            listChoice.add(pnAnswItem.getOrder());
+                        }
+                        else {
+                            listChoice.clear();
+                            listChoice.add(pnAnswItem.getOrder());
+                        }
+                        trackingQuestion.put(nbQuestionCurrent, listChoice);
 
                     }
+  
                     trackingQuestion.forEach((key, value) -> {
+                        System.out.println("======================");
                         System.out.println("Key: " + key);
                         value.forEach(System.out::println);
                     });
-                    
-                }
+                    }
                 
             });
             listAnswComponent.add(pnAnswItem);
             pnAnsw.add(pnAnswItem);
         }
         calcHeight();
+        revalidate();
+        repaint();
     }
     
     private void removeAllSelect() {
         for (PanelAnswers x : listAnswComponent) {
-            x.selected(false);
+            x.selected(false, false);
         }
     }
     
@@ -253,7 +293,7 @@ public class DialogDoExam extends javax.swing.JDialog {
         main.setBackground(new java.awt.Color(247, 247, 247));
 
         lbNbQuestion.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        lbNbQuestion.setText("Câu hỏi");
+        lbNbQuestion.setText("Câu 1");
 
         lbQuestion.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         lbQuestion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -346,16 +386,13 @@ public class DialogDoExam extends javax.swing.JDialog {
                     .addComponent(lbNbQuestion1)
                     .addGroup(pnQuestionLayout.createSequentialGroup()
                         .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnQuestionLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(pnQuestionLayout.createSequentialGroup()
-                                .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(5, 5, 5)))
+                            .addComponent(jLabel2)
+                            .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(panelBackground3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

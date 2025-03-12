@@ -50,15 +50,24 @@ public class PanelAnswers extends javax.swing.JPanel {
         return this.isSelected;
     }
     
-    public void selected(boolean isSelected) {
+    public void selected(boolean isSelected, boolean multiChoice) {
         this.isSelected = isSelected;
         if (isSelected) {
             Font oldFont = lbOrder.getFont();
-            lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
-            lbOrder.setForeground(ColorConfig.BLUE);
-            lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
-            lbAnsw.setForeground(ColorConfig.BLUE);
-            main.setBackground(ColorConfig.LIGHT_BLUE);
+            if (multiChoice == true) {
+                lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
+                lbOrder.setForeground(ColorConfig.GREEN);
+                lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
+                lbAnsw.setForeground(ColorConfig.GREEN);
+                main.setBackground(ColorConfig.LIGHT_GREEN);
+            }
+            else {
+                lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
+                lbOrder.setForeground(ColorConfig.BLUE);
+                lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
+                lbAnsw.setForeground(ColorConfig.BLUE);
+                main.setBackground(ColorConfig.LIGHT_BLUE);
+            }
         }
         else {
             Font oldFont = lbOrder.getFont();
