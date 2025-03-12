@@ -7,6 +7,7 @@ public class ExamDTO {
     private String exOrder;
     private String exCode;
     private ArrayList<QuestionDTO> questions;
+    private boolean status;
 
     public static ExamDTO builder() {
         return new ExamDTO();
@@ -47,6 +48,14 @@ public class ExamDTO {
         return questions;
     }
 
+    public ExamDTO setStatus(boolean status) {
+        this.status = status;
+        return this;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
 
     public ExamDTO setQuestions(ArrayList<QuestionDTO> questions) {
         this.questions = questions;

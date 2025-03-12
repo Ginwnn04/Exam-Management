@@ -6,6 +6,7 @@ public class TestStructureDTO {
     private int numEasy;
     private int numMedium;
     private int numDiff;
+    private boolean status;
 
     public TestStructureDTO() {
 
@@ -54,6 +55,15 @@ public class TestStructureDTO {
     public TestStructureDTO setNumDiff(int numDiff) {
         this.numDiff = numDiff;
         return this;
+    }
+
+    public TestStructureDTO setStatus(boolean status) {
+        this.status = status;
+        return this;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     public static TestStructureDTO builder() {
