@@ -17,7 +17,8 @@ public class MyFont {
     public static Font fontMenuBar = new Font("Roboto", Font.BOLD, 20);
     public static Font fontText = new Font("Roboto", Font.PLAIN, 16);
 
-    
+    public static Font fontText_14 = new Font("Roboto", Font.BOLD, 14);
+
 
     
 

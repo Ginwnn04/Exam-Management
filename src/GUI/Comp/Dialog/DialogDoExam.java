@@ -4,9 +4,15 @@
  */
 package GUI.Comp.Dialog;
 
+import BUS.AnswerBUS;
+import BUS.QuestionBUS;
+import DTO.AnswerDTO;
+import DTO.QuestionDTO;
 import GUI.Comp.Panel.PanelAnswers;
 import Helper.Format;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,18 +21,35 @@ import java.awt.event.MouseEvent;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+import style.ColorConfig;
+import style.MyFont;
 
 /**
  *
  * @author pc
  */
 public class DialogDoExam extends javax.swing.JDialog {
-    private List<PanelAnswers> listAnsw = new ArrayList<>();
+    private List<PanelAnswers> listAnswComponent = new ArrayList<>();
     private Timer timer;
-     long startTime = 100000;
+    private String exCode;
+    private long testTime;
+    private int nbQuestionCurrent = 1;
+    
+    private List<QuestionDTO> listQuestion = new ArrayList<>();
+    private List<AnswerDTO> listAnsw = new ArrayList<>();
+    private List<JButton> listBtnQuestion = new ArrayList<>();
+    private QuestionBUS questionBUS = new QuestionBUS();
+    private AnswerBUS answerBUS = new AnswerBUS();
+    private HashMap<Integer, Set<Character>> trackingQuestion = new HashMap<>();
+    private Boolean isMultiChoice = false; // Lưu những câu nào đang là only choice hoặc multi choice
 
     /**
      * Creates new form DialogDoExam
@@ -36,48 +59,172 @@ public class DialogDoExam extends javax.swing.JDialog {
         initComponents();
 //        setLocationRelativeTo(null);
         setSize(Toolkit.getDefaultToolkit().getScreenSize()); // Set full màn hình
-        initAnsw();
         startCountdown();
     }
+    
+    public void setExCode(String exCode) {
+        this.exCode = exCode;
+        initDataQuestion(exCode);
+        renderQuestion();
+    }
+    
+    public void setTime(long testTime) {
+        this.testTime = testTime * 60 * 1000;
+    }
+    
+    public void setTitleExam(String title, String exCode) {
+        lbTitle.setText("Bài kiếm tra " + title + " - Mã đề: " + exCode);
+    }
+    
+    private void initDataQuestion(String exCode) {
+        listQuestion = questionBUS.getQuestionByExamCode(exCode);
+        initDataButtonQuestion();
+    }
+    
 
-    private void initAnsw() {
-        final int size = 5;
+    private void initDataButtonQuestion() {
+        for (int i = 0; i < listQuestion.size(); i++) {            
+            JButton btn = new JButton((i + 1) + "");
+            btn.setMargin(new Insets(5, 5, 5, 5));
+            btn.setPreferredSize(new Dimension(35, 35));
+            btn.setFont(MyFont.fontText_14);
+            btn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int numberQuestion = Integer.parseInt(btn.getText());
+                    nbQuestionCurrent = numberQuestion;
+                    lbNbQuestion.setText("Câu " + nbQuestionCurrent);
+                    renderQuestion();
+                    
+                }
+            });
+            listBtnQuestion.add(btn);
+        }
+        renderMapQuestion();
+    }
+    
+    private void renderMapQuestion() {
+        for (JButton btn : listBtnQuestion) {
+            pnMap.add(btn);
+        }
+    }
+    
+    private void renderQuestion() {
+        QuestionDTO questionDTO = listQuestion.get(nbQuestionCurrent - 1);
+        lbQuestion.setText("<html>" + questionDTO.getContent() + "</html>");
+//        System.out.println(questionDTO.getId() + " " + questionDTO.getContent());
+        if (!questionDTO.getPicture().isEmpty()) {
+            String pathImage = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + questionDTO.getPicture()).toString();
+            Image img = new ImageIcon(pathImage).getImage().getScaledInstance(300, 207, Image.SCALE_SMOOTH);
+            lbQuestion.setIcon(new ImageIcon(img));
+        }
+        revalidate();
+        repaint();
+        renderMultiChoice();
+        renderAnsw(trackingQuestion.get(nbQuestionCurrent));
+    }
+    
+
+    private void renderMultiChoice() {
+        listAnsw = answerBUS.getAnswerByQuestionId(listQuestion.get(nbQuestionCurrent - 1).getId());
+        int cnt = 0;
+        for (AnswerDTO answ : listAnsw) {
+            if(answ.isIsRight()) {
+                cnt++;
+            }
+        }
+
+        if (cnt >= 2) {
+                isMultiChoice = true;
+            }
+            else {
+                isMultiChoice = false;
+            }
+        }
+    
+    private void renderAnsw(Set<Character> trackingAnsw) {
+        listAnswComponent.clear();
+        pnAnsw.removeAll();
+        listAnsw = answerBUS.getAnswerByQuestionId(listQuestion.get(nbQuestionCurrent - 1).getId());
         char order = 'E';
-        for (int i = 0; i < size; i++) {
-            PanelAnswers answ = new PanelAnswers();
+        for (AnswerDTO answ : listAnsw) {
             if (order == 'A') order = 'B';
             else if (order == 'B') order = 'C';
             else if (order == 'C') order = 'D';
             else if (order == 'D') order = 'E';
             else if (order == 'E') order = 'A';
-            String pathImg = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/123.jpg").toString();
-            answ.setData(order, "Tôi đẹp trai vl", null);
-            if (answ.getPath() == null || answ.getPath().isEmpty()) {
-                answ.setPreferredSize(new Dimension(1020, 60));
-          
+            String pathImg = null;
+            if (!answ.getPicture().isEmpty()) {
+                pathImg = Paths.get(System.getProperty("user.dir") + "/src/GUI/Image/" + answ.getPicture()).toString();
+            }
+            PanelAnswers pnAnswItem = new PanelAnswers();
+            pnAnswItem.setData(order, "<html>" + answ.getContent() + "</html>", pathImg);
+//            System.out.println(order + " " + answ.getContent());
+            if (pnAnswItem.getPath() == null || pnAnswItem.getPath().isEmpty()) {
+                pnAnswItem.setPreferredSize(new Dimension(1020, 60));
             }
             else {
-                answ.setPreferredSize(new Dimension(1020, 200));
+                pnAnswItem.setPreferredSize(new Dimension(1020, 200));
+
             }
-      
-            answ.addMouseListener(new MouseAdapter(){
+            if (trackingAnsw == null) {
+                        pnAnswItem.selected(false, isMultiChoice);
+                    }
+            else {
+                trackingAnsw.forEach(value -> {
+                    System.out.println(value + " " + pnAnswItem.getOrder());
+                    if (value == pnAnswItem.getOrder())
+                        pnAnswItem.selected(true, isMultiChoice);
+                });
+            }
+            pnAnswItem.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    removeAllSelect();
-                    boolean isSelected = answ.isSelected();
-                    answ.selected(!isSelected);
-                }
+                    if (!isMultiChoice) {
+                        removeAllSelect();
+                    }
+                    pnAnswItem.selected(true, isMultiChoice);
+                    
+                    listBtnQuestion.get(nbQuestionCurrent - 1).setBackground(ColorConfig.BLUE);
+                    listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);    
+                    
+                    if (!trackingQuestion.containsKey(nbQuestionCurrent)) {
+                        Set<Character> listChoice = new HashSet<>();
+                        listChoice.add(pnAnswItem.getOrder());
+                        trackingQuestion.put(nbQuestionCurrent, listChoice);
+                    }
+                    else {
+                        Set<Character> listChoice = trackingQuestion.get(nbQuestionCurrent);
+                        if (isMultiChoice) {
+                            listChoice.add(pnAnswItem.getOrder());
+                        }
+                        else {
+                            listChoice.clear();
+                            listChoice.add(pnAnswItem.getOrder());
+                        }
+                        trackingQuestion.put(nbQuestionCurrent, listChoice);
+
+                    }
+  
+                    trackingQuestion.forEach((key, value) -> {
+                        System.out.println("======================");
+                        System.out.println("Key: " + key);
+                        value.forEach(System.out::println);
+                    });
+                    }
                 
             });
-            listAnsw.add(answ);
-            pnAnsw.add(answ);
+            listAnswComponent.add(pnAnswItem);
+            pnAnsw.add(pnAnswItem);
         }
         calcHeight();
+        revalidate();
+        repaint();
     }
     
     private void removeAllSelect() {
-        for (PanelAnswers x : listAnsw) {
-            x.selected(false);
+        for (PanelAnswers x : listAnswComponent) {
+            x.selected(false, false);
         }
     }
     
@@ -85,25 +232,30 @@ public class DialogDoExam extends javax.swing.JDialog {
         int cntHeightNotImg = 0;
         int cntHeightHaveImg = 0;
         int space = (listAnsw.size() - 1) * 15;
-        for (PanelAnswers x : listAnsw) {
+        for (PanelAnswers x : listAnswComponent) {
             if (x.getPath() == null || x.getPath().isEmpty()) cntHeightNotImg++;
             else cntHeightHaveImg++;
         }
         int totalSpace = space + (cntHeightNotImg * 60) + (cntHeightHaveImg * 200) + 50; // +50 sai so
-        System.out.println(totalSpace);
+//        System.out.println(totalSpace);
         pnAnsw.setPreferredSize(new Dimension(500, totalSpace));
     }
     // miliseconds
     private void startCountdown() {
-        lbTime.setText(Format.formatTime.format(startTime));
+        if (testTime == 0) {
+            lbTime.setText("");
+        }
+        else {
+            lbTime.setText(Format.formatTime.format(testTime));
+        }
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startTime -= 1000;
+                testTime -= 1000;
                 
-                lbTime.setText(Format.formatTime.format(startTime));
+                lbTime.setText(Format.formatTime.format(testTime));
                 
-                if (startTime <= 0) {
+                if (testTime <= 0) {
                     timer.stop();
                     lbTime.setText("Hết giờ!");
                 }
@@ -119,76 +271,84 @@ public class DialogDoExam extends javax.swing.JDialog {
 
         main = new GUI.Comp.Swing.PanelBackground();
         pnQuestion = new GUI.Comp.Swing.PanelBackground();
-        jLabel2 = new javax.swing.JLabel();
-        lbQuestio = new javax.swing.JLabel();
+        lbNbQuestion = new javax.swing.JLabel();
+        lbQuestion = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         pnAnsw = new GUI.Comp.Swing.PanelBackground();
+        lbNbQuestion1 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        panelBackground2 = new GUI.Comp.Swing.PanelBackground();
+        panelBackground3 = new GUI.Comp.Swing.PanelBackground();
         lbTitle = new javax.swing.JLabel();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         lbTime = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         pnMap = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
-        jButton15 = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
-        jButton17 = new javax.swing.JButton();
-        jButton18 = new javax.swing.JButton();
-        jButton19 = new javax.swing.JButton();
-        jButton20 = new javax.swing.JButton();
-        jButton21 = new javax.swing.JButton();
-        jButton22 = new javax.swing.JButton();
-        jButton23 = new javax.swing.JButton();
-        jButton24 = new javax.swing.JButton();
-        jButton25 = new javax.swing.JButton();
-        jButton26 = new javax.swing.JButton();
-        jButton27 = new javax.swing.JButton();
-        jButton28 = new javax.swing.JButton();
-        jButton29 = new javax.swing.JButton();
-        jButton30 = new javax.swing.JButton();
-        jButton31 = new javax.swing.JButton();
-        jButton32 = new javax.swing.JButton();
-        jButton33 = new javax.swing.JButton();
-        jButton34 = new javax.swing.JButton();
-        jButton35 = new javax.swing.JButton();
-        jButton36 = new javax.swing.JButton();
-        jButton37 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
 
         main.setBackground(new java.awt.Color(247, 247, 247));
 
-        jLabel2.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jLabel2.setText("Câu hỏi");
+        lbNbQuestion.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        lbNbQuestion.setText("Câu 1");
 
-        lbQuestio.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        lbQuestio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbQuestio.setText("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</html>");
-        lbQuestio.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        lbQuestio.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        lbQuestio.setMaximumSize(new java.awt.Dimension(200, 19));
-        lbQuestio.setPreferredSize(new java.awt.Dimension(200, 19));
+        lbQuestion.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        lbQuestion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbQuestion.setText("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</html>");
+        lbQuestion.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lbQuestion.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        lbQuestion.setMaximumSize(new java.awt.Dimension(200, 19));
+        lbQuestion.setPreferredSize(new java.awt.Dimension(200, 19));
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(345, 100));
 
         pnAnsw.setPreferredSize(new java.awt.Dimension(500, 340));
-        pnAnsw.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 15));
+        java.awt.FlowLayout flowLayout2 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 15);
+        flowLayout2.setAlignOnBaseline(true);
+        pnAnsw.setLayout(flowLayout2);
         jScrollPane1.setViewportView(pnAnsw);
+
+        lbNbQuestion1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
+        lbNbQuestion1.setText("Chú thích");
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel1.setText("Nhiều đáp án");
+
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        jLabel2.setText("Một đáp án");
+
+        panelBackground2.setBackground(new java.awt.Color(215, 220, 235));
+        panelBackground2.setPreferredSize(new java.awt.Dimension(70, 20));
+
+        javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
+        panelBackground2.setLayout(panelBackground2Layout);
+        panelBackground2Layout.setHorizontalGroup(
+            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 70, Short.MAX_VALUE)
+        );
+        panelBackground2Layout.setVerticalGroup(
+            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelBackground3.setBackground(new java.awt.Color(192, 232, 213));
+        panelBackground3.setPreferredSize(new java.awt.Dimension(70, 20));
+
+        javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
+        panelBackground3.setLayout(panelBackground3Layout);
+        panelBackground3Layout.setHorizontalGroup(
+            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 70, Short.MAX_VALUE)
+        );
+        panelBackground3Layout.setVerticalGroup(
+            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout pnQuestionLayout = new javax.swing.GroupLayout(pnQuestion);
         pnQuestion.setLayout(pnQuestionLayout);
@@ -197,21 +357,44 @@ public class DialogDoExam extends javax.swing.JDialog {
             .addGroup(pnQuestionLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(lbQuestio, javax.swing.GroupLayout.PREFERRED_SIZE, 1104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1074, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1074, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbNbQuestion)
+                    .addComponent(lbQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, 1104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnQuestionLayout.createSequentialGroup()
+                        .addComponent(lbNbQuestion1)
+                        .addGap(18, 18, 18)
+                        .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnQuestionLayout.createSequentialGroup()
+                                .addComponent(panelBackground3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel1))
+                            .addGroup(pnQuestionLayout.createSequentialGroup()
+                                .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)))))
+                .addGap(63, 63, 63))
         );
         pnQuestionLayout.setVerticalGroup(
             pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnQuestionLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbQuestio, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbNbQuestion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbNbQuestion1)
+                    .addGroup(pnQuestionLayout.createSequentialGroup()
+                        .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnQuestionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(panelBackground3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         lbTitle.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
@@ -223,7 +406,9 @@ public class DialogDoExam extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel4.setText("Thời gian làm bài:");
 
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("NỘP BÀI");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,150 +423,6 @@ public class DialogDoExam extends javax.swing.JDialog {
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 10);
         flowLayout1.setAlignOnBaseline(true);
         pnMap.setLayout(flowLayout1);
-
-        jButton2.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton2.setText("1");
-        pnMap.add(jButton2);
-
-        jButton3.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton3.setText("2");
-        pnMap.add(jButton3);
-
-        jButton4.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton4.setText("3");
-        pnMap.add(jButton4);
-
-        jButton5.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton5.setText("4");
-        pnMap.add(jButton5);
-
-        jButton6.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton6.setText("4");
-        pnMap.add(jButton6);
-
-        jButton7.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton7.setText("3");
-        pnMap.add(jButton7);
-
-        jButton8.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton8.setText("1");
-        pnMap.add(jButton8);
-
-        jButton9.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton9.setText("2");
-        pnMap.add(jButton9);
-
-        jButton10.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton10.setText("3");
-        pnMap.add(jButton10);
-
-        jButton11.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton11.setText("4");
-        pnMap.add(jButton11);
-
-        jButton12.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton12.setText("4");
-        pnMap.add(jButton12);
-
-        jButton13.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton13.setText("3");
-        pnMap.add(jButton13);
-
-        jButton14.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton14.setText("1");
-        pnMap.add(jButton14);
-
-        jButton15.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton15.setText("2");
-        pnMap.add(jButton15);
-
-        jButton16.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton16.setText("3");
-        pnMap.add(jButton16);
-
-        jButton17.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton17.setText("4");
-        pnMap.add(jButton17);
-
-        jButton18.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton18.setText("4");
-        pnMap.add(jButton18);
-
-        jButton19.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton19.setText("3");
-        pnMap.add(jButton19);
-
-        jButton20.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton20.setText("1");
-        pnMap.add(jButton20);
-
-        jButton21.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton21.setText("2");
-        pnMap.add(jButton21);
-
-        jButton22.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton22.setText("3");
-        pnMap.add(jButton22);
-
-        jButton23.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton23.setText("4");
-        pnMap.add(jButton23);
-
-        jButton24.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton24.setText("4");
-        pnMap.add(jButton24);
-
-        jButton25.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton25.setText("3");
-        pnMap.add(jButton25);
-
-        jButton26.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton26.setText("1");
-        pnMap.add(jButton26);
-
-        jButton27.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton27.setText("2");
-        pnMap.add(jButton27);
-
-        jButton28.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton28.setText("3");
-        pnMap.add(jButton28);
-
-        jButton29.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton29.setText("4");
-        pnMap.add(jButton29);
-
-        jButton30.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton30.setText("4");
-        pnMap.add(jButton30);
-
-        jButton31.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton31.setText("3");
-        pnMap.add(jButton31);
-
-        jButton32.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton32.setText("1");
-        pnMap.add(jButton32);
-
-        jButton33.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton33.setText("2");
-        pnMap.add(jButton33);
-
-        jButton34.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton34.setText("3");
-        pnMap.add(jButton34);
-
-        jButton35.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton35.setText("4");
-        pnMap.add(jButton35);
-
-        jButton36.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton36.setText("4");
-        pnMap.add(jButton36);
-
-        jButton37.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton37.setText("3");
-        pnMap.add(jButton37);
 
         javax.swing.GroupLayout panelBackground1Layout = new javax.swing.GroupLayout(panelBackground1);
         panelBackground1.setLayout(panelBackground1Layout);
@@ -503,50 +544,19 @@ public class DialogDoExam extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton18;
-    private javax.swing.JButton jButton19;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton20;
-    private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton23;
-    private javax.swing.JButton jButton24;
-    private javax.swing.JButton jButton25;
-    private javax.swing.JButton jButton26;
-    private javax.swing.JButton jButton27;
-    private javax.swing.JButton jButton28;
-    private javax.swing.JButton jButton29;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton30;
-    private javax.swing.JButton jButton31;
-    private javax.swing.JButton jButton32;
-    private javax.swing.JButton jButton33;
-    private javax.swing.JButton jButton34;
-    private javax.swing.JButton jButton35;
-    private javax.swing.JButton jButton36;
-    private javax.swing.JButton jButton37;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lbQuestio;
+    private javax.swing.JLabel lbNbQuestion;
+    private javax.swing.JLabel lbNbQuestion1;
+    private javax.swing.JLabel lbQuestion;
     private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbTitle;
     private GUI.Comp.Swing.PanelBackground main;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
+    private GUI.Comp.Swing.PanelBackground panelBackground2;
+    private GUI.Comp.Swing.PanelBackground panelBackground3;
     private GUI.Comp.Swing.PanelBackground pnAnsw;
     private javax.swing.JPanel pnMap;
     private GUI.Comp.Swing.PanelBackground pnQuestion;

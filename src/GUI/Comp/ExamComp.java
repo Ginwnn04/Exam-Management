@@ -1,5 +1,7 @@
 package GUI.Comp;
 
+import BUS.ExamBUS;
+import DTO.ExamDTO;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -15,8 +17,8 @@ import GUI.Comp.Dialog.DialogDoExam;
  * Author: Minh Phuc
  */
 public class ExamComp extends javax.swing.JPanel {
-
     private TestDTO exam;
+    private ExamBUS examBUS = new ExamBUS();
 
     /**
      * Creates new form ExamComp
@@ -138,17 +140,23 @@ public class ExamComp extends javax.swing.JPanel {
                                 .addGap(50, 50, 50)));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
-        LocalDate currentDate = LocalDate.now();
-        LocalDate examDate = exam.getTestDate().toLocalDate();
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    LocalDate currentDate = LocalDate.now();
+    LocalDate examDate = exam.getTestDate().toLocalDate();
 
-        if (currentDate.isAfter(examDate)) {
-            JOptionPane.showMessageDialog(this, "Ngày thi đã qua, bạn không thể vào thi.");
-        } else {
-            DialogDoExam doExam = new DialogDoExam(null, true);
-            doExam.setVisible(true);
-        }
-    }// GEN-LAST:event_jButton2ActionPerformed
+    if (currentDate.isAfter(examDate)) {
+        JOptionPane.showMessageDialog(this, "Ngày thi đã qua, bạn không thể vào thi.");
+    } else {
+        ExamDTO examDTO = examBUS.randomExamByTestCode(exam.getTestCode());
+        DialogDoExam doExam = new DialogDoExam(null, true);
+        doExam.setTime(exam.getTestTime());
+        doExam.setExCode(examDTO.getExCode());
+        doExam.setTitleExam(exam.getTitle(), examDTO.getExCode());
+        doExam.setVisible(true);
+    }
+}//GEN-LAST:event_jButton2ActionPerformed
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

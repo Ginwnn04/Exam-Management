@@ -252,4 +252,27 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
 
         return null;
     }
+    
+    public ExamDTO randomExamByTestCode(String testCode) {
+        String query = "SELECT * FROM exams WHERE testCode = ? ORDER BY RAND() LIMIT 1";
+        ExamDTO exam = null;
+       try {
+            PreparedStatement ps = ConnectDB.getInstance().getConnection().prepareStatement(query);
+            ps.setString(1, testCode);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                exam = ExamDTO.builder()
+                                      .setTestCode(rs.getString("testCode"))
+                                      .setExOrder(rs.getString("exOrder"))
+                                      .setExCode(rs.getString("exCode"))
+                                      .build();
+        
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return exam;
+
+    }
 }
