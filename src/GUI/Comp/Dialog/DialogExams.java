@@ -234,10 +234,10 @@ public class DialogExams extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateLabel() {
-        
-        // TestDTO selectedTestExam = (TestDTO) jComboBox1.getSelectedItem();
-        // String selectedOrder = (String) jComboBox2.getSelectedItem();
-        // jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);
+//        
+//        TestDTO selectedTestExam = (TestDTO) jComboBox1.getSelectedItem();
+//        String selectedOrder = (String) jComboBox2.getSelectedItem();
+//        jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);
 
         // Fetch questions based on the topic ID
         // int topicId = selectedTestExam.getTopicId();
@@ -272,24 +272,24 @@ public class DialogExams extends javax.swing.JDialog {
         tbCauHoi.setModel(model);
     }
 
-    // private ExamDTO gatherData() {
-    //     var testExam = (TestDTO) jComboBox1.getSelectedItem();
+//    private ExamDTO gatherData() {
+//        var testExam = (TestDTO) jComboBox1.getSelectedItem();
+//
+//        return ExamDTO.builder()
+//                      .setTestCode(testExam.getTestCode())
+//                      .setExCode(jLabel1.getText())
+//                      .setExOrder((String)jComboBox2.getSelectedItem())
+//                      .setQuestions(questions)
+//                      .setStatus(true)
+//                      .build();
+//    }
 
-    //     return ExamDTO.builder()
-    //                   .setTestCode(testExam.getTestCode())
-    //                   .setExCode(jLabel1.getText())
-    //                   .setExOrder((String)jComboBox2.getSelectedItem())
-    //                   .setQuestions(questions)
-    //                   .setStatus(true)
-    //                   .build();
-    // }
-
-    // private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
-    //     // ExamDTO exam = gatherData();
-    //     if (BUS.addExam(exam) == null) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
-    //     else JOptionPane.showMessageDialog(this, "Tạo đề thi thành công");
-    //     this.dispose();
-    // }// GEN-LAST:event_jButton2ActionPerformed
+//    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
+//        ExamDTO exam = gatherData();
+//        if (BUS.addExam(exam) == null) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
+//        else JOptionPane.showMessageDialog(this, "Tạo đề thi thành công");
+//        this.dispose();
+//    }// GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
