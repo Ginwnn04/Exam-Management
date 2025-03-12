@@ -479,7 +479,7 @@ public class DialogTest extends JDialog {
 
     private Pair<Boolean, String> canSave() { 
         try {
-            if (examTitle.getText().isEmpty() && time.getText().isEmpty() && testLimit.getText().isEmpty())
+            if (examTitle.getText().isEmpty() || time.getText().isEmpty() || testLimit.getText().isEmpty())
                 return new Pair<>(false, "Vui lòng nhập đầy đủ thông tin");
 
             var _ = Short.parseShort(testLimit.getText());
