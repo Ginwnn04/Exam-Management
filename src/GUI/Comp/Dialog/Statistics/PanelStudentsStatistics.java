@@ -22,6 +22,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -43,7 +44,7 @@ import style.ColorConfig;
 import style.MyFont;
 
 public class PanelStudentsStatistics extends PanelBackground {
-    private final int WIDTH = 1200;
+    private final int WIDTH = 1180;
     private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
 
     private List<ResultDTO> listResult;
@@ -53,7 +54,6 @@ public class PanelStudentsStatistics extends PanelBackground {
     private HashMap<Integer, UserDTO> users = new HashMap<>();
 
     private UserBus userBUS = new UserBus();
-    private TestBUS testExamBUS = new TestBUS();
     private ExamBUS examBUS = new ExamBUS();
 
     public PanelStudentsStatistics(TestDTO testExam, List<ResultDTO> listResult) {
@@ -62,6 +62,7 @@ public class PanelStudentsStatistics extends PanelBackground {
         
         fetchUsers();
         initComponents();
+        setBorder(new EmptyBorder(0, 10, 0, 10));
     }
 
      private void resetTableItems() {
@@ -125,11 +126,15 @@ public class PanelStudentsStatistics extends PanelBackground {
         searchAndFilterContainer.setAbsoluteSize(WIDTH, 50);
         searchAndFilterContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
+        JLabel searchTitle = new JLabel("Tìm kiếm: ");
+        searchTitle.setFont(MyFont.fontHeader);
+
         searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(650, 30));
+        searchField.setPreferredSize(new Dimension(450, 30));
         searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
         setupSearchFieldEvent();
 
+        searchAndFilterContainer.add(searchTitle);
         searchAndFilterContainer.add(searchField);
         searchAndFilterContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 

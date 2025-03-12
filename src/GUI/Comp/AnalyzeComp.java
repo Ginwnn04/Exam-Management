@@ -150,7 +150,7 @@ public class AnalyzeComp extends javax.swing.JPanel {
     if (currentDate.isBefore(examDate)) {
         JOptionPane.showMessageDialog(this, "Đề thi chưa có thống kê");
     } else {
-        DialogStatistics statistics = new DialogStatistics(exam);
+        DialogStatistics statistics = new DialogStatistics(exam, null, true);
         statistics.setVisible(true);
     }
 }//GEN-LAST:event_jButton2ActionPerformed

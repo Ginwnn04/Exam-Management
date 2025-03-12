@@ -233,6 +233,64 @@ public class DialogExams extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void updateLabel() {
+        
+        TestDTO selectedTestExam = (TestDTO) jComboBox1.getSelectedItem();
+        String selectedOrder = (String) jComboBox2.getSelectedItem();
+        jLabel1.setText(selectedTestExam.getTestCode() + selectedOrder);
+
+        // Fetch questions based on the topic ID
+        // int topicId = selectedTestExam.getTopicId();
+        // List<QuestionDTO> temp = testExamBUS.getByTopicId(topicId);
+        // questions = BUS.shuffleQuestions(temp);
+
+        // Clear the table
+        DefaultTableModel model = (DefaultTableModel) tbCauHoi.getModel();
+        model.setRowCount(0);
+
+        // Add questions to the table based on the number of questions for each level
+        // int numEasy = selectedTestExam.getEasyQuestionCount();
+        // int numMedium = selectedTestExam.getMediumQuestionCount();
+        // int numDiff = selectedTestExam.getDiffQuestionCount();
+
+        // int easyCount = 0, mediumCount = 0, diffCount = 0;
+
+        // for (QuestionDTO question : questions) {
+        //     if (question.getLevel().equals("Dễ") && easyCount < numEasy) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         easyCount++;
+        //     } else if (question.getLevel().equals("Trung bình") && mediumCount < numMedium) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         mediumCount++;
+        //     } else if (question.getLevel().equals("Khó") && diffCount < numDiff) {
+        //         model.addRow(new Object[] { question.getId(), question.getContent(), question.getLevel() });
+        //         diffCount++;
+        //     }
+        // }
+
+        model.fireTableDataChanged();
+        tbCauHoi.setModel(model);
+    }
+
+    private ExamDTO gatherData() {
+        var testExam = (TestDTO) jComboBox1.getSelectedItem();
+
+        return ExamDTO.builder()
+                      .setTestCode(testExam.getTestCode())
+                      .setExCode(jLabel1.getText())
+                      .setExOrder((String)jComboBox2.getSelectedItem())
+                      .setQuestions(questions)
+                      .setStatus(true)
+                      .build();
+    }
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
+        ExamDTO exam = gatherData();
+        if (BUS.addExam(exam) == null) JOptionPane.showMessageDialog(this, "Tạo đề thi thất bại");
+        else JOptionPane.showMessageDialog(this, "Tạo đề thi thành công");
+        this.dispose();
+    }// GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
