@@ -194,8 +194,9 @@ public class DialogDoExam extends javax.swing.JDialog {
                     if (!isMultiChoice) {
                         removeAllSelect();
                     }
-                    pnAnswItem.selected(true, isMultiChoice);
-
+                    boolean isSelected = pnAnswItem.isSelected();
+                    pnAnswItem.selected(!isSelected, isMultiChoice);
+                    
                     listBtnQuestion.get(nbQuestionCurrent - 1).setBackground(ColorConfig.BLUE);
                     listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);
 
@@ -207,10 +208,14 @@ public class DialogDoExam extends javax.swing.JDialog {
                     } else {
                         Set<Character> listChoice = trackingQuestion.get(nbQuestionCurrent);
                         if (isMultiChoice) {
-                            listChoice.add(pnAnswItem.getOrder());
-                            logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, true);
-                        } else {
-                            logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, false);
+                            if (!isSelected) {
+                                listChoice.add(pnAnswItem.getOrder());
+                            }
+                            else {
+                                listChoice.remove(pnAnswItem.getOrder());
+                            }
+                        }
+                        else {
                             listChoice.clear();
                             listChoice.add(pnAnswItem.getOrder());
                         }
