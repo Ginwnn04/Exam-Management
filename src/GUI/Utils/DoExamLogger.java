@@ -42,7 +42,7 @@ public class DoExamLogger {
         var trackingQuestion = trackingQuestionsSupplier.get();
 
         var current = trackingQuestion.get(currentQuestionIndex);
-        if (current == null) format = "Thí sinh đã chọn đáp án %c ở câu %d";
+        if (current == null || current.size() == 0) format = "Thí sinh đã chọn đáp án %c ở câu %d";
         else if (!current.contains(answer)) format = "Thí sinh đã chuyển sang đáp án %c ở câu %d";
         else return;
 
@@ -58,14 +58,48 @@ public class DoExamLogger {
         var current = trackingQuestion.get(currentQuestionIndex);
 
         int i = 0;
-
         for (Character character : current) {
+            if (current.size() == 1) {
+                message = "Thí sinh đã chọn đáp án " + character + " ";
+                break;
+            }
+
             if (i < current.size() - 1) message += character + ", ";
             else message += character + " ";
             i++;
         }
 
         message += "ở câu " + currentQuestionIndex;
+        log.writeLog(new Date(System.currentTimeMillis()), message);
+        System.out.println(log.getLogContent());
+    }
+
+    /**
+     * Only use when question is multi answer
+     */
+    public void writeRemoveUserChoice(int currentQuestionIndex, Character removedAnswer) {
+        var trackingQuestion = trackingQuestionsSupplier.get();
+        var current = trackingQuestion.get(currentQuestionIndex);
+
+        String format = "Thí sinh đã bỏ chọn câu %c ở câu %d. Câu trả lời của thí sinh còn lại: ";
+        String message;
+        
+        if (current.size() == 0) {
+            message = "Thí sinh đã bỏ chọn tất cả câu trả lời ở câu " + currentQuestionIndex;
+            log.writeLog(new Date(System.currentTimeMillis()), message);
+            System.out.println(log.getLogContent());
+            return;
+        }
+
+        message = String.format(format, removedAnswer, currentQuestionIndex);
+
+        int i = 0;
+        for (Character character : current) {
+            if (i < current.size() - 1) message += character + ", ";
+            else message += String.valueOf(character);
+            i++;
+        }
+
         log.writeLog(new Date(System.currentTimeMillis()), message);
         System.out.println(log.getLogContent());
     }

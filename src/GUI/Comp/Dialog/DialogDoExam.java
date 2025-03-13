@@ -210,12 +210,15 @@ public class DialogDoExam extends javax.swing.JDialog {
                         if (isMultiChoice) {
                             if (!isSelected) {
                                 listChoice.add(pnAnswItem.getOrder());
+                                logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, true);
                             }
                             else {
                                 listChoice.remove(pnAnswItem.getOrder());
+                                logger.writeRemoveUserChoice(nbQuestionCurrent, pnAnswItem.getOrder());
                             }
                         }
                         else {
+                            logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, false);
                             listChoice.clear();
                             listChoice.add(pnAnswItem.getOrder());
                         }
@@ -547,7 +550,7 @@ public class DialogDoExam extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
-        logger.save();
+        if (logger != null) logger.save();
         dispose();
     }// GEN-LAST:event_jButton1ActionPerformed
 

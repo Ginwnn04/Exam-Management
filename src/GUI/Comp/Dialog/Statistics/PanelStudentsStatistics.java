@@ -140,12 +140,14 @@ public class PanelStudentsStatistics extends PanelBackground {
 
         JLabel searchByCbLabel = new JLabel("Tìm kiếm theo:");
         searchByCb = new JComboBox<>();
+        searchByCb.setFont(MyFont.fontText);
         searchByCb.setPreferredSize(new Dimension(150, 30));
         searchByCb.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "ID học sinh", "Họ tên" }));
         searchByCb.addActionListener(e -> filterTableItems());
 
         JLabel orderFilterLabel = new JLabel("Thứ tự: ");
         orderFilter = new JComboBox<>();
+        orderFilter.setFont(MyFont.fontText);
         orderFilter.setPreferredSize(new Dimension(150, 30));
         setOrderFilterItems();
         orderFilter.addActionListener(e -> filterTableItems());

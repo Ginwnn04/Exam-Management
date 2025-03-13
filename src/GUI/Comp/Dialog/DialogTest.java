@@ -267,10 +267,12 @@ public class DialogTest extends JDialog {
 
     private PanelBackground addExamInformationItem(String label, JComponent component) {
         var container = new PanelBackground();
-        container.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        container.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        container.setAbsoluteSize(270, 50);
 
         container.add(new JLabel(label));
         container.add(component);
+        container.setAlignmentX(RIGHT_ALIGNMENT);
 
         return container;
     }
@@ -278,8 +280,7 @@ public class DialogTest extends JDialog {
     private void initExamInformation() {
         var container = new PanelBackground();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        container.setAbsoluteSize(350, 205);
-        container.setAlignmentY(CENTER_ALIGNMENT);
+        container.setAbsoluteSize(360, 205);
 
         int height = 30;
 
@@ -287,7 +288,11 @@ public class DialogTest extends JDialog {
 
         time = new JTextField();
         time.setPreferredSize(new Dimension(70, height));;
-        container.add(addExamInformationItem("Thời gian thi:", time));
+        JLabel temp = new JLabel(" phút");
+        temp.setFont(MyFont.fontText);
+        var timeContainer = addExamInformationItem("Thời gian thi:", time);
+        timeContainer.add(temp);
+        container.add(timeContainer);
 
         testLimit = new JTextField();
         testLimit.setPreferredSize(new Dimension(70, height));;
@@ -295,6 +300,7 @@ public class DialogTest extends JDialog {
 
         Integer[] examCountData = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         examCount = new JComboBox<>(examCountData);
+        examCount.setFont(MyFont.fontText);
         examCount.setPreferredSize(new Dimension(70, height));;
 
         if (!isUpdateDialog) container.add(addExamInformationItem("Số đề thi:", examCount));
