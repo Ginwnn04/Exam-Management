@@ -327,7 +327,7 @@ public class DialogTest extends JDialog {
 
     private void addTestStructure() {
         TestStructurePanel testStructurePanel = new TestStructurePanel(topics, testCodeLabel.getText(), questionBUS);
-        testStructurePanel.addOnDeleteListener(this::deleteTestStructure);
+        testStructurePanel.addOnDeleteCallback(this::deleteTestStructure);
 
         int height = (int) testStructureContainer.getPreferredSize().getHeight() + 210;
         testStructureContainer.setAbsoluteSize(WIDTH, height);

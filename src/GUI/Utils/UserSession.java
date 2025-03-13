@@ -22,12 +22,12 @@ public class UserSession {
         return instance;
     }
    
-    public static void setCurrentUser(UserDTO user) {
+    public void setCurrentUser(UserDTO user) {
         currentUser = user;
     }
 
    
-    public static UserDTO getCurrentUser() {
+    public UserDTO getCurrentUser() {
         return currentUser;
     }
 

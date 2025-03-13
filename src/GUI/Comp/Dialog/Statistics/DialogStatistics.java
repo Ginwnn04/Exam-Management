@@ -47,10 +47,10 @@ public class DialogStatistics extends JDialog {
         setLayout(new GridBagLayout());
 
         chart = new PanelChart(testExam, listResult);
-        chart.addOnChangeTabListener(this::changeTab);
+        chart.addOnChangeTabCallback(this::changeTab);
         
         studentStatistics = new PanelStudentsStatistics(testExam, listResult);
-        studentStatistics.addOnChangeTabListener(this::changeTab);
+        studentStatistics.addOnChangeTabCallback(this::changeTab);
 
         main = new PanelBackground();
         main.setAbsoluteSize(1180, 720);

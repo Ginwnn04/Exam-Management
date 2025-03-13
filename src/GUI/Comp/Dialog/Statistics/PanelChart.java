@@ -40,7 +40,7 @@ import style.MyFont;
 
 public class PanelChart extends PanelBackground {
     private final int WIDTH = 1180;
-    private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
+    private ArrayList<Consumer<PanelBackground>> onChangeTabCallback = new ArrayList<>();
 
     private TestDTO testExam;
     private List<ResultDTO> listResult;
@@ -302,12 +302,12 @@ public class PanelChart extends PanelBackground {
     }
 
     private void OnChangeTab(ActionEvent e) {
-        for (var callback : onChangeTabListener) {
+        for (var callback : onChangeTabCallback) {
             callback.accept(this);
         }
     }
 
-    public void addOnChangeTabListener(Consumer<PanelBackground> callback) {
-        onChangeTabListener.add(callback);
+    public void addOnChangeTabCallback(Consumer<PanelBackground> callback) {
+        onChangeTabCallback.add(callback);
     }
 }

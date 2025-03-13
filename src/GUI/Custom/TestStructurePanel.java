@@ -43,7 +43,7 @@ public class TestStructurePanel extends PanelBackground {
     
     private List<TopicDTO> topics;
     private String testCode;
-    private ArrayList<Consumer<TestStructurePanel>> onDeleteListeners = new ArrayList<>();
+    private ArrayList<Consumer<TestStructurePanel>> onDeleteCallback = new ArrayList<>();
     private QuestionBUS questionBUS;
     private List<QuestionDTO> questions;
     
@@ -263,12 +263,12 @@ public class TestStructurePanel extends PanelBackground {
                                .setNumDiff(diffCount);
     }
 
-    public void addOnDeleteListener(Consumer<TestStructurePanel> callback) {
-        onDeleteListeners.add(callback);
+    public void addOnDeleteCallback(Consumer<TestStructurePanel> callback) {
+        onDeleteCallback.add(callback);
     }
 
     private void onDelete() {
-        for (var callback : onDeleteListeners) {
+        for (var callback : onDeleteCallback) {
             callback.accept(this);
         }
     }
