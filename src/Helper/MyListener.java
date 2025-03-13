@@ -19,6 +19,7 @@ public class MyListener{
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     
+    
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }

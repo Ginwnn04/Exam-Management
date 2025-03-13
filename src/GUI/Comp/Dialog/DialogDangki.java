@@ -4,12 +4,15 @@
  */
 package GUI.Comp.Dialog;
 import javax.swing.JOptionPane;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import DTO.UserDTO;
 
 import BUS.UserBus;
- import java.awt.event.ActionEvent;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
  import java.util.ArrayList;
  import java.util.List;
 /**
@@ -50,8 +53,8 @@ public class DialogDangki extends javax.swing.JDialog {
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         panelBackground5 = new GUI.Comp.Swing.PanelBackground();
-        jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -107,8 +110,6 @@ public class DialogDangki extends javax.swing.JDialog {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-       
-
         jLabel4.setText("Mật khẩu");
 
         javax.swing.GroupLayout panelBackground5Layout = new javax.swing.GroupLayout(panelBackground5);
@@ -118,20 +119,24 @@ public class DialogDangki extends javax.swing.JDialog {
             .addGroup(panelBackground5Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelBackground5Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 98, Short.MAX_VALUE))
+                    .addComponent(jPasswordField1))
+                .addContainerGap())
         );
         panelBackground5Layout.setVerticalGroup(
             panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBackground5Layout.createSequentialGroup()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabel5.setText("Họ và Tên");
+
+       
 
         javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
         panelBackground2.setLayout(panelBackground2Layout);
@@ -173,7 +178,7 @@ public class DialogDangki extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(53,80,154));
+        jButton1.setBackground(new java.awt.Color(53, 80, 154));
         jButton1.setText("Đăng kí");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,10 +200,10 @@ public class DialogDangki extends javax.swing.JDialog {
             .addGroup(panelBackground1Layout.createSequentialGroup()
                 .addGroup(panelBackground1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBackground1Layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(jButton1)
-                        .addGap(49, 49, 49)
-                        .addComponent(jButton2))
+                        .addGap(55, 55, 55)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelBackground1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -211,8 +216,8 @@ public class DialogDangki extends javax.swing.JDialog {
                 .addComponent(panelBackground2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(panelBackground1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
                 .addGap(39, 39, 39))
         );
 
@@ -235,16 +240,27 @@ public class DialogDangki extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+
+    // Hàm kiểm tra email hợp lệ
+    private boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
     private UserDTO gatherData(){
         String username = jTextField1.getText().trim();
         String email = jTextField2.getText().trim();
-        String password = jTextField3.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
         String fullname = jTextField4.getText().trim();
         if (username.isEmpty() || password.isEmpty() || email.isEmpty() || fullname.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-
+        if (!isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ! Vui lòng nhập đúng định dạng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
         if (password.length() < 6) {
             JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 ký tự trở lên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return null;
@@ -257,7 +273,7 @@ public class DialogDangki extends javax.swing.JDialog {
                 .build();
 
     }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         UserDTO user = gatherData();
         if(user == null) return;
         if(BUS.addUser(user)== null)
@@ -268,7 +284,7 @@ public class DialogDangki extends javax.swing.JDialog {
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -324,9 +340,9 @@ public class DialogDangki extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
     private GUI.Comp.Swing.PanelBackground panelBackground2;

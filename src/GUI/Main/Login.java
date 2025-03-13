@@ -75,7 +75,7 @@ public class Login extends javax.swing.JFrame {
 
         panel_right.setBackground(new Color(255,255,255));
 
-        ImageIcon image = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/log.png"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/log2.png"));
         JLabel lbImage = new JLabel(image) {
             public void paintComponent(Graphics g) {
                 Dimension size = getSize();
