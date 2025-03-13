@@ -44,22 +44,30 @@ public class PanelAnswers extends javax.swing.JPanel {
             Image img = new ImageIcon(path).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
             this.lbImg.setIcon(new ImageIcon(img));
         }
-    
     }
     
     public boolean isSelected() {
         return this.isSelected;
     }
     
-    public void selected(boolean isSelected) {
+    public void selected(boolean isSelected, boolean multiChoice) {
         this.isSelected = isSelected;
         if (isSelected) {
             Font oldFont = lbOrder.getFont();
-            lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
-            lbOrder.setForeground(ColorConfig.BLUE);
-            lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
-            lbAnsw.setForeground(ColorConfig.BLUE);
-            main.setBackground(ColorConfig.LIGHT_BLUE);
+            if (multiChoice == true) {
+                lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
+                lbOrder.setForeground(ColorConfig.GREEN);
+                lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
+                lbAnsw.setForeground(ColorConfig.GREEN);
+                main.setBackground(ColorConfig.LIGHT_GREEN);
+            }
+            else {
+                lbOrder.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize())); // Giữ nguyên size, chỉ đổi thành BOLD
+                lbOrder.setForeground(ColorConfig.BLUE);
+                lbAnsw.setFont(oldFont.deriveFont(Font.BOLD, oldFont.getSize()));
+                lbAnsw.setForeground(ColorConfig.BLUE);
+                main.setBackground(ColorConfig.LIGHT_BLUE);
+            }
         }
         else {
             Font oldFont = lbOrder.getFont();
@@ -70,6 +78,14 @@ public class PanelAnswers extends javax.swing.JPanel {
             main.setBackground(ColorConfig.GREY_COLOR_BG);
 
         }
+    }
+    
+    public char getOrder() {
+        return order;
+    }
+    
+    public String getAnsw() {
+        return answ;
     }
 
     /**

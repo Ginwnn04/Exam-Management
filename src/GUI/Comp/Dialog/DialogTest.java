@@ -10,7 +10,10 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -30,16 +33,21 @@ import javax.swing.border.TitledBorder;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import BUS.QuestionBUS;
 import BUS.TestBUS;
 import BUS.TestStructureBUS;
 import BUS.TopicBUS;
+import DTO.QuestionDTO;
 import DTO.TestDTO;
 import DTO.TestStructureDTO;
 import DTO.TopicDTO;
+import Exceptions.DuplicateTopicException;
+import Exceptions.EmptyQuestionsException;
 import GUI.Comp.DateChooser.DateChooser;
 import GUI.Comp.DateChooser.SelectedDate;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.TestStructurePanel;
+import GUI.Utils.Pair;
 import GUI.Utils.RandomCode;
 import GUI.Utils.RoundBorder;
 import style.ColorConfig;
@@ -52,6 +60,7 @@ public class DialogTest extends JDialog {
     private TestBUS BUS;
     private TopicBUS topicBUS = new TopicBUS();
     private TestStructureBUS testStructureBUS = new TestStructureBUS();
+    private QuestionBUS questionBUS = new QuestionBUS();
 
     private ArrayList<TestStructurePanel> testStructurePanels = new ArrayList<>();
     private List<TopicDTO> topics;
@@ -87,6 +96,10 @@ public class DialogTest extends JDialog {
 
         setResizable(false);
         setLocationRelativeTo(null);
+    }
+
+    private void prepareData() {
+        
     }
     
     private void initComponents() {
@@ -153,7 +166,7 @@ public class DialogTest extends JDialog {
         container.setBorder(new EmptyBorder(0, 10, 0, 10));
 
         idLabel = new JLabel();
-        idLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        idLabel.setFont(MyFont.fontText.deriveFont(16f));
         idLabel.setText("ID cấu trúc đề thi: " + selectedTestExamId);
 
         container.add(idLabel);
@@ -313,7 +326,7 @@ public class DialogTest extends JDialog {
     }
 
     private void addTestStructure() {
-        TestStructurePanel testStructurePanel = new TestStructurePanel(WIDTH, 200, topics, testCodeLabel.getText());
+        TestStructurePanel testStructurePanel = new TestStructurePanel(topics, testCodeLabel.getText(), questionBUS);
         testStructurePanel.addOnDeleteListener(this::deleteTestStructure);
 
         int height = (int) testStructureContainer.getPreferredSize().getHeight() + 210;
@@ -329,7 +342,7 @@ public class DialogTest extends JDialog {
     }
 
     private void addTestStructure(TestStructureDTO model) {
-        TestStructurePanel testStructurePanel = new TestStructurePanel(WIDTH, 200, topics, model.getTestCode());
+        TestStructurePanel testStructurePanel = new TestStructurePanel(topics, model.getTestCode(), questionBUS);
         testStructurePanel.setModel(model);
         testStructurePanel.setEditable(!isUpdateDialog);
 
@@ -409,12 +422,17 @@ public class DialogTest extends JDialog {
     }
 
     private void onSave(ActionEvent e) {
-        TestDTO data = gatherFormData();
-        ArrayList<TestStructureDTO> listTestStructure = new ArrayList<>();
+        var check = canSave();
 
-        for (var testStructurePanel : testStructurePanels) {
-            listTestStructure.add(testStructurePanel.result());
+        if (!check.getFirst()) {
+            JOptionPane.showMessageDialog(this, check.getLast(), "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        TestDTO data = gatherFormData();
+
+        List<TestStructureDTO> listTestStructure = getTestStructureList();
+        if (listTestStructure == null) return;
 
         String action = !isUpdateDialog ? "Tạo" : "Cập nhật";
         var result = !isUpdateDialog ? create(data, listTestStructure) != null : update(data);
@@ -425,12 +443,53 @@ public class DialogTest extends JDialog {
         this.dispose();
     }
 
+    private List<TestStructureDTO> getTestStructureList() {
+        List<TestStructureDTO> listTestStructure;
+
+        try {
+            listTestStructure = gatherTestStructureListData();
+        }
+        catch (EmptyQuestionsException ignore) {
+            JOptionPane.showMessageDialog(this, 
+                                  "Không có câu hỏi trong cấu trúc này! Hãy thiết lập số câu hỏi", 
+                                    "Thông báo", 
+                                          JOptionPane.ERROR_MESSAGE);
+
+            return null;
+        }
+        catch (DuplicateTopicException ignore) {
+            JOptionPane.showMessageDialog(this, 
+                                  "1 Chủ đề chỉ được xuất hiện 1 lần", 
+                                    "Thông báo", 
+                                          JOptionPane.ERROR_MESSAGE);
+
+            return null;
+        }
+
+        return listTestStructure;
+    }
+
     private TestDTO create(TestDTO data, List<TestStructureDTO> listTestStructure) {
         return BUS.create(data, (int) examCount.getSelectedItem(), listTestStructure);
     }
 
     private boolean update(TestDTO data) {
         return BUS.update(selectedTestExamId, data);
+    }
+
+    private Pair<Boolean, String> canSave() { 
+        try {
+            if (examTitle.getText().isEmpty() || time.getText().isEmpty() || testLimit.getText().isEmpty())
+                return new Pair<>(false, "Vui lòng nhập đầy đủ thông tin");
+
+//            var _ = Short.parseShort(testLimit.getText());
+//            var _ = Integer.parseInt(time.getText());
+        }
+        catch (NumberFormatException ignore) {
+            return new Pair<>(false, "Thời gian và Số lượt thi chỉ được nhập số");
+        }
+
+        return new Pair<Boolean,String>(true, "");
     }
 
     private TestDTO gatherFormData() {
@@ -444,6 +503,27 @@ public class DialogTest extends JDialog {
                       .setTestTime(Integer.parseInt(time.getText()))
                       .setTestDate(starDate)
                       .setTestStatus(true);
+    }
+
+    private List<TestStructureDTO> gatherTestStructureListData() throws EmptyQuestionsException, DuplicateTopicException {
+        ArrayList<TestStructureDTO> listTestStructure = new ArrayList<>();
+        int questionCount = 0;
+        Set<Integer> set = new HashSet<>();
+
+        for (var testStructurePanel : testStructurePanels) {
+            var request = testStructurePanel.result();
+
+            if (!set.add(request.getTopicID())) throw new DuplicateTopicException();
+
+            listTestStructure.add(request);
+
+            questionCount += request.getNumEasy();
+            questionCount += request.getNumMedium();
+            questionCount += request.getNumDiff();
+        }
+
+        if (questionCount == 0) throw new EmptyQuestionsException();
+        return listTestStructure;
     }
 
     private PanelBackground main;

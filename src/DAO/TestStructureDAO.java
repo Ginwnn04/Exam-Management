@@ -18,12 +18,13 @@ public class TestStructureDAO implements BaseDAO<TestStructureDTO, String> {
                                .setTopicID(rs.getInt("tpID"))
                                .setNumEasy(rs.getInt("num_easy"))
                                .setNumMedium(rs.getInt("num_medium"))
-                               .setNumDiff(rs.getInt("num_diff"));
+                               .setNumDiff(rs.getInt("num_diff"))
+                               .setStatus(rs.getBoolean("status"));
     }
 
     @Override
     public TestStructureDTO create(TestStructureDTO request) {
-        String query = "INSERT INTO test_structure (testCode, tpID, numEasy, numMedium, numDiff) " +
+        String query = "INSERT INTO test_structure (testCode, tpID, numEasy, numMedium, numDiff, status) " +
                        "VALUES (?, ?, ?, ?, ?)";
 
         try {
@@ -33,6 +34,7 @@ public class TestStructureDAO implements BaseDAO<TestStructureDTO, String> {
             ps.setInt(3, request.getNumEasy());
             ps.setInt(4, request.getNumMedium());
             ps.setInt(5, request.getNumDiff());
+            ps.setInt(6, request.getStatus() ? 1 : 0);
 
             var result = ps.executeUpdate() > 0;
 
@@ -48,21 +50,22 @@ public class TestStructureDAO implements BaseDAO<TestStructureDTO, String> {
     }
 
     public boolean createMultiple(List<TestStructureDTO> requests) {
-        String query = "INSERT INTO test_structure (testCode, tpID, num_easy, num_medium, num_diff) VALUES ";
+        String query = "INSERT INTO test_structure (testCode, tpID, num_easy, num_medium, num_diff, status) VALUES ";
 
         for (int i = 0; i < requests.size(); i++) {
             var request = requests.get(i);
 
             String format;
-            if (i < requests.size() - 1) format = "('%s', %d, %d, %d, %d), ";
-            else format = "('%s', %d, %d, %d, %d);";
+            if (i < requests.size() - 1) format = "('%s', %d, %d, %d, %d, %d), ";
+            else format = "('%s', %d, %d, %d, %d, %d);";
 
             query += String.format(format, 
                                    request.getTestCode(), 
                                    request.getTopicID(),
                                    request.getNumEasy(),
                                    request.getNumMedium(),
-                                   request.getNumDiff());
+                                   request.getNumDiff(),
+                                   request.getStatus() ? 1 : 0);
         }
 
         try {
@@ -100,7 +103,7 @@ public class TestStructureDAO implements BaseDAO<TestStructureDTO, String> {
 
     @Override
     public boolean delete(String id) {
-        String query = "DELETE FROM test_structure WHERE testCode = " + id;
+        String query = "UPDATE test_structure SET status = 0 WHERE testCode = " + id;
 
         try {
             PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
