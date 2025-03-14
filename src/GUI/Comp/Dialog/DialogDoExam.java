@@ -7,12 +7,15 @@ package GUI.Comp.Dialog;
 import BUS.AnswerBUS;
 import BUS.LogBUS;
 import BUS.QuestionBUS;
+import BUS.ResultBUS;
 import DTO.AnswerDTO;
 import DTO.LogDTO;
 import DTO.QuestionDTO;
+import DTO.ResultDTO;
 import DTO.UserDTO;
 import GUI.Comp.Panel.PanelAnswers;
 import GUI.Utils.DoExamLogger;
+import GUI.Utils.Pair;
 import GUI.Utils.UserSession;
 import Helper.Format;
 import java.awt.Dimension;
@@ -29,12 +32,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.Timer;
+
+import org.jfree.data.json.impl.JSONObject;
+
 import style.ColorConfig;
 import style.MyFont;
 
@@ -54,7 +62,9 @@ public class DialogDoExam extends javax.swing.JDialog {
     private List<JButton> listBtnQuestion = new ArrayList<>();
     private QuestionBUS questionBUS = new QuestionBUS();
     private AnswerBUS answerBUS = new AnswerBUS();
+    private ResultBUS resultBUS = new ResultBUS();
     private HashMap<Integer, Set<Character>> trackingQuestion = new HashMap<>();
+    private HashMap<Integer, Set<Integer>> userAnswers = new HashMap<>();
     private Boolean isMultiChoice = false; // Lưu những câu nào đang là only choice hoặc multi choice
     private DoExamLogger logger;
 
@@ -161,7 +171,9 @@ public class DialogDoExam extends javax.swing.JDialog {
     private void renderAnsw(Set<Character> trackingAnsw) {
         listAnswComponent.clear();
         pnAnsw.removeAll();
-        listAnsw = answerBUS.getAnswerByQuestionId(listQuestion.get(nbQuestionCurrent - 1).getId());
+        var question = listQuestion.get(nbQuestionCurrent - 1);
+        listAnsw = answerBUS.getAnswerByQuestionId(question.getId());
+
         char order = 'A';
         for (AnswerDTO answ : listAnsw) {
             if (order > 'D') order = 'A';
@@ -188,49 +200,11 @@ public class DialogDoExam extends javax.swing.JDialog {
                         pnAnswItem.selected(true, isMultiChoice);
                 });
             }
+
             pnAnswItem.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (!isMultiChoice) {
-                        removeAllSelect();
-                    }
-                    boolean isSelected = pnAnswItem.isSelected();
-                    pnAnswItem.selected(!isSelected, isMultiChoice);
-                    
-                    listBtnQuestion.get(nbQuestionCurrent - 1).setBackground(ColorConfig.BLUE);
-                    listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);
-
-                    if (!trackingQuestion.containsKey(nbQuestionCurrent)) {
-                        Set<Character> listChoice = new HashSet<>();
-                        logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, false);
-                        listChoice.add(pnAnswItem.getOrder());
-                        trackingQuestion.put(nbQuestionCurrent, listChoice);
-                    } else {
-                        Set<Character> listChoice = trackingQuestion.get(nbQuestionCurrent);
-                        if (isMultiChoice) {
-                            if (!isSelected) {
-                                listChoice.add(pnAnswItem.getOrder());
-                                logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, true);
-                            }
-                            else {
-                                listChoice.remove(pnAnswItem.getOrder());
-                                logger.writeRemoveUserChoice(nbQuestionCurrent, pnAnswItem.getOrder());
-                            }
-                        }
-                        else {
-                            logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, false);
-                            listChoice.clear();
-                            listChoice.add(pnAnswItem.getOrder());
-                        }
-                        trackingQuestion.put(nbQuestionCurrent, listChoice);
-
-                    }
-
-                    trackingQuestion.forEach((key, value) -> {
-                        System.out.println("======================");
-                        System.out.println("Key: " + key);
-                        value.forEach(System.out::println);
-                    });
+                    onAnswerClick(pnAnswItem, answ, question);
                 }
 
             });
@@ -243,6 +217,80 @@ public class DialogDoExam extends javax.swing.JDialog {
         calcHeight();
         revalidate();
         repaint();
+    }
+
+    private void onAnswerClick(PanelAnswers pnAnswItem, AnswerDTO answ, QuestionDTO question) {
+        if (!isMultiChoice) {
+            removeAllSelect();
+        }
+
+        boolean isSelected = pnAnswItem.isSelected();
+        pnAnswItem.selected(!isSelected, isMultiChoice);
+        
+        listBtnQuestion.get(nbQuestionCurrent - 1).setBackground(ColorConfig.BLUE);
+        listBtnQuestion.get(nbQuestionCurrent - 1).setForeground(ColorConfig.WHITE_COLOR_BG);
+        Set<Character> listChoice;
+        Set<Integer> answers;
+
+        if (!trackingQuestion.containsKey(nbQuestionCurrent)) {
+            Pair<Set<Character>, Set<Integer>> pr = addNewTrackingAnswer(pnAnswItem.getOrder(), answ.getId(), question.getId());
+            listChoice = pr.getFirst();
+            answers = pr.getLast();
+            logTrackingQuestion();
+
+            return;
+        } 
+        
+        listChoice = trackingQuestion.get(nbQuestionCurrent);
+        answers = userAnswers.get(question.getId());
+
+        if (isMultiChoice) {
+            if (!isSelected) {
+                listChoice.add(pnAnswItem.getOrder());
+                answers.add(answ.getId());
+                logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, true);
+            }
+            else {
+                listChoice.remove(pnAnswItem.getOrder());
+                answers.remove(answ.getId());
+                logger.writeRemoveUserChoice(nbQuestionCurrent, pnAnswItem.getOrder());
+            }
+        }
+        else {
+            logger.writeUserChoice(pnAnswItem.getOrder(), nbQuestionCurrent, false);
+            listChoice.clear();
+            answers.clear();
+
+            listChoice.add(pnAnswItem.getOrder());
+            answers.add(answ.getId());
+        }
+
+        logTrackingQuestion();
+        trackingQuestion.put(nbQuestionCurrent, listChoice);
+        userAnswers.put(question.getId(), answers);
+    }
+
+    private void logTrackingQuestion() {
+        trackingQuestion.forEach((key, value) -> {
+            System.out.println("======================");
+            System.out.println("Key: " + key);
+            value.forEach(System.out::println);
+        });
+    }
+
+    private Pair<Set<Character>, Set<Integer>> addNewTrackingAnswer(char order, int answerId, int questionId) {
+        logger.writeUserChoice(order, nbQuestionCurrent, false);
+
+        Set<Character> listChoice = new HashSet<>();
+        Set<Integer> answers = new HashSet<>();
+
+        listChoice.add(order);
+        answers.add(answerId);
+
+        userAnswers.put(questionId, answers);
+        trackingQuestion.put(nbQuestionCurrent, listChoice);
+
+        return new Pair<>(listChoice, answers);
     }
 
     private void removeAllSelect() {
@@ -551,8 +599,51 @@ public class DialogDoExam extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         if (logger != null) logger.save();
+        var result = getUserAnswersAndMark();
+        var user = UserSession.getInstance().getCurrentUser();
+
+        ResultDTO model = ResultDTO.builder()
+                                    .setExCode(exCode)
+                                    .setUserId(user.getId())
+                                    .setRsDate(new Date(System.currentTimeMillis()))
+                                    .setRsMark(result.getLast())
+                                    .setRsAnswer(result.getFirst());
+
+        resultBUS.create(model);
         dispose();
     }// GEN-LAST:event_jButton1ActionPerformed
+
+    
+    @SuppressWarnings("unchecked")
+    private Pair<String, Integer> getUserAnswersAndMark() {
+        JSONObject json = new JSONObject();
+        int mark = 0;
+
+        for (int questionId : userAnswers.keySet()) {
+            var answers = userAnswers.get(questionId);
+            var answerIds = gatherAnswer(answers);
+
+            mark += resultBUS.getScore(questionId, answerIds);
+
+            if (answerIds.size() == 1) json.put(questionId, answerIds.peek());
+            else json.put(questionId, answerIds);
+        }
+
+        System.out.println(json.toString());
+
+        return new Pair<>(json.toString(), mark);
+    }
+
+    private Queue<Integer> gatherAnswer(Set<Integer> answers) {
+        // ArrayList<Integer> result = new ArrayList<>();
+        Queue<Integer> result = new LinkedList<>();
+
+        for (var answerId : answers) {
+            result.add(answerId);
+        }
+
+        return result;
+    }
 
     /**
      * @param args the command line arguments

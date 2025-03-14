@@ -4,6 +4,7 @@
  */
 package GUI.Comp.Panel;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -85,6 +86,15 @@ public class PanelAnswers extends javax.swing.JPanel {
             lbAnsw.setForeground(ColorConfig.BLACK);
             main.setBackground(ColorConfig.GREY_COLOR_BG);
         }
+    }
+
+    public void setContentBackground(Color bg) {
+        main.setBackground(bg);
+    }
+
+    public void setContentForeGround(Color fg) {
+        lbOrder.setForeground(fg);
+        lbAnsw.setForeground(fg);
     }
     
     public char getOrder() {
