@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.ExamDTO;
+import DTO.QuestionDTO;
 import Helper.ConnectDB;
 
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ import java.sql.ResultSet;
 public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
     @Override
     public ArrayList<ExamDTO> getAll(boolean active) {
+        int isGet = active ? 1 : 0;
         ArrayList<ExamDTO> list_exams = new ArrayList<ExamDTO>();
-        String query = "SELECT * FROM exams";
+        String query = "SELECT * FROM exams WHERE status = " + isGet;
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -20,6 +22,7 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
                     .setTestCode(resultSet.getString("testCode"))
                     .setExOrder(resultSet.getString("exOrder"))
                     .setExCode(resultSet.getString("exCode"))
+                    .setStatus(resultSet.getBoolean("status"))
                     .build();
                 list_exams.add(exam);
             }
@@ -39,6 +42,7 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
                     .setTestCode(resultSet.getString("testCode"))
                     .setExOrder(resultSet.getString("exOrder"))
                     .setExCode(resultSet.getString("exCode"))
+                    .setStatus(resultSet.getBoolean("status"))
                     .build();
                 return exam;
             }
@@ -64,37 +68,86 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
 
     @Override
     public ExamDTO create(ExamDTO examDTO) {
-        String query = "INSERT INTO exams(testCode, exOrder, exCode) VALUES(?, ?, ?)";
+        String query = "INSERT INTO exams(testCode, exOrder, exCode, status) VALUES(?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             preparedStatement.setString(1, examDTO.getTestCode());
             preparedStatement.setString(2, examDTO.getExOrder());
             preparedStatement.setString(3, examDTO.getExCode());
+            preparedStatement.setBoolean(4, examDTO.getStatus());
             if (preparedStatement.executeUpdate() <= 0) return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+
+        System.out.println(query);
         
         var questions = examDTO.getQuestions();
-
-        for (var question : questions) {
-            if (!createExamQuestion(question.getId(), examDTO)) return null;
-        }
+        createMultipleExamQuestion(examDTO.getExCode(), questions);
 
         return examDTO;
     }
 
-    private boolean createExamQuestion(int questionId, ExamDTO examDTO) {
-        String query = "INSERT INTO exam_question(question_id, exCode) VALUES(?, ?)";
+    public boolean createMultipleExam(List<ExamDTO> requests) {
+        String query = "INSERT INTO exams(testCode, exOrder, exCode, status) VALUES ";
+        boolean result = false;
+
+        for (int i = 0; i < requests.size(); i++) {
+            String value;
+            var model = requests.get(i);
+
+            if (i < requests.size() - 1) value = ("('%s', '%s', '%s', %d), ");
+            else value = ("('%s', '%s', '%s', %d);");
+
+            query += String.format(value, 
+                                   model.getTestCode(), 
+                                   model.getExOrder(), 
+                                   model.getExCode(), 
+                                   model.getStatus() ? 1 : 0);
+        }
+
+        System.out.println(query);
 
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
-            preparedStatement.setInt(1, questionId);
-            preparedStatement.setString(2, examDTO.getExCode());
+            result = preparedStatement.executeUpdate() > 0;
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if (!result) return false;
+
+        for (ExamDTO model : requests) {
+            result = createMultipleExamQuestion(model.getExCode(), model.getQuestions());
+        }
+
+        return result;
+    }
+
+    private boolean createMultipleExamQuestion(String exCode, List<QuestionDTO> questions) {
+        String query = "INSERT INTO exam_question (question_id, exCode, status) VALUES ";
+
+        for (int i = 0; i < questions.size(); i++) {
+            String value;
+
+            if (i < questions.size() - 1) value = "(%d, '%s', %d), ";
+            else value = "(%d, '%s', %d);";
+
+            var question = questions.get(i);
+            query += String.format(value, question.getId(), exCode, 1);
+        }
+
+        System.out.println(query);
+
+        try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
             return preparedStatement.executeUpdate() > 0;
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
+
         return false;
     }
 
@@ -125,6 +178,33 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         return false;
     }
 
+    public boolean delete(String testCode) {
+        String query = "UPDATE exams SET status = 0 WHERE testCode = " + testCode;
+        boolean result = false;
+
+        try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            result = preparedStatement.executeUpdate() > 0;
+            result = deleteExamQuestion(testCode);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return result;
+    }
+
+    public boolean deleteExamQuestion(String testCode) {
+        String query = "UPDATE exam_question SET status = 0 WHERE INSTR(exCode, ?) > 0";
+
+        try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            preparedStatement.setString(1, testCode);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public ExamDTO findByExCode(String exCode) {
         String query = "SELECT * FROM exams WHERE exCode = ?";
         try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
@@ -135,6 +215,7 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
                     .setTestCode(resultSet.getString("testCode"))
                     .setExOrder(resultSet.getString("exOrder"))
                     .setExCode(resultSet.getString("exCode"))
+                    .setStatus(resultSet.getBoolean("status"))
                     .build();
                 return exam;
             }
@@ -157,6 +238,7 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
                                       .setTestCode(rs.getString("testCode"))
                                       .setExOrder(rs.getString("exOrder"))
                                       .setExCode(rs.getString("exCode"))
+                                      .setStatus(rs.getBoolean("status"))
                                       .build();
 
                 result.add(exam);
@@ -169,5 +251,28 @@ public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
         }
 
         return null;
+    }
+    
+    public ExamDTO randomExamByTestCode(String testCode) {
+        String query = "SELECT * FROM exams WHERE testCode = ? ORDER BY RAND() LIMIT 1";
+        ExamDTO exam = null;
+       try {
+            PreparedStatement ps = ConnectDB.getInstance().getConnection().prepareStatement(query);
+            ps.setString(1, testCode);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                exam = ExamDTO.builder()
+                                      .setTestCode(rs.getString("testCode"))
+                                      .setExOrder(rs.getString("exOrder"))
+                                      .setExCode(rs.getString("exCode"))
+                                      .build();
+        
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return exam;
+
     }
 }

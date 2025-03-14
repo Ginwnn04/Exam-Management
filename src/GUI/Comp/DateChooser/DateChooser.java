@@ -14,6 +14,8 @@ import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import style.ColorConfig;
+
 public final class DateChooser extends javax.swing.JPanel {
 
     public JTextField getTextRefernce() {
@@ -41,7 +43,7 @@ public final class DateChooser extends javax.swing.JPanel {
     }
 
     private void execute() {
-        setForeground(new Color(204, 93, 93));
+        setForeground(ColorConfig.BLUE);
         events = new ArrayList<>();
         popup.add(this);
         toDay(false);

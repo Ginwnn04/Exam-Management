@@ -22,6 +22,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -31,11 +32,11 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ExamBUS;
-import BUS.TestExamBUS;
+import BUS.TestBUS;
 import BUS.UserBus;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
 import DTO.UserDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.Debounce;
@@ -43,25 +44,25 @@ import style.ColorConfig;
 import style.MyFont;
 
 public class PanelStudentsStatistics extends PanelBackground {
-    private final int WIDTH = 1200;
+    private final int WIDTH = 1180;
     private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
 
     private List<ResultDTO> listResult;
     private List<ResultDTO> filterListResult;
-    private TestExamDTO testExam;
+    private TestDTO testExam;
 
     private HashMap<Integer, UserDTO> users = new HashMap<>();
 
     private UserBus userBUS = new UserBus();
-    private TestExamBUS testExamBUS = new TestExamBUS();
     private ExamBUS examBUS = new ExamBUS();
 
-    public PanelStudentsStatistics(List<ResultDTO> listResult, ExamDTO exam) {
+    public PanelStudentsStatistics(TestDTO testExam, List<ResultDTO> listResult) {
         this.listResult = listResult;
-        testExam = testExamBUS.getTestByTestCode(exam.getTestCode());
+        this.testExam = testExam;
         
         fetchUsers();
         initComponents();
+        setBorder(new EmptyBorder(0, 10, 0, 10));
     }
 
      private void resetTableItems() {
@@ -125,11 +126,15 @@ public class PanelStudentsStatistics extends PanelBackground {
         searchAndFilterContainer.setAbsoluteSize(WIDTH, 50);
         searchAndFilterContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
+        JLabel searchTitle = new JLabel("Tìm kiếm: ");
+        searchTitle.setFont(MyFont.fontHeader);
+
         searchField = new JTextField();
-        searchField.setPreferredSize(new Dimension(650, 30));
+        searchField.setPreferredSize(new Dimension(450, 30));
         searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
         setupSearchFieldEvent();
 
+        searchAndFilterContainer.add(searchTitle);
         searchAndFilterContainer.add(searchField);
         searchAndFilterContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 

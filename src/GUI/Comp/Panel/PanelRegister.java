@@ -4,24 +4,48 @@
  */
 package GUI.Comp.Panel;
 
+import BUS.UserBus;
+import DTO.UserDTO;
+import GUI.Utils.Encryptor;
+
+import Helper.MyListener;
+import java.awt.Image;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author 84376
  */
 public class PanelRegister extends javax.swing.JPanel {
-
+     private UserBus BUS = new UserBus();
     /**
      * Creates new form PanelRegister
      */
     public PanelRegister() {
         initComponents();
-        jTextField1.putClientProperty("JTextField.placeholderText", "Nhập tài khoản");
-        jTextField2.putClientProperty("JTextField.placeholderText", "Nhập email");
-        jTextField3.putClientProperty("JTextField.placeholderText", "Nhập họ tên");
-        jPasswordField1.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");
-        jPasswordField2.putClientProperty("JTextField.placeholderText", "Nhập lại mật khẩu");
+        txttaikhoan.putClientProperty("JTextField.placeholderText", "Nhập tài khoản");
+        txtemail.putClientProperty("JTextField.placeholderText", "Nhập email");
+        txthovaten.putClientProperty("JTextField.placeholderText", "Nhập họ tên");
+        txtPassword.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");
+        txtPasswordCf.putClientProperty("JTextField.placeholderText", "Nhập lại mật khẩu");
+        
+        ImageIcon icon = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/book1.jpg"));
+        Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        jLabel1.setIcon(new ImageIcon(img));
     }
+     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
 
+    // Hàm kiểm tra email hợp lệ
+    private boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,17 +59,18 @@ public class PanelRegister extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txttaikhoan = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField2 = new javax.swing.JTextField();
+        btnDangki = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
+        txtemail = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txthovaten = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        txtPasswordCf = new javax.swing.JPasswordField();
+        cbChinhsach = new javax.swing.JCheckBox();
+        btnQuaylai = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -58,26 +83,31 @@ public class PanelRegister extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel3.setText("Tài khoản");
 
-        jTextField1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txttaikhoan.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel4.setText("Mật khẩu");
 
-        jButton2.setBackground(new java.awt.Color(53, 80, 154));
-        jButton2.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Đăng kí");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setPreferredSize(new java.awt.Dimension(88, 30));
+        btnDangki.setBackground(new java.awt.Color(53, 80, 154));
+        btnDangki.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        btnDangki.setForeground(new java.awt.Color(255, 255, 255));
+        btnDangki.setText("Đăng kí");
+        btnDangki.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDangki.setPreferredSize(new java.awt.Dimension(88, 30));
+        btnDangki.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangkiActionPerformed(evt);
+            }
+        });
 
-        jPasswordField1.setPreferredSize(new java.awt.Dimension(90, 32));
+        txtPassword.setPreferredSize(new java.awt.Dimension(90, 32));
 
-        jTextField2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtemail.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel5.setText("Email");
 
-        jTextField3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txthovaten.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel6.setText("Họ và Tên");
@@ -85,38 +115,51 @@ public class PanelRegister extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel7.setText("Xác nhận mật khẩu");
 
-        jPasswordField2.setPreferredSize(new java.awt.Dimension(90, 32));
+        txtPasswordCf.setPreferredSize(new java.awt.Dimension(90, 32));
 
-        jCheckBox1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        jCheckBox1.setText("Đồng ý với các chính sách");
+        cbChinhsach.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        cbChinhsach.setText("Đồng ý với các chính sách");
+
+        btnQuaylai.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        btnQuaylai.setForeground(new java.awt.Color(53, 80, 154));
+        btnQuaylai.setText("Quay lại");
+        btnQuaylai.setBorder(null);
+        btnQuaylai.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnQuaylai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuaylaiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
         panelBackground2.setLayout(panelBackground2Layout);
         panelBackground2Layout.setHorizontalGroup(
             panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBackground2Layout.createSequentialGroup()
+                .addGap(75, 75, 75)
                 .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelBackground2Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelBackground2Layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                                .addComponent(jPasswordField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jCheckBox1))))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(panelBackground2Layout.createSequentialGroup()
+                            .addComponent(btnQuaylai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(66, 66, 66)
+                            .addComponent(btnDangki, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txthovaten, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtemail, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txttaikhoan, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtPasswordCf, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbChinhsach))
                 .addContainerGap(77, Short.MAX_VALUE))
+            .addGroup(panelBackground2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBackground2Layout.setVerticalGroup(
             panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,28 +171,30 @@ public class PanelRegister extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txttaikhoan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txthovaten, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPasswordCf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox1)
+                .addComponent(cbChinhsach)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDangki, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnQuaylai, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -165,11 +210,65 @@ public class PanelRegister extends javax.swing.JPanel {
             .addComponent(panelBackground2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+    private boolean isPasswordConfirmed(String password, String passwordCf) {
+    return password.equals(passwordCf);
+}
+     private UserDTO gatherData(){
+        String username = txttaikhoan.getText().trim();
+        String email = txtemail.getText().trim();
+        String fullname = txthovaten.getText();
+        String password = new String(txtPassword.getPassword());
+        String passwordCf = new String (txtPasswordCf.getPassword());
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty() || fullname.isEmpty() || passwordCf.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+         if (!isValidEmail(email)) {
+        JOptionPane.showMessageDialog(this, "Email không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return null;
+    }
+        if (password.length() < 6) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 ký tự trở lên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        if (!isPasswordConfirmed(password, passwordCf)) {
+        JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return null;
+    }
+         if (!cbChinhsach.isSelected()) {
+        JOptionPane.showMessageDialog(this, "Bạn phải đồng ý với điều khoản ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return null;
+    }
+//        String hash_password = Encryptor.encrypt("Bar12345Bar12345", "RandomInitVector", password);
+        String hashedPassword = Encryptor.encrypt(password);
+        return UserDTO.builder()
+                .setName(username)
+                .setEmail(email)
+                .setFullName(fullname)
+                .setPassword(hashedPassword)
+                
+                .build();
+
+    }
+    private void btnQuaylaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuaylaiActionPerformed
+        MyListener.getInstance().firePropertyChange("back_home", 0, 1);
+    }//GEN-LAST:event_btnQuaylaiActionPerformed
+
+    private void btnDangkiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangkiActionPerformed
+         UserDTO user = gatherData();
+        if(user == null) return;
+        if(BUS.addUser(user)== null)
+        JOptionPane.showMessageDialog(this,"Đăng kí thất bại");
+        else
+        JOptionPane.showMessageDialog(this,"Đăng kí thành công");
+        MyListener.getInstance().firePropertyChange("back_home", 0, 1);
+    }//GEN-LAST:event_btnDangkiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JButton btnDangki;
+    private javax.swing.JButton btnQuaylai;
+    private javax.swing.JCheckBox cbChinhsach;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -177,11 +276,11 @@ public class PanelRegister extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private GUI.Comp.Swing.PanelBackground panelBackground2;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JPasswordField txtPasswordCf;
+    private javax.swing.JTextField txtemail;
+    private javax.swing.JTextField txthovaten;
+    private javax.swing.JTextField txttaikhoan;
     // End of variables declaration//GEN-END:variables
 }

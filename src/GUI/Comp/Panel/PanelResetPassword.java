@@ -4,23 +4,29 @@
  */
 package GUI.Comp.Panel;
 
+import BUS.UserBus;
+import Helper.MyListener;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author 84376
  */
 public class PanelResetPassword extends javax.swing.JPanel {
-
+    private UserBus userBus = new UserBus();
+    private int userId;
     /**
      * Creates new form PanelResetPassword
      */
     public PanelResetPassword() {
         initComponents();
-        jPasswordField1.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");
-        jPasswordField1.putClientProperty("JTextField.placeholderText", "Nhập lại mật khẩu");
-
+        newPasswordField.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");
+        confirmPasswordField.putClientProperty("JTextField.placeholderText", "Nhập lại mật khẩu");
 
     }
-
+    public void setUserID(int userId) {
+        this.userId = userId;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,9 +41,9 @@ public class PanelResetPassword extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        newPasswordField = new javax.swing.JPasswordField();
         jLabel7 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        confirmPasswordField = new javax.swing.JPasswordField();
 
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -56,13 +62,18 @@ public class PanelResetPassword extends javax.swing.JPanel {
         jButton2.setText("Xác nhận");
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton2.setPreferredSize(new java.awt.Dimension(88, 30));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jPasswordField1.setPreferredSize(new java.awt.Dimension(90, 32));
+        newPasswordField.setPreferredSize(new java.awt.Dimension(90, 32));
 
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         jLabel7.setText("Xác nhận mật khẩu");
 
-        jPasswordField2.setPreferredSize(new java.awt.Dimension(90, 32));
+        confirmPasswordField.setPreferredSize(new java.awt.Dimension(90, 32));
 
         javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
         panelBackground2.setLayout(panelBackground2Layout);
@@ -80,8 +91,8 @@ public class PanelResetPassword extends javax.swing.JPanel {
                             .addGroup(panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPasswordField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(newPasswordField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(confirmPasswordField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(78, Short.MAX_VALUE))
         );
@@ -95,11 +106,11 @@ public class PanelResetPassword extends javax.swing.JPanel {
                 .addGap(65, 65, 65)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(newPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(confirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(126, Short.MAX_VALUE))
@@ -119,15 +130,47 @@ public class PanelResetPassword extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String newPassword = new String(newPasswordField.getPassword());
+        String confirmPassword = new String(confirmPasswordField.getPassword());
+        if(validatePassword(newPassword, confirmPassword)){
+            System.out.println(userId + " ");
+            updatePassword(userId, newPassword);
+        }
+        else {
+        newPasswordField.setText("");
+        confirmPasswordField.setText("");
+        }
 
+    }//GEN-LAST:event_jButton2ActionPerformed
+    private boolean validatePassword(String newPassword, String confirmPassword) {
+        if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        else if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    private void updatePassword(int user_id, String newPassword) {
+        if (userBus.changePassword(user_id, newPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu đã được cập nhật thành công!");
+            MyListener.getInstance().firePropertyChange("back_home", 0, 1);
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật mật khẩu thất bại!");
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField confirmPasswordField;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
+    private javax.swing.JPasswordField newPasswordField;
     private GUI.Comp.Swing.PanelBackground panelBackground2;
     // End of variables declaration//GEN-END:variables
 }

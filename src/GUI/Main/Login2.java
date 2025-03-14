@@ -5,14 +5,20 @@
 package GUI.Main;
 
 import GUI.Comp.Panel.PanelRegister;
+import GUI.Comp.Panel.PanelResetPassword;
 import GUI.Comp.Panel.PannelLogin;
+import Helper.ConnectDB;
 import Helper.MyListener;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Paths;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -28,9 +34,19 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
      */
     public Login2() {
         initComponents();
+        ConnectDB.getInstance().openConnect();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setSize(new Dimension(835, 560));
+        setResizable(false);
         MyListener.getInstance().addPropertyChangeListener(this);
         showForm(new PannelLogin());
-
+        
+        String linkImg = Paths.get(System.getProperty("user.dir") + "/src/GUI/Comp/Icon/logo1.jpg").toString();
+        Image img = new ImageIcon(linkImg).getImage().getScaledInstance(417, 535, Image.SCALE_SMOOTH);
+        txtImg.setIcon(new ImageIcon(img));
+        
+        
     }
     
         public void showForm(JPanel com) {
@@ -54,6 +70,7 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         pnLeft = new GUI.Comp.Swing.PanelBackground();
         panelBackground3 = new GUI.Comp.Swing.PanelBackground();
+        txtImg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
@@ -64,17 +81,8 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         panelBackground1.add(pnLeft);
 
         panelBackground3.setBackground(new java.awt.Color(255, 51, 102));
-
-        javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
-        panelBackground3.setLayout(panelBackground3Layout);
-        panelBackground3Layout.setHorizontalGroup(
-            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 416, Short.MAX_VALUE)
-        );
-        panelBackground3Layout.setVerticalGroup(
-            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 534, Short.MAX_VALUE)
-        );
+        panelBackground3.setLayout(new java.awt.BorderLayout());
+        panelBackground3.add(txtImg, java.awt.BorderLayout.CENTER);
 
         panelBackground1.add(panelBackground3);
 
@@ -117,18 +125,25 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
     private GUI.Comp.Swing.PanelBackground panelBackground1;
     private GUI.Comp.Swing.PanelBackground panelBackground3;
     private GUI.Comp.Swing.PanelBackground pnLeft;
+    private javax.swing.JLabel txtImg;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("login")) {
-            
+        if (evt.getPropertyName().equals("loginSuccess")) {
+            this.setVisible(false);
         }
         else if (evt.getPropertyName().equals("register")) {
             showForm(new PanelRegister());
         }
-        else if (evt.getPropertyName().equals("reset_password")) {
-            
+        else if (evt.getPropertyName().equals("resetPassword")) {
+            PanelResetPassword resetForm = new PanelResetPassword();
+            resetForm.setUserID(Integer.parseInt(evt.getNewValue().toString()));
+            showForm(resetForm);
         }
+        else if (evt.getPropertyName().equals("back_home")) {
+            showForm(new PannelLogin());
+        }
+        
     }
 }

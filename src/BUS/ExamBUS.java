@@ -3,10 +3,13 @@ package BUS;
 import DAO.ExamDAO;
 import DTO.ExamDTO;
 import DTO.QuestionDTO;
-import DTO.TestExamDTO;
+import DTO.TestDTO;
+import DTO.TestStructureDTO;
 import Enum.LevelEnum;
+import GUI.Utils.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +21,7 @@ public class ExamBUS {
         return ExamDAO.getAll(true);
     }
 
-    public ArrayList<QuestionDTO> shuffleQuestions(List<QuestionDTO> questions) {
+    public ArrayList<TopicQuestion> shuffleQuestions(List<TopicQuestion> questions) {
         int n = questions.size();
         Random rand = new Random();
 
@@ -28,7 +31,7 @@ public class ExamBUS {
             n--;
             int index = rand.nextInt(n);
 
-            QuestionDTO temp = result.get(n);
+            TopicQuestion temp = result.get(n);
             result.set(n, result.get(index));
             result.set(index, temp);
         }
@@ -56,12 +59,20 @@ public class ExamBUS {
         return ExamDAO.delete(id);
     }
 
+    public boolean deleteExam(String testCode) {
+        return ExamDAO.delete(testCode);
+    }
+
     public ExamDTO findByExCode(String exCode) {
         return ExamDAO.findByExCode(exCode);
     }
 
     public List<ExamDTO> findByTestCode(String testCode) {
         return ExamDAO.findByTestCode(testCode);
+    }
+    
+    public ExamDTO randomExamByTestCode(String testCode) {
+        return ExamDAO.randomExamByTestCode(testCode);
     }
 
     /**
@@ -71,49 +82,177 @@ public class ExamBUS {
         return ExamDAO.findByTestCode(testCode).size();
     }
 
-    public boolean generateExam(TestExamDTO testExam, int quantity) {
-        List<QuestionDTO> questions = questionBUS.getQuestionByTopicAndLevel(testExam.getTopicId(), "");
-        char order = 65;
-        boolean result = false;
-        
+    public boolean generateExam(TestDTO testExam, int quantity, List<TestStructureDTO> listTestStructure) {
+        var testStructureQuestions =  getTestStructureQuestions(listTestStructure);
+
+        HashMap<Integer, DifficultCount> diffCountMap = testStructureQuestions.getFirst();
+        List<TopicQuestion> questions = testStructureQuestions.getLast();
+
+        ArrayList<ExamDTO> requests = new ArrayList<>();
+
+        char order = 'A';
+
         for (int i = 0; i < quantity; i++) {
             if (order > 'Z') return false;
 
-            var list = getQuestionsByCondition(testExam, shuffleQuestions(questions));
+            resetDiffCountMap(diffCountMap);
+            var shuffleList = shuffleQuestions(questions);
+            var list = getQuestionsWithCondition(shuffleList, diffCountMap);
 
             ExamDTO model = ExamDTO.builder()
                                    .setTestCode(testExam.getTestCode())
                                    .setExOrder(String.valueOf(order))
                                    .setExCode(testExam.getTestCode() + String.valueOf(order))
-                                   .setQuestions(list);
+                                   .setQuestions(list)
+                                   .setStatus(true)
+                                   .build();
 
-            result = addExam(model) != null;
+            requests.add(model);
+
             order++;
+        }
+
+        return ExamDAO.createMultipleExam(requests);
+    }
+
+    // prepare resource
+    private Pair<HashMap<Integer, DifficultCount>, List<TopicQuestion>> getTestStructureQuestions(List<TestStructureDTO> listTestStructure) {
+        HashMap<Integer, DifficultCount> map = new HashMap<>();
+        ArrayList<TopicQuestion> questions = new ArrayList<>();
+
+        for (var testStructure : listTestStructure) {
+            int topicId = testStructure.getTopicID();
+            
+            DifficultCount difficultCount = new DifficultCount(testStructure.getNumEasy(), 
+                                                               testStructure.getNumMedium(), 
+                                                               testStructure.getNumDiff());
+
+            map.put(topicId, difficultCount);
+
+            List<QuestionDTO> tempList = questionBUS.getQuestionByTopicAndLevel(topicId, "");
+            for (QuestionDTO question : tempList) {
+                questions.add(new TopicQuestion(topicId, question));
+            }
+        }
+
+        Pair<HashMap<Integer, DifficultCount>, List<TopicQuestion>> result = new Pair<>(map, questions);
+        return result;
+    }
+
+    private void resetDiffCountMap(HashMap<Integer, DifficultCount> diffCountMap) {
+        for (var key : diffCountMap.keySet()) {
+            diffCountMap.get(key).clear();
+        }
+    }
+
+    /**
+     * Get list question with matching num of difficult
+     */
+    private ArrayList<QuestionDTO> getQuestionsWithCondition(List<TopicQuestion> questions, HashMap<Integer, DifficultCount> diffCountMap) {
+        ArrayList<QuestionDTO> result = new ArrayList<>();
+
+        for (TopicQuestion topicQuestion : questions) {
+            int topicId = topicQuestion.topicID;
+            if (!canAddQuestion(topicQuestion, diffCountMap.get(topicId))) continue;
+            result.add(topicQuestion.question);
         }
 
         return result;
     }
-    
-    public ArrayList<QuestionDTO> getQuestionsByCondition(TestExamDTO testExam, List<QuestionDTO> questions) {
-        ArrayList<QuestionDTO> result = new ArrayList<>();
 
-        int numEasy = testExam.getEasyQuestionCount();
-        int numMedium = testExam.getMediumQuestionCount();
-        int numDiff = testExam.getDiffQuestionCount();
+    private boolean canAddQuestion(TopicQuestion topicQuestion, DifficultCount difficultCount) {
+        QuestionDTO question = topicQuestion.question;
+        String level = question.getLevel();
+        Runnable callback;
 
-        int easyCount = 0, mediumCount = 0, diffCount = 0;
+        switch (level) {
+            case "easy":
+                if (difficultCount.isEnoughEasy()) return false;
+                callback = () -> difficultCount.increaseEasy();
+                break;
 
-        for (QuestionDTO question : questions) {
-            String level = question.getLevel();
-            
-            if (level.equals(LevelEnum.EASY.getDesc()) && easyCount < numEasy) easyCount++;
-            else if (level.equals(LevelEnum.MEDIUM.getDesc()) && mediumCount < numMedium) mediumCount++;
-            else if (level.equals(LevelEnum.HARD.getDesc()) && diffCount < numDiff) diffCount++;
-            else continue;
+            case "medium":
+            if (difficultCount.isEnoughMedium()) return false;
+                callback = () -> difficultCount.increaseMedium();
+                break;
 
-            result.add(question);
+            case "diff":
+            if (difficultCount.isEnoughDiff()) return false;
+                callback = () -> difficultCount.increaseDiff();
+                break;
+        
+            default:
+                return false;
         }
 
-        return result;
+        callback.run();
+        return true;
+    }
+
+    private class TopicQuestion {
+        public final int topicID;
+        public final QuestionDTO question;
+
+        public TopicQuestion(int topicID, QuestionDTO question) {
+            this.topicID = topicID;
+            this.question = question;
+        }
+    }
+
+    /**
+     * Help in count condition of TestStructure
+     */
+    private class DifficultCount {
+        private Pair<Integer, Integer> easy;
+        private Pair<Integer, Integer> medium;
+        private Pair<Integer, Integer> diff;
+
+        public DifficultCount(int easyTarget, int mediumTarget, int diffTarget) {
+            easy = new Pair<Integer,Integer>(0, easyTarget);
+            medium = new Pair<Integer,Integer>(0, mediumTarget);
+            diff = new Pair<Integer,Integer>(0, diffTarget);
+        }
+
+        public boolean increaseEasy() {
+            int value = (Integer) easy.getFirst() + 1;
+            if (value > easy.getLast()) return false;
+
+            easy.setFirst(value);
+            return true;
+        }
+
+        public boolean increaseMedium() {
+            int value = (Integer) medium.getFirst() + 1;
+            if (value > medium.getLast()) return false;
+
+            medium.setFirst(value);
+            return true;
+        }
+
+        public boolean increaseDiff() {
+            int value = (Integer) diff.getFirst() + 1;
+            if (value > diff.getLast()) return false;
+
+            diff.setFirst(value);
+            return true;
+        }
+
+        public boolean isEnoughEasy() {
+            return easy.getFirst() == easy.getLast();
+        }
+
+        public boolean isEnoughMedium() {
+            return medium.getFirst() == medium.getLast();
+        }
+        
+        public boolean isEnoughDiff() {
+            return diff.getFirst() == diff.getLast();
+        }
+
+        public void clear() {
+            easy.setFirst(0);
+            medium.setFirst(0);
+            diff.setFirst(0);
+        }
     }
 }

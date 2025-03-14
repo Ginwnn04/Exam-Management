@@ -30,23 +30,26 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import DTO.UserDTO;
-import GUI.Comp.Dialog.DialogDangki;
+//import GUI.Comp.Dialog.DialogDangki;
+import GUI.Utils.Encryptor;
 import GUI.Utils.UserSession;
 import BUS.UserBus;
 import DAO.UserDao;
 import Helper.ConnectDB;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import GUI.Comp.Dialog.DialogSendOTP;
 /**
  *
  * @author vuled
  */
 public class Login extends javax.swing.JFrame {
     private UserBus userBus = new UserBus();
-
     public Login() {
         initComponents();
         LoginLayout();
@@ -210,47 +213,83 @@ public class Login extends javax.swing.JFrame {
                 dangkiDialog();
             }
         });
+
+        JLabel forgotPasswordLabel = new JLabel("<html><u>Quên mật khẩu</u></html>");
+        forgotPasswordLabel.setForeground(Color.BLACK);
+        forgotPasswordLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        forgotPasswordLabel.setPreferredSize(new Dimension(300, 35));
+        forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                forgotPasswordLabelMouseClicked(usernameField);
+            }
+        });
+
         JLabel login_lbl = new JLabel("Đăng nhập", SwingConstants.CENTER);
         login_lbl.setFont(new Font("Roboto", Font.BOLD, 40));
         login_lbl.setForeground(new Color(50, 168, 82));
 
         logSection_panel_top.add(login_lbl, BorderLayout.SOUTH);
         logSection_panel_top.setBackground(new Color(255,255,255));
-        
-        
+        logSection_panel_bot.add(forgotPasswordLabel);
+    }
 //        
 //        usernameField.setText("quangdeptrai");
 //        passwordField.setText("1234");
+
+    private void forgotPasswordLabelMouseClicked(JTextField usernameField) {
+        String username = usernameField.getText();
+        UserDTO user = userBus.findByUsername(username);
+        if (username.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return;
+        }
+        else if(user == null){
+            JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+            return;
+        }
+        
+        JDialog dialogOTP = new DialogSendOTP(null, true,username);
+        dialogOTP.setVisible(true);
     }
+
     private void dangkiDialog(){
-        DialogDangki dangki =new DialogDangki(null,true);
-        dangki.setVisible(true);
+//        DialogDangki dangki =new DialogDangki(null,true);
+//        dangki.setVisible(true);
     }
+
     private void loginButtonActionPerformed(JTextField usernameField, JTextField passwordField) {
-       String username = usernameField.getText();
-        String password = passwordField.getText();
-        UserDTO user = userBus.login(username,password);
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
+       String textUsername = usernameField.getText();
+       String textPassword = passwordField.getText();
+       if (textUsername.isEmpty() || textPassword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
         }
-        if (user != null) {
-            UserSession.getInstance().setCurrentUser(user); 
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-           
-            Main main = new Main(user);
-            main.setVisible(true);
-            main.updateNavBar();
-            dispose(); 
-            return ;
-            
-        } else {
-            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng!");
-            return;
+        UserDTO user = userBus.findByUsername(textUsername);
+        if(user == null){
+              JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+              return;
         }
+        String password = user.getPassword();
+//        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
+//            if(decryptedPassword.equals(textPassword)){
+//                UserSession.getInstance().setCurrentUser(user); 
+//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+//                Main main = new Main(user);
+//                main.setVisible(true);
+//                main.updateNavBar();
+//                dispose(); 
+//                return ;
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
+//                return;
+//            }
+            
+    } 
+        
             
             
-        }
+    
 
     
 
@@ -282,34 +321,34 @@ public class Login extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        FlatMacLightLaf.registerCustomDefaultsSource("style");
-        UIManager.put("TextField.font", style.MyFont.fontText);
-        UIManager.put("Label.font", style.MyFont.fontText);
-        UIManager.put("Button.font", style.MyFont.fontText);
-        UIManager.put("Table.font", style.MyFont.fontText);
-        UIManager.put("PasswordField.font", style.MyFont.fontText);
-        UIManager.put("PasswordField.showRevealButton", true);
-        UIManager.put("RootPane.background", new Color(255, 255, 255));
-        UIManager.put("TitlePane.background", new Color(255, 255, 255));
-        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
-        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
-        UIManager.put("TitlePane.centerTitle", true);
-        
-        
-        
-        UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 16));
-//        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
-        UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
-        FlatMacLightLaf.setup();
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        FlatMacLightLaf.registerCustomDefaultsSource("style");
+//        UIManager.put("TextField.font", style.MyFont.fontText);
+//        UIManager.put("Label.font", style.MyFont.fontText);
+//        UIManager.put("Button.font", style.MyFont.fontText);
+//        UIManager.put("Table.font", style.MyFont.fontText);
+//        UIManager.put("PasswordField.font", style.MyFont.fontText);
+//        UIManager.put("PasswordField.showRevealButton", true);
+//        UIManager.put("RootPane.background", new Color(255, 255, 255));
+//        UIManager.put("TitlePane.background", new Color(255, 255, 255));
+//        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
+//        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
+//        UIManager.put("TitlePane.centerTitle", true);
+//        
+//        
+//        
+//        UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 16));
+////        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
+//        UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
+//        FlatMacLightLaf.setup();
+//        
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Login().setVisible(true);
+//            }
+//        });
+//    }
 
     private JPanel JPanel(GridLayout gridLayout) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

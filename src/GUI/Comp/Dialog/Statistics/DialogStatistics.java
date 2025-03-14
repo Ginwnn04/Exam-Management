@@ -1,20 +1,23 @@
 package GUI.Comp.Dialog.Statistics;
 
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import BUS.ResultBUS;
 import DTO.ExamDTO;
 import GUI.Comp.Swing.PanelBackground;
 import DTO.ResultDTO;
+import DTO.TestDTO;
 import DTO.UserDTO;
 
 public class DialogStatistics extends JDialog {
     private final Dimension DIALOG_SIZE = new Dimension(1200, 768);
-    private ExamDTO exam;
+    private TestDTO testExam;
     private ResultBUS resultBUS = new ResultBUS();
 
     private List<ResultDTO> listResult;
@@ -27,9 +30,10 @@ public class DialogStatistics extends JDialog {
         setLocationRelativeTo(null);
     }
 
-    public DialogStatistics(ExamDTO exam) {
-        this.exam = exam;
-        listResult = resultBUS.getAllByExam(exam);
+    public DialogStatistics(TestDTO testExam, JFrame parent, boolean modal) {
+        super(parent, modal);
+        this.testExam = testExam;
+        listResult = resultBUS.getAllByTestExam(testExam);
 
         initComponents();
 
@@ -40,14 +44,16 @@ public class DialogStatistics extends JDialog {
     private void initComponents() {
         setMinimumSize(DIALOG_SIZE);
         setPreferredSize(DIALOG_SIZE);
+        setLayout(new GridBagLayout());
 
-        chart = new PanelChart(exam, listResult);
+        chart = new PanelChart(testExam, listResult);
         chart.addOnChangeTabListener(this::changeTab);
         
-        studentStatistics = new PanelStudentsStatistics(listResult, exam);
+        studentStatistics = new PanelStudentsStatistics(testExam, listResult);
         studentStatistics.addOnChangeTabListener(this::changeTab);
 
         main = new PanelBackground();
+        main.setAbsoluteSize(1180, 720);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.add(chart);
 
