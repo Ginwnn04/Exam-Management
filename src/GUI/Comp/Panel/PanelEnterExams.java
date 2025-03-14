@@ -1,6 +1,8 @@
 package GUI.Comp.Panel;
 
 import GUI.Comp.ExamComp;
+import GUI.Utils.Debounce;
+
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,9 +18,11 @@ import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 import BUS.TestBUS;
+import DTO.ResultDTO;
 import DTO.TestDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Panel for entering exams.
@@ -34,10 +38,14 @@ public class PanelEnterExams extends javax.swing.JPanel {
     private JTextField searchField;
     private javax.swing.JScrollPane scrollPane;
 
+    private Consumer<ResultDTO> handlerAfterExam;
+
     /**
      * Creates new form PanelEnterExams
      */
-    public PanelEnterExams() {
+    public PanelEnterExams(Consumer<ResultDTO> handlerAfterExam) {
+        this.handlerAfterExam = handlerAfterExam;
+
         initComponents();
         initSearchField();
         loadExamComponents();
@@ -51,6 +59,7 @@ public class PanelEnterExams extends javax.swing.JPanel {
         for (TestDTO exam : examList) {
             ExamComp examComp = new ExamComp(exam);
             examComp.setPreferredSize(new Dimension(jPanel5.getWidth(), 100)); // Adjust height as needed
+            examComp.setAfterExamHandler(handlerAfterExam);
             jPanel5.add(examComp);
             examComponents.add(examComp); // Add examComp to examComponents list
         }
@@ -69,10 +78,13 @@ public class PanelEnterExams extends javax.swing.JPanel {
 
     searchField = new JTextField();
     searchField.setPreferredSize(new Dimension(300, 30));
+
+    Debounce searchDebounce = new Debounce(() -> filterExamComponents(), 200);
+
     searchField.addKeyListener(new KeyAdapter() {
         @Override
         public void keyReleased(KeyEvent e) {
-            filterExamComponents();
+            searchDebounce.execute();
         }
     });
 

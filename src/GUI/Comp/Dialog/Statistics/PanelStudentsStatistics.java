@@ -45,7 +45,7 @@ import style.MyFont;
 
 public class PanelStudentsStatistics extends PanelBackground {
     private final int WIDTH = 1180;
-    private ArrayList<Consumer<PanelBackground>> onChangeTabListener = new ArrayList<>();
+    private ArrayList<Consumer<PanelBackground>> onChangeTabCallback = new ArrayList<>();
 
     private List<ResultDTO> listResult;
     private List<ResultDTO> filterListResult;
@@ -140,12 +140,14 @@ public class PanelStudentsStatistics extends PanelBackground {
 
         JLabel searchByCbLabel = new JLabel("Tìm kiếm theo:");
         searchByCb = new JComboBox<>();
+        searchByCb.setFont(MyFont.fontText);
         searchByCb.setPreferredSize(new Dimension(150, 30));
         searchByCb.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "ID học sinh", "Họ tên" }));
         searchByCb.addActionListener(e -> filterTableItems());
 
         JLabel orderFilterLabel = new JLabel("Thứ tự: ");
         orderFilter = new JComboBox<>();
+        orderFilter.setFont(MyFont.fontText);
         orderFilter.setPreferredSize(new Dimension(150, 30));
         setOrderFilterItems();
         orderFilter.addActionListener(e -> filterTableItems());
@@ -341,13 +343,13 @@ public class PanelStudentsStatistics extends PanelBackground {
     }
 
     private void OnChangeTab(ActionEvent e) {
-        for (var callback : onChangeTabListener) {
+        for (var callback : onChangeTabCallback) {
             callback.accept(this);
         }
     }
 
-    public void addOnChangeTabListener(Consumer<PanelBackground> callback) {
-        onChangeTabListener.add(callback);
+    public void addOnChangeTabCallback(Consumer<PanelBackground> callback) {
+        onChangeTabCallback.add(callback);
     }
 
     private JTable studentTable;

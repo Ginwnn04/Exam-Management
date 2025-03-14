@@ -1,10 +1,14 @@
-package GUI.Comp.Panel;
+package GUI.Comp.Panel.Result;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,8 +30,9 @@ import GUI.Utils.RoundBorder;
 import style.ColorConfig;
 import style.MyFont;
 
-public class PanelAfterExam extends JPanel {
+public class PanelTestScore extends JPanel {
     private final int WIDTH = 1160;
+    private ArrayList<Consumer<JPanel>> onChangeTabCallback = new ArrayList<>();
 
     private Font resultItemLabelFont = MyFont.fontHeader.deriveFont(20f);
     private Font resultItemValueFont = MyFont.fontText.deriveFont(20f);
@@ -42,11 +47,11 @@ public class PanelAfterExam extends JPanel {
     private TestDTO test;
     private ResultDTO result;
 
-    public PanelAfterExam() {
+    public PanelTestScore() {
         initComponents();
     }
 
-    public PanelAfterExam(ResultDTO result) {
+    public PanelTestScore(ResultDTO result) {
         this.result = result;
         student = userBUS.findByID(result.getUserId());
         exam = examBUS.findByExCode(result.getExCode());
@@ -124,8 +129,9 @@ public class PanelAfterExam extends JPanel {
         container.setBorder(border);
 
         Font font = MyFont.fontText.deriveFont(30f);
+        int maxScore = testExamBUS.getMaxScore(test.getTestCode());
 
-        circleProgressBar = new CircleProgressBar(ColorConfig.BLUE,  "%.2f / %d", font);
+        circleProgressBar = new CircleProgressBar(ColorConfig.BLUE, font, maxScore);
         circleProgressBar.setStringPainted(true);
         circleProgressBar.setValue(result.getRsMark());
         circleProgressBar.setForeground(Color.BLACK);
@@ -190,6 +196,13 @@ public class PanelAfterExam extends JPanel {
         return container;
     }
 
+    private boolean isOutOfTestExamTime() {
+        int studentTakeExamTime = resultBUS.getTakeExamTime(student, test);
+        int maxTakeExamTime = test.getTestLimit();
+
+        return studentTakeExamTime >= maxTakeExamTime;
+    }
+
     private void initButtonContainer() {
         PanelBackground container = new PanelBackground();
         container.setAbsoluteSize(WIDTH, 100);
@@ -201,18 +214,31 @@ public class PanelAfterExam extends JPanel {
         againButton.setForeground(Color.WHITE);
         againButton.setPreferredSize(new Dimension(150, 50));
 
+        if (isOutOfTestExamTime()) againButton.setEnabled(false);
+
         container.add(againButton);
 
-        homeButton = new JButton("Quay về trang chủ");
-        homeButton.setBackground(ColorConfig.BLUE);
-        homeButton.setFont(MyFont.fontHeader.deriveFont(20f));
-        homeButton.setForeground(new Color(255, 255, 255));
-        homeButton.setPreferredSize(new Dimension(222, 50));
+        resultButton = new JButton("Xem kết quả bài thi");
+        resultButton.setBackground(ColorConfig.BLUE);
+        resultButton.setFont(MyFont.fontHeader.deriveFont(20f));
+        resultButton.setForeground(new Color(255, 255, 255));
+        resultButton.setPreferredSize(new Dimension(222, 50));
+        resultButton.addActionListener(this::onChangeTab);
 
-        container.add(homeButton);
+        container.add(resultButton);
 
         content.add(Box.createRigidArea(new Dimension(0, 73)));
         content.add(container);
+    }
+
+    public void addOnChangeTabCallback(Consumer<JPanel> callback) {
+        onChangeTabCallback.add(callback);
+    }
+
+    private void onChangeTab(ActionEvent e) {
+        for (var callback : onChangeTabCallback) {
+            callback.accept(this);
+        }
     }
 
     private PanelBackground main;
@@ -225,5 +251,5 @@ public class PanelAfterExam extends JPanel {
     private JLabel examDate;
     private CircleProgressBar circleProgressBar;
     private JButton againButton;
-    private JButton homeButton;
+    private JButton resultButton;
 }

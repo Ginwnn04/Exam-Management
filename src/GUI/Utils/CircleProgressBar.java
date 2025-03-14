@@ -6,11 +6,19 @@ import java.awt.Font;
 import javax.swing.JProgressBar;
 
 public class CircleProgressBar extends JProgressBar {
+    private CircleProgressUI circleProgressUI;
+
     public CircleProgressBar(Color progressBarColor) {
-        setUI(new CircleProgressUI(progressBarColor));
+        circleProgressUI = new CircleProgressUI(progressBarColor);
+        setUI(circleProgressUI);
     }
 
-    public CircleProgressBar(Color progressBarColor, String format, Font font) {
-        setUI(new CircleProgressUI(progressBarColor, format, font));
+    public CircleProgressBar(Color progressBarColor, Font font, int maxValue) {
+        circleProgressUI = new CircleProgressUI(progressBarColor, font, maxValue);
+        setUI(circleProgressUI);
+    }
+
+    public void setMaxValue() {
+
     }
 }

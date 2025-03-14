@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import DAO.TestDAO;
+import DTO.ExamDTO;
 import DTO.QuestionDTO;
 import DTO.TestDTO;
 import DTO.TestStructureDTO;
@@ -17,7 +18,6 @@ public class TestBUS {
     private ExamBUS examBUS;
     private TestStructureBUS testStructureBUS;
 
-    private HashMap<Integer, TopicDTO> topics = new HashMap<>();
 
     public TestBUS() {
         DAO = new TestDAO();
@@ -27,14 +27,7 @@ public class TestBUS {
         testStructureBUS = new TestStructureBUS();
     }
 
-    private void updateMap(List<TopicDTO> list) {
-        for (var topic : list) {
-            topics.put(topic.getId(), topic);
-        }
-    }
-
     public ArrayList<TestDTO> getAll(boolean isActive) {       
-        updateMap(topicBUS.getAllTopic());
         return DAO.getAll(isActive);
     }
 
@@ -59,6 +52,11 @@ public class TestBUS {
         return DAO.getByTestCode(testCode);
     }
 
+    public TestDTO findByExam(ExamDTO exam) {
+        String testCode = exam.getTestCode();
+        return DAO.getByTestCode(testCode);
+    }
+
     public TestDTO create(TestDTO request, int examCount, List<TestStructureDTO> listTestStructure) {
         var result = DAO.create(request);
 
@@ -76,5 +74,38 @@ public class TestBUS {
         examBUS.deleteExam(testCode);
         testStructureBUS.delete(testCode);
         return DAO.delete(id);
+    }
+
+    public int getMaxScore(String testCode) {
+        var list = testStructureBUS.getAllByTestCode(testCode);
+        int maxScore = 0;
+
+        for (TestStructureDTO testStructure : list) {
+            int easyCount = testStructure.getNumEasy();
+            int mediumCount = testStructure.getNumMedium();
+            int diffCount = testStructure.getNumDiff();
+
+            maxScore += easyCount * getScore("easy");
+            maxScore += mediumCount * getScore("medium");
+            maxScore += diffCount * getScore("diff");
+        }
+
+        return maxScore;
+    }
+
+    private int getScore(String level) {
+        switch (level) {
+            case "easy":
+                return 1;
+
+            case "medium":
+                return 2;
+
+            case "diff":
+                return 3;
+
+            default:
+                return 0;
+        }
     }
 }
