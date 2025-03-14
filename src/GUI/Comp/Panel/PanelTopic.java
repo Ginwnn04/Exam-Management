@@ -126,8 +126,8 @@ public class PanelTopic extends javax.swing.JPanel {
 
         
     };
-    tbChude.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer() );
-    tbChude.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
+    tbChude.getColumnModel().getColumn(2).setCellRenderer(new TableActionCellRenderer() );
+    tbChude.getColumnModel().getColumn(2).setCellEditor(new TableActionCellEditor(event));
     renderTopic();
     }
     public void renderTopic(){
@@ -149,7 +149,6 @@ public class PanelTopic extends javax.swing.JPanel {
             model.addRow(new Object[]{
                 topic.getId(),
                 topic.getTitle(),
-                topic.getParent(),
             });
         }
         // model.fireTableDataChanged();
@@ -442,9 +441,9 @@ public class PanelTopic extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground13);
 
-        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel3.setText("ID chủ đề");
-        panelBackground11.add(jLabel3);
+//        jLabel3.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+//        jLabel3.setText("ID chủ đề");
+//        panelBackground11.add(jLabel3);
 
         panelBackground14.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -461,11 +460,11 @@ public class PanelTopic extends javax.swing.JPanel {
 
         panelBackground11.add(panelBackground14);
 
-        cbxchude.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxchude.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "0"}));
-        cbxchude.setToolTipText("");
-        cbxchude.setPreferredSize(new java.awt.Dimension(200, 30));
-        panelBackground11.add(cbxchude);
+//        cbxchude.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+//        cbxchude.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "0"}));
+//        cbxchude.setToolTipText("");
+//        cbxchude.setPreferredSize(new java.awt.Dimension(200, 30));
+//        panelBackground11.add(cbxchude);
 
         panelBackground15.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -522,7 +521,7 @@ public class PanelTopic extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Tên Chủ đề", "Parent", "Hành động"
+                "ID", "Tên Chủ đề", "Hành động"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -182,19 +182,6 @@ public class PanelDetailExam extends javax.swing.JPanel {
                     + getDifficultyPoints(question.getLevel()) + " điểm)", null);
             questionContainer.add(questionLabelPanel);
 
-            List<AnswerDTO> answers = answerBUS.getAnswerByQuestionId(question.getId());
-            List<PanelAnswers> answerPanels = new ArrayList<>();
-            for (int i = 0; i < answers.size(); i++) {
-                AnswerDTO answer = answers.get(i);
-                PanelAnswers answerPanel = new PanelAnswers();
-                answerPanel.setData((char) ('a' + i), answer.getContent(), answer.getPicture());
-                answerPanels.add(answerPanel);
-                if (answer.isIsRight()) {
-                    answerPanel.selected(true, false); // Assuming single choice for simplicity
-                }
-                questionContainer.add(answerPanel);
-            }
-            calcHeight(answers, questionContainer, answerPanels);
             addAnswer(question.getId(), questionContainer);
             questionPanel.add(questionContainer);
 

@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/QLDT/Exam-Management/src/GUI/Main/Main.java</file>
-            <file>file:/E:/QLDT/Exam-Management/src/GUI/Comp/Panel/PanelRegister.java</file>
-            <file>file:/E:/QLDT/Exam-Management/src/GUI/Main/Login2.java</file>
-            <file>file:/E:/QLDT/Exam-Management/src/GUI/Comp/Panel/PannelLogin.java</file>
+            <file>file:/D:/Coding/Exam-Management/src/GUI/Main/Login2.java</file>
+            <file>file:/D:/Coding/Exam-Management/src/GUI/Main/Main.java</file>
+            <file>file:/D:/Coding/Exam-Management/src/GUI/Comp/Panel/PanelUser.java</file>
+            <file>file:/D:/Coding/Exam-Management/src/GUI/Comp/Panel/PanelQuestion.java</file>
         </group>
     </open-files>
 </project-private>
