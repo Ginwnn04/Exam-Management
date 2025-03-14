@@ -22,4 +22,8 @@ public class AnswerBUS {
     public List<AnswerDTO> getAnswerByQuestionId(int id) {
         return anwserDAO.getByQuestionId(id);
     }
+
+    public List<AnswerDTO> findAnswersByListQuestionIds(List<Integer> questionIds) {
+        return anwserDAO.findByListQuestionId(questionIds);
+    }
 }

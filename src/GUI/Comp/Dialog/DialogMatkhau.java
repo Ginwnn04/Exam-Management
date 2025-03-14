@@ -50,14 +50,14 @@ public class DialogMatkhau extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        
+       
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Đổi mật khẩu");
 
-        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Mật khẩu cũ");
 
         javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
@@ -81,7 +81,7 @@ public class DialogMatkhau extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Mật khẩu mới");
 
         javax.swing.GroupLayout panelBackground4Layout = new javax.swing.GroupLayout(panelBackground4);
@@ -106,7 +106,7 @@ public class DialogMatkhau extends javax.swing.JDialog {
                 .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Xác nhận mật khẩu");
 
         javax.swing.GroupLayout panelBackground5Layout = new javax.swing.GroupLayout(panelBackground5);
@@ -251,7 +251,7 @@ public class DialogMatkhau extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại! Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
        
         dispose();
     }

@@ -9,7 +9,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import GUI.Utils.Email;
+import Helper.MyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
+import style.ColorConfig;
 
 public class DialogSendOTP extends JDialog {
 
@@ -69,8 +73,24 @@ public class DialogSendOTP extends JDialog {
     
         // Send OTP button (same row, different column)
         sendOtpButton = new JButton("Gửi OTP");
-        sendOtpButton.setBackground(new Color(50, 168, 82));
-        sendOtpButton.setForeground(Color.WHITE);
+        sendOtpButton.setBackground(ColorConfig.WHITE_COLOR_BG);
+        sendOtpButton.setForeground(ColorConfig.BLUE);
+        sendOtpButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                sendOtpButton.setBackground(ColorConfig.WHITE_COLOR_BG);
+                sendOtpButton.setForeground(ColorConfig.BLUE);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                sendOtpButton.setBackground(ColorConfig.BLUE);
+                sendOtpButton.setForeground(ColorConfig.WHITE_COLOR_BG);
+
+            }
+            
+        
+        });
         sendOtpButton.setPreferredSize(new Dimension(160, 30));
         gbc.gridx = 3; // Move to next column
         gbc.gridy = 0; // Stay in the same row
@@ -94,8 +114,8 @@ public class DialogSendOTP extends JDialog {
     
         // Confirm button
         confirmButton = new JButton("Xác nhận");
-        confirmButton.setBackground(new Color(50, 168, 82));
-        confirmButton.setForeground(Color.WHITE);
+        confirmButton.setBackground(ColorConfig.BLUE);
+        confirmButton.setForeground(ColorConfig.WHITE_COLOR_BG);
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
@@ -113,6 +133,8 @@ public class DialogSendOTP extends JDialog {
         long time = Email.getExpiredTime();
         expired_time = new Date(time);
         BUS = new UserBus();
+        System.out.println(emailField + " " + "123");
+        System.out.println(emailText + " " + otp + " " + expired_time);
         if(BUS.update_OTP_expiredTime(otp, expired_time, emailText)){
             Email.sendEmail(emailText, "OTP", "Mã OTP của bạn là: " + otp);
             JOptionPane.showMessageDialog(this, "Đã gửi OTP đến email của bạn");
@@ -150,8 +172,7 @@ public class DialogSendOTP extends JDialog {
         String otp = user.getOtp();
         int user_id = user.getId();
         if(isExpired && otp.equals(otpText)){
-            Dialog resetPassDialog = new DialogResetPassword(null, true, user_id);
-            resetPassDialog.setVisible(true);
+            MyListener.getInstance().firePropertyChange("resetPassword", 0, user_id);
             dispose();
 
         } else {

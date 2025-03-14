@@ -2,30 +2,39 @@ package GUI.Comp.Panel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Panel;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import BUS.AnswerBUS;
 import BUS.ExamBUS;
 import BUS.QuestionBUS;
+import BUS.ResultBUS;
 import BUS.TestBUS;
+import BUS.UserBus;
 import DTO.AnswerDTO;
 import DTO.QuestionDTO;
+import DTO.ResultDTO;
 import DTO.TestDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.ExportDocx;
+import style.ColorConfig;
+import style.MyFont;
+
 import java.text.SimpleDateFormat;
 
 public class PanelDetailExam extends javax.swing.JPanel {
@@ -34,9 +43,15 @@ public class PanelDetailExam extends javax.swing.JPanel {
     private ExamBUS BUS = new ExamBUS();
     private QuestionBUS questionBUS = new QuestionBUS();
     private AnswerBUS answerBUS = new AnswerBUS();
+    private ResultBUS resultBUS = new ResultBUS();
+    private UserBus userBus = new UserBus();
+    private ArrayList<Consumer<JPanel>> onChangeTabCallback = new ArrayList<>();
+
     private String examCode;
     private String testCode;
+    private ResultDTO result;
     private List<QuestionDTO> questions;
+    private HashMap<Integer, AnswerDTO> examAnswers;
     private GUI.Comp.Swing.PanelBackground panelBackground;
     private java.awt.Label label1;
     private java.awt.Label label2;
@@ -48,6 +63,10 @@ public class PanelDetailExam extends javax.swing.JPanel {
     private javax.swing.JPanel questionPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jButton2;
+    private JButton toScoreView;
+
+    // questionId: { answerId: panel }
+    private HashMap<Integer, HashMap<Integer, PanelAnswers>> answerPanels = new HashMap<>();
 
     /**
      * Creates new form PanelDetailExam
@@ -61,7 +80,57 @@ public class PanelDetailExam extends javax.swing.JPanel {
         initComponents();
         loadTestDetails();
         updateQuestions();
+
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(10);
     }
+
+    public PanelDetailExam(ResultDTO result) {
+        this.result = result;
+        
+        this.examCode = result.getExCode();
+        var exam = BUS.findByExCode(result.getExCode());  
+        this.testCode = testExamBUS.findByExam(exam).getTestCode();
+
+        initComponents();
+        loadTestDetails();
+        updateQuestions();
+        setupResultDetail();
+
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(10);
+    }
+
+    //#region User Exam View
+
+    private void setupResultDetail() {
+        jButton2.setVisible(false);
+        var user = userBus.findByID(result.getUserId());
+        label1.setText("Bài làm của thí sinh: " + user.getFullName());
+
+
+        PanelBackground container = new PanelBackground();
+        container.setAbsoluteSize(1200, 200);
+        container.setLayout(new GridBagLayout());
+
+        toScoreView = new JButton("Xem điểm");
+        toScoreView.setFont(MyFont.fontText);
+        toScoreView.setBackground(ColorConfig.BLUE);
+        toScoreView.addActionListener(this::onChangeTab);
+
+        container.add(toScoreView);
+    }
+
+    public void addOnChangeTabCallback(Consumer<JPanel> callback) {
+        if (result == null) throw new NullPointerException("Not accepted when result is null");
+        onChangeTabCallback.add(callback);
+    }
+
+    private void onChangeTab(ActionEvent e) {
+        for (var callback : onChangeTabCallback) {
+            callback.accept(this);
+        }
+    }
+
+    //#endregion
 
     private void loadTestDetails() {
         TestDTO testExam = testExamBUS.findByTestCode(testCode);
@@ -126,13 +195,126 @@ public class PanelDetailExam extends javax.swing.JPanel {
                 questionContainer.add(answerPanel);
             }
             calcHeight(answers, questionContainer, answerPanels);
+            addAnswer(question.getId(), questionContainer);
             questionPanel.add(questionContainer);
 
             index++;
         }
 
+        if (result != null) {
+            try {
+                checkResult();
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
         questionPanel.revalidate();
         questionPanel.repaint();
+    }
+
+    private void addAnswer(int questionId, JPanel questionContainer) {
+        List<AnswerDTO> answers = answerBUS.getAnswerByQuestionId(questionId);
+        
+        HashMap<Integer, PanelAnswers> list = new HashMap<>();
+        ArrayList<PanelAnswers> multiAnswers = new ArrayList<>();
+
+        for (int i = 0; i < answers.size(); i++) {
+            AnswerDTO answer = answers.get(i);
+            PanelAnswers answerPanel = new PanelAnswers();
+            answerPanel.setData((char) ('a' + i), answer.getContent(), answer.getPicture());
+            list.put(answer.getId(), answerPanel);
+            
+            if (answer.isIsRight()) {
+                fillAnswer(AnswerResult.RIGHT, answerPanel);
+                if (result != null) multiAnswers.add(answerPanel);
+            }
+
+            questionContainer.add(answerPanel);
+        }
+
+        // if question is multi-answer in user exam detail
+        if (multiAnswers.size() > 1) {
+            fillMultiAnswer(multiAnswers);
+            multiAnswers.clear();
+        }
+        
+        answerPanels.put(questionId, list);
+        calcHeight(answers, questionContainer, new ArrayList<>(list.values()));
+    }
+
+    private void fillMultiAnswer(List<PanelAnswers> multiAnswers) {
+         for (var panel : multiAnswers) {
+            fillAnswer(AnswerResult.MISS, panel);
+         }
+    }
+
+    private void fetchData() {
+        examAnswers = new HashMap<>();
+        ArrayList<Integer> questionIds = new ArrayList<>(questions.stream().map(question -> question.getId()).toList());
+        var list = answerBUS.findAnswersByListQuestionIds(questionIds);
+
+        for (AnswerDTO answer : list) {
+            examAnswers.put(answer.getId(), answer);
+        }
+    }
+
+    /**
+     * Call when detail exam is view exam result
+     */
+    private void checkResult() throws NullPointerException, JSONException, NumberFormatException {
+        if (examAnswers == null) fetchData();
+
+        String answerJSON = result.getRsAnswer();     
+        JSONObject json = new JSONObject(answerJSON);
+        
+        for (var questionId : json.keySet()) {
+            var pr = answerPanels.get(Integer.parseInt(questionId));
+
+            try {
+                JSONArray answerIds = (JSONArray) json.get(questionId);
+                for (var item : answerIds) {
+                    int id = (int) item;         
+                    fillUserChoice(id, pr);
+                }
+            }
+            catch (ClassCastException ex) {
+                int id = (int) json.get(questionId);
+                fillUserChoice(id, pr);
+            }
+        }
+    }
+
+    private void fillUserChoice(int userChoiceAnswerId, HashMap<Integer, PanelAnswers> pr) {
+        var panel = pr.get(userChoiceAnswerId);
+        var answerResult = examAnswers.get(userChoiceAnswerId);
+
+        if (answerResult.isIsRight()) fillAnswer(AnswerResult.RIGHT, panel);
+        else fillAnswer(AnswerResult.WRONG, panel);
+    }
+
+    private void fillAnswer(AnswerResult answerResult, PanelAnswers answerPanel) {
+        switch (answerResult) {
+            case RIGHT:
+                answerPanel.selected(true, false); // Assuming single choice for simplicity
+                answerPanel.setContentBackground(ColorConfig.RIGHT_ANSWER_COLOR);
+                answerPanel.setContentForeGround(Color.GREEN.darker());
+                break;
+
+            case WRONG:
+                answerPanel.selected(true, false);
+                answerPanel.setContentBackground(ColorConfig.WRONG_ANSWER_COLOR);
+                answerPanel.setContentForeGround(Color.RED);
+                break;
+
+            case MISS:
+                answerPanel.selected(true, false);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private String getDifficultyPoints(String level) {
@@ -281,4 +463,10 @@ public class PanelDetailExam extends javax.swing.JPanel {
                                 .addComponent(jButton2)
                                 .addContainerGap(27, Short.MAX_VALUE)));
     }// </editor-fold>//GEN-END:initComponents
+
+    private enum AnswerResult {
+        RIGHT,
+        WRONG,
+        MISS
+    }
 }

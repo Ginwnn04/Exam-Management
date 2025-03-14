@@ -19,17 +19,17 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 public class CircleProgressUI extends BasicProgressBarUI {
     private Color progressBarColor;
     private Font font;
-    private String format;
+    private String format = "%d / %d";
+    private int maxValue = 0;
 
     public CircleProgressUI(Color progressBarColor) {
         this.progressBarColor = progressBarColor;
-        this.format = null;
     }
 
-    public CircleProgressUI(Color progressBarColor, String format, Font font) {
+    public CircleProgressUI(Color progressBarColor, Font font, int maxValue) {
         this.progressBarColor = progressBarColor;
-        this.format = format;
         this.font = font;
+        this.maxValue = maxValue;
     }
 
     @Override
@@ -83,12 +83,15 @@ public class CircleProgressUI extends BasicProgressBarUI {
         Area backgroundCircle = createCircle(g2, 100, bgCircleColor);
         g2.fill(backgroundCircle);
 
-        Area completeProgress = createCircle(g2, progressBar.getPercentComplete(), progressBarColor);
+        double score = progressBar.getPercentComplete();
+        double percentComplete = (score / maxValue) * 100;
+        
+        Area completeProgress = createCircle(g2, percentComplete, progressBarColor);
         g2.fill(completeProgress);
 
         if (!progressBar.isStringPainted()) return;
 
-        if (format == null) {
+        if (maxValue == 0) {
             paintString(g, b.left, b.top, barRectWidth, barRectHeight, 0, b);
         } 
         else paintCustomString(g2, c);
@@ -102,7 +105,8 @@ public class CircleProgressUI extends BasicProgressBarUI {
         g2.setColor(progressBar.getForeground());
         g2.setFont(font);
 
-        String s = String.format(format, progressBar.getPercentComplete() * 100, 100);
+        double score = progressBar.getPercentComplete() * 100;
+        String s = String.format(format, (int) score, maxValue);
 
         FontMetrics fm = g2.getFontMetrics();
         int textWidth = fm.stringWidth(s);

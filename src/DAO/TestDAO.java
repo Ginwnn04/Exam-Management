@@ -122,7 +122,6 @@ public class TestDAO implements BaseDAO<TestDTO, Integer> {
             ps.setInt(7, id);
 
             return ps.executeUpdate() > 0;
-
         }
         catch (Exception ex) {
             ex.printStackTrace();

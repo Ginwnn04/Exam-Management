@@ -22,6 +22,8 @@ public class ColorConfig {
     public static Color BLACK = new Color(0, 0 ,0);
     public static Color LIGHT_GREEN = new Color(192, 232, 213);
     public static Color GREEN = new Color(45, 62, 47);
-
+    
+    public static Color RIGHT_ANSWER_COLOR = new Color(113, 255, 84, 80);
+    public static Color WRONG_ANSWER_COLOR = new Color(255, 86, 86, 80);
 
 }

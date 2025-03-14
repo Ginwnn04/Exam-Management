@@ -121,7 +121,9 @@ public class PanelTest extends JPanel {
         searchAndFilterContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 
         JLabel searchByCbLabel = new JLabel("Tìm kiếm theo:");
+        searchByCbLabel.setFont(MyFont.fontText);
         searchByCb = new JComboBox<>();
+        searchByCb.setFont(MyFont.fontText);
         searchByCb.setPreferredSize(new Dimension(150, 30));
         searchByCb.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "Mã đề", "Tiêu đề" }));
         searchByCb.addActionListener(e -> filterTableItems());

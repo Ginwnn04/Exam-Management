@@ -36,6 +36,7 @@ import DTO.TopicDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Utils.RoundBorder;
 import style.ColorConfig;
+import style.MyFont;
 
 public class TestStructurePanel extends PanelBackground {
     private RoundBorder border = new RoundBorder(Color.BLACK, 10);
@@ -43,7 +44,7 @@ public class TestStructurePanel extends PanelBackground {
     
     private List<TopicDTO> topics;
     private String testCode;
-    private ArrayList<Consumer<TestStructurePanel>> onDeleteListeners = new ArrayList<>();
+    private ArrayList<Consumer<TestStructurePanel>> onDeleteCallback = new ArrayList<>();
     private QuestionBUS questionBUS;
     private List<QuestionDTO> questions;
     
@@ -94,8 +95,14 @@ public class TestStructurePanel extends PanelBackground {
 
     private void initDifficultComboBox() {
         numEasyCb = new JComboBox<>();
+        numEasyCb.setFont(MyFont.fontText);
+
         numMediumCb = new JComboBox<>();
+        numMediumCb.setFont(MyFont.fontText);
+
         numDiffCb = new JComboBox<>();
+        numDiffCb.setFont(MyFont.fontText);
+
     }
 
     private void addInformationContainer() {
@@ -121,9 +128,12 @@ public class TestStructurePanel extends PanelBackground {
         topicContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 
         topicContainer.add(Box.createRigidArea(new Dimension(10, 0)));
-        topicContainer.add(new JLabel("Chủ đề: "));
+        JLabel label = new JLabel("Chủ đề: ");
+        label.setFont(MyFont.fontText);
+        topicContainer.add(label);
                 
         topicCb = new JComboBox<>();
+        topicCb.setFont(MyFont.fontText);
         topicCb.setPreferredSize(new Dimension(200, (int)topicCb.getPreferredSize().getHeight()));
         topicContainer.add(topicCb);
         setTopicCbItems();
@@ -263,12 +273,12 @@ public class TestStructurePanel extends PanelBackground {
                                .setNumDiff(diffCount);
     }
 
-    public void addOnDeleteListener(Consumer<TestStructurePanel> callback) {
-        onDeleteListeners.add(callback);
+    public void addOnDeleteCallback(Consumer<TestStructurePanel> callback) {
+        onDeleteCallback.add(callback);
     }
 
     private void onDelete() {
-        for (var callback : onDeleteListeners) {
+        for (var callback : onDeleteCallback) {
             callback.accept(this);
         }
     }

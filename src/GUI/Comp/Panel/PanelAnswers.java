@@ -4,8 +4,12 @@
  */
 package GUI.Comp.Panel;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import style.ColorConfig;
@@ -15,10 +19,13 @@ import style.ColorConfig;
  * @author pc
  */
 public class PanelAnswers extends javax.swing.JPanel {
-     private boolean isSelected = false;
-     private char order;
-     private String answ;
-     private String path;
+    private boolean isSelected = false;
+    private char order;
+    private String answ;
+    private String path;
+
+    private ArrayList<Consumer<Character>> onClickCallback = new ArrayList<>();
+
     /**
      * Creates new form PanelAnswers
      */
@@ -74,6 +81,8 @@ public class PanelAnswers extends javax.swing.JPanel {
                 lbAnsw.setForeground(ColorConfig.BLUE);
                 main.setBackground(ColorConfig.LIGHT_BLUE);
             }
+
+            invokeOnClickEvent();
         }
         else {
             Font oldFont = lbOrder.getFont();
@@ -82,8 +91,16 @@ public class PanelAnswers extends javax.swing.JPanel {
             lbAnsw.setFont(oldFont.deriveFont(Font.PLAIN, oldFont.getSize()));
             lbAnsw.setForeground(ColorConfig.BLACK);
             main.setBackground(ColorConfig.GREY_COLOR_BG);
-
         }
+    }
+
+    public void setContentBackground(Color bg) {
+        main.setBackground(bg);
+    }
+
+    public void setContentForeGround(Color fg) {
+        lbOrder.setForeground(fg);
+        lbAnsw.setForeground(fg);
     }
     
     public char getOrder() {
@@ -92,6 +109,16 @@ public class PanelAnswers extends javax.swing.JPanel {
     
     public String getAnsw() {
         return answ;
+    }
+
+    public void addOnClickCallback(Consumer<Character> callback) {
+        onClickCallback.add(callback);
+    }
+
+    private void invokeOnClickEvent() {
+        for (var callback : onClickCallback) {
+            callback.accept(order);
+        }
     }
 
     /**

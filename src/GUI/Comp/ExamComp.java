@@ -1,15 +1,21 @@
 package GUI.Comp;
 
 import BUS.ExamBUS;
+import BUS.ResultBUS;
 import DTO.ExamDTO;
+import DTO.ResultDTO;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 
 import DTO.TestDTO;
+import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogDoExam;
+import GUI.Utils.UserSession;
 
 /**
  * ExamComp class to display exam details.
@@ -19,6 +25,7 @@ import GUI.Comp.Dialog.DialogDoExam;
 public class ExamComp extends javax.swing.JPanel {
     private TestDTO exam;
     private ExamBUS examBUS = new ExamBUS();
+    private Consumer<ResultDTO> handlerAfterExam;
 
     /**
      * Creates new form ExamComp
@@ -27,6 +34,10 @@ public class ExamComp extends javax.swing.JPanel {
         this.exam = exam;
         initComponents();
         loadExamData(exam);
+    }
+
+    public void setAfterExamHandler(Consumer<ResultDTO> handler) {
+        handlerAfterExam = handler;
     }
 
     private void loadExamData(TestDTO exam) {
@@ -153,8 +164,19 @@ public class ExamComp extends javax.swing.JPanel {
         doExam.setExCode(examDTO.getExCode());
         doExam.setTitleExam(exam.getTitle(), examDTO.getExCode());
         doExam.setVisible(true);
+
+        toResultView(examDTO);
     }
 }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void toResultView(ExamDTO exam) {
+        UserDTO currentUser = UserSession.getInstance().getCurrentUser();
+
+        ResultBUS resultBUS = new ResultBUS();
+        ResultDTO result = resultBUS.findByUserAndExam(currentUser, exam);
+
+        handlerAfterExam.accept(result);
+    }
 
 
 
