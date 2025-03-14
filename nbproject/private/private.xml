@@ -3,17 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/D:/Save/Coding/Exam-Management/src/style/ColorConfig.java</file>
-            <file>file:/D:/Save/Coding/Exam-Management/src/GUI/Main/Login.java</file>
-            <file>file:/D:/Save/Coding/Exam-Management/src/style/MyFont.java</file>
-            <file>file:/D:/Save/Coding/Exam-Management/src/GUI/Comp/Panel/PanelAnswers.java</file>
-            <file>file:/D:/Save/Coding/Exam-Management/src/GUI/Comp/Dialog/DialogDoExam.java</file>
-            <file>file:/D:/Save/Coding/Exam-Management/src/GUI/Comp/Dialog/DialogQuestion.java</file>
-=======
-            <file>file:/C:/Users/Minh%20Phuc/OneDrive/Desktop/QuanLiDeThi/Exam-Management/src/GUI/Comp/Dialog/DialogExams.java</file>
-            <file>file:/C:/Users/Minh%20Phuc/OneDrive/Desktop/QuanLiDeThi/Exam-Management/src/GUI/Main/Login.java</file>
->>>>>>> d4b8539e06dd1376d2001ce02fe57dec4e737980
+            <file>file:/E:/QLDT/Exam-Management/src/GUI/Main/Main.java</file>
+            <file>file:/E:/QLDT/Exam-Management/src/GUI/Comp/Panel/PanelRegister.java</file>
+            <file>file:/E:/QLDT/Exam-Management/src/GUI/Main/Login2.java</file>
+            <file>file:/E:/QLDT/Exam-Management/src/GUI/Comp/Panel/PannelLogin.java</file>
         </group>
     </open-files>
 </project-private>

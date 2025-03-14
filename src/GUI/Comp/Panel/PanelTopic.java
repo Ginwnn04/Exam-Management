@@ -141,9 +141,10 @@ public class PanelTopic extends javax.swing.JPanel {
     public void render(){
         
          listTopic = topicBUS.getAllTopic();
-         System.out.println(listTopic);
+        //  System.out.println(listTopic);
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
         model.setRowCount(0);
+        System.out.println("Số lượng topic: " + listTopic.size());
         for (TopicDTO topic : listTopic) {
             model.addRow(new Object[]{
                 topic.getId(),
@@ -151,10 +152,8 @@ public class PanelTopic extends javax.swing.JPanel {
                 topic.getParent(),
             });
         }
-
-
-        model.fireTableDataChanged();
-        tbChude.setModel(model);
+        // model.fireTableDataChanged();
+        // tbChude.setModel(model);
     }
     private void loadTableData() {
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
@@ -173,7 +172,7 @@ public class PanelTopic extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
         model.setRowCount(0);
         for (TopicDTO topic : listTopic){
-            boolean chude = selectedchude.equals("Chọn")|| topic.getId() == Integer.parseInt(selectedchude);       
+            boolean chude = selectedchude.equals("Tất cả")|| topic.getId() == Integer.parseInt(selectedchude);       
             boolean searchchude =   
                                   topic.getTitle().toLowerCase().contains(query);
 //                                  topic.getParent().contains(query);
@@ -463,7 +462,7 @@ public class PanelTopic extends javax.swing.JPanel {
         panelBackground11.add(panelBackground14);
 
         cbxchude.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        cbxchude.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "0","1","2","3","4","5","6","7","8","9","10"}));
+        cbxchude.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn", "0"}));
         cbxchude.setToolTipText("");
         cbxchude.setPreferredSize(new java.awt.Dimension(200, 30));
         panelBackground11.add(cbxchude);
@@ -502,7 +501,7 @@ public class PanelTopic extends javax.swing.JPanel {
         jButton1.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("+ Thêm Chủ đề");
-        jButton1.setActionCommand("Thêm người dùng");
+        jButton1.setActionCommand("Thêm chủ đề");
         jButton1.setMaximumSize(new java.awt.Dimension(150, 28));
         jButton1.setMinimumSize(new java.awt.Dimension(150, 28));
         jButton1.setPreferredSize(new java.awt.Dimension(180, 30));
@@ -534,7 +533,7 @@ public class PanelTopic extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        tbChude.setPreferredSize(new java.awt.Dimension(225, 60));
+        tbChude.setPreferredSize(new java.awt.Dimension(225, 1300));
         jScrollPane1.setViewportView(tbChude);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);

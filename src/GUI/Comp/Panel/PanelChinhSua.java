@@ -60,8 +60,8 @@ public class PanelChinhSua extends javax.swing.JPanel {
         });
 
         jButton4.setText("Đổi mật khẩu");
-        jButton4.setBackground(new java.awt.Color(53, 80, 154));
-        jButton4.setForeground(Color.WHITE);
+      
+        jButton4.setForeground(Color.BLACK);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);

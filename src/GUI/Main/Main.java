@@ -240,7 +240,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new Login().setVisible(true);
+                new Login2().setVisible(true);
                 
             }
 

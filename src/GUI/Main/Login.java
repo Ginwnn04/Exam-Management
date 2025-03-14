@@ -35,7 +35,7 @@ import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import DTO.UserDTO;
-import GUI.Comp.Dialog.DialogDangki;
+//import GUI.Comp.Dialog.DialogDangki;
 import GUI.Utils.Encryptor;
 import GUI.Utils.UserSession;
 import BUS.UserBus;
@@ -76,7 +76,7 @@ public class Login extends javax.swing.JFrame {
 
         panel_right.setBackground(new Color(255,255,255));
 
-        ImageIcon image = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/log.png"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/log2.png"));
         JLabel lbImage = new JLabel(image) {
             public void paintComponent(Graphics g) {
                 Dimension size = getSize();
@@ -251,8 +251,8 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void dangkiDialog(){
-        DialogDangki dangki = new DialogDangki(null,true);
-        dangki.setVisible(true);
+//        DialogDangki dangki =new DialogDangki(null,true);
+//        dangki.setVisible(true);
     }
 
     private void loginButtonActionPerformed(JTextField usernameField, JTextField passwordField) {
@@ -268,20 +268,20 @@ public class Login extends javax.swing.JFrame {
               return;
         }
         String password = user.getPassword();
-        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
-            if(decryptedPassword.equals(textPassword)){
-                UserSession.getInstance().setCurrentUser(user); 
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-                Main main = new Main(user);
-                main.setVisible(true);
-                main.updateNavBar();
-                dispose(); 
-                return ;
-            }
-            else{
-                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
-                return;
-            }
+//        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
+//            if(decryptedPassword.equals(textPassword)){
+//                UserSession.getInstance().setCurrentUser(user); 
+//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+//                Main main = new Main(user);
+//                main.setVisible(true);
+//                main.updateNavBar();
+//                dispose(); 
+//                return ;
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
+//                return;
+//            }
             
     } 
         
@@ -319,34 +319,34 @@ public class Login extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        FlatMacLightLaf.registerCustomDefaultsSource("style");
-        UIManager.put("TextField.font", style.MyFont.fontText);
-        UIManager.put("Label.font", style.MyFont.fontText);
-        UIManager.put("Button.font", style.MyFont.fontText);
-        UIManager.put("Table.font", style.MyFont.fontText);
-        UIManager.put("PasswordField.font", style.MyFont.fontText);
-        UIManager.put("PasswordField.showRevealButton", true);
-        UIManager.put("RootPane.background", new Color(255, 255, 255));
-        UIManager.put("TitlePane.background", new Color(255, 255, 255));
-        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
-        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
-        UIManager.put("TitlePane.centerTitle", true);
-        
-        
-        
-        UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 16));
-//        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
-        UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
-        FlatMacLightLaf.setup();
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        FlatMacLightLaf.registerCustomDefaultsSource("style");
+//        UIManager.put("TextField.font", style.MyFont.fontText);
+//        UIManager.put("Label.font", style.MyFont.fontText);
+//        UIManager.put("Button.font", style.MyFont.fontText);
+//        UIManager.put("Table.font", style.MyFont.fontText);
+//        UIManager.put("PasswordField.font", style.MyFont.fontText);
+//        UIManager.put("PasswordField.showRevealButton", true);
+//        UIManager.put("RootPane.background", new Color(255, 255, 255));
+//        UIManager.put("TitlePane.background", new Color(255, 255, 255));
+//        UIManager.put("TitlePane.foreground", new Color(0, 0, 0));
+//        UIManager.put("TitlePane.font", new Font("Roboto", Font.BOLD, 16));
+//        UIManager.put("TitlePane.centerTitle", true);
+//        
+//        
+//        
+//        UIManager.put("TableHeader.font", new Font("Roboto", Font.BOLD, 16));
+////        UIManager.put("Table.alternateRowColor", new Color(243, 215, 208));
+//        UIManager.put("TableHeader.separatorColor", new Color(0, 0, 0, 0));
+//        FlatMacLightLaf.setup();
+//        
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Login().setVisible(true);
+//            }
+//        });
+//    }
 
     private JPanel JPanel(GridLayout gridLayout) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
