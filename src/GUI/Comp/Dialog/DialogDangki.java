@@ -249,7 +249,7 @@ public class DialogDangki extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 ký tự trở lên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        String hash_password = Encryptor.encrypt("Bar12345Bar12345", "RandomInitVector", password);
+        String hash_password = Encryptor.encrypt(password);
         return UserDTO.builder()
                 .setName(username)
                 .setEmail(email)

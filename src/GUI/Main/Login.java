@@ -270,7 +270,7 @@ public class Login extends javax.swing.JFrame {
               return;
         }
         String password = user.getPassword();
-        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
+        String decryptedPassword = Encryptor.decrypt(password);
             if(decryptedPassword.equals(textPassword)){
                 UserSession.getInstance().setCurrentUser(user); 
                 JOptionPane.showMessageDialog(this, "Đăng nhập thành công");

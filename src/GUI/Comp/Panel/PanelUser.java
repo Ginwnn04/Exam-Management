@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatClientProperties;
+
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
@@ -45,6 +48,7 @@ public class PanelUser extends javax.swing.JPanel {
 
             @Override
             public void onUpdate(int row) {
+                System.out.println("update on row number: "+row);
                 var a =tbNguoidung.getModel().getValueAt(row, 4);
                 int id = ((Number) a).intValue();
                 DialogUsers d = new DialogUsers(null,userBus,id);
@@ -386,12 +390,13 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground14.add(panelBackground10);
 
-        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel2.setText("Người dùng");
-        panelBackground14.add(jLabel2);
+        // jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        // jLabel2.setText("Người dùng");
+        // panelBackground14.add(jLabel2);
 
         txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtNguoiDung.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên người dùng, email hoặc quyền .....");
         panelBackground14.add(txtNguoiDung);
 
         panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);
@@ -409,17 +414,20 @@ public class PanelUser extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Họ và Tên", "Email", "Phân Quyền", "Hành động"
+                "Họ và Tên", "Email", "Phân Quyền", "Hành động","id"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+
+        tbNguoidung.removeColumn(tbNguoidung.getColumnModel().getColumn(4));
+
         jScrollPane1.setViewportView(tbNguoidung);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
