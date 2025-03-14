@@ -38,10 +38,16 @@ public class PanelAnswers extends javax.swing.JPanel {
     }
     
     public void setData(char order, String answ, String path) {
+        
         this.order = order;
         this.answ = answ;
         this.path = path;
-        this.lbOrder.setText(order + ". ");
+        if (order == '\0') {
+            this.lbOrder.setText("");
+        }
+        else {
+            this.lbOrder.setText(order + ". ");
+        }
         this.lbAnsw.setText(answ);
         System.out.println(this.lbOrder.getText() + " " + this.lbAnsw.getText());
         if (path == null || path.isEmpty()) {

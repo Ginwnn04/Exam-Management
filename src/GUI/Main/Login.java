@@ -268,20 +268,20 @@ public class Login extends javax.swing.JFrame {
               return;
         }
         String password = user.getPassword();
-//        String decryptedPassword = Encryptor.decrypt("Bar12345Bar12345", "RandomInitVector", password);
-//            if(decryptedPassword.equals(textPassword)){
-//                UserSession.getInstance().setCurrentUser(user); 
-//                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
-//                Main main = new Main(user);
-//                main.setVisible(true);
-//                main.updateNavBar();
-//                dispose(); 
-//                return ;
-//            }
-//            else{
-//                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
-//                return;
-//            }
+        String decryptedPassword = Encryptor.decrypt(password);
+            if(decryptedPassword.equals(textPassword)){
+                UserSession.getInstance().setCurrentUser(user); 
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+                Main main = new Main(user);
+                main.setVisible(true);
+                main.updateNavBar();
+                dispose(); 
+                return ;
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Sai mật khẩu!");
+                return;
+            }
             
     } 
         

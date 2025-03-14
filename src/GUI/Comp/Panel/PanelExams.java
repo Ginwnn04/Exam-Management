@@ -18,8 +18,7 @@ import GUI.Utils.Debounce;
 import GUI.Custom.TableActionCellEditor;
 import DTO.ExamDTO;
 import BUS.ExamBUS;
-import GUI.Comp.Dialog.DialogExams;
-import GUI.Utils.Email;
+import GUI.Comp.Dialog.DialogDetailExams;
 import com.formdev.flatlaf.FlatClientProperties;
 /**
  *
@@ -44,22 +43,13 @@ public class PanelExams extends javax.swing.JPanel {
     }
     
     private void initTable() {
-
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbDeThi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         TableActionEvent event = new TableActionEvent() {
-
             @Override
-            public void onDelete(int row) {
-                var a = tbDeThi.getModel().getValueAt(row, 4);
-                
-            }
-
+            public void onDelete(int row) {}
             @Override
-            public void onUpdate(int row) {
-                var a = tbDeThi.getModel().getValueAt(row, 4);
-            }
-
+            public void onUpdate(int row) {}
             @Override
             public void onView(int row) {
                 var a = tbDeThi.getModel().getValueAt(row, 0);
@@ -67,11 +57,9 @@ public class PanelExams extends javax.swing.JPanel {
                 String testCode = a.toString();
                 String examCode = b.toString();
                 System.out.println(testCode);
-                DialogExams d = new DialogExams(null, true,examCode, testCode);
+                DialogDetailExams d = new DialogDetailExams(null, true,examCode, testCode);
                 d.setVisible(true);
-
             }
-            
         };
         tbDeThi.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
         tbDeThi.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));

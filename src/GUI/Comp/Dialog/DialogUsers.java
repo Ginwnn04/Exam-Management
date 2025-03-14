@@ -5,9 +5,16 @@
 package GUI.Comp.Dialog;
 import javax.swing.JOptionPane;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import BUS.UserBus;
 import DTO.UserDTO;
+import GUI.Utils.Encryptor;
+
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 /**
  *
  * @author nguye
@@ -49,21 +56,73 @@ public class DialogUsers extends javax.swing.JDialog {
         var user = BUS.findByID(id);
         jTextField1.setText(user.getName());
         jTextField2.setText(user.getEmail());
-        jTextField3.setText(user.getPassword());
+        jTextField3.setText(Encryptor.decrypt(user.getPassword()));
         jTextField4.setText(user.getFullName());
         jCheckBox1.setSelected(user.getIsAdmin()==1);
+    }
+
+    private boolean EmailValidator(String email){
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+
+    private boolean fullNameValidator(String fullName){
+        String fullNameRegex = "^[a-zA-Z\\s]*$";
+        return fullName.matches(fullNameRegex);
+    }
+    private boolean ValidateFormData(){
+        if(jTextField1.getText().isBlank() || jTextField2.getText().isBlank() || jTextField3.getText().isBlank() || jTextField4.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if(jTextField1.getText().length() < 6){
+            JOptionPane.showMessageDialog(this, "Tên tài khoản phải có ít nhất 6 ký tự", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if(!EmailValidator(jTextField2.getText())){
+            JOptionPane.showMessageDialog(this, "Email sai định dạng", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if(jTextField3.getText().length() < 6){
+            JOptionPane.showMessageDialog(this, "Mật khẩu phải có ít nhất 6 ký tự", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if(!fullNameValidator(jTextField4.getText())){
+            JOptionPane.showMessageDialog(this, "Họ và tên không được có kí tự đặc biệt", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean ValidateIsExist(){
+        ArrayList<UserDTO> userList = BUS.getAllUsers();
+        if(userList.stream().anyMatch(user -> user.getName().equals(jTextField1.getText()))){
+            JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if(userList.stream().anyMatch(user -> user.getEmail().equals(jTextField2.getText()))){
+            JOptionPane.showMessageDialog(this, "Email đã tồn tại", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     private UserDTO gatherFormData(){
         return UserDTO.builder()
                 .setName(jTextField1.getText())
                 .setEmail(jTextField2.getText())
-                .setPassword(jTextField3.getText())
+                .setPassword(Encryptor.encrypt(jTextField3.getText()))
                 .setFullName(jTextField4.getText())
                 .setIsAdmin(jCheckBox1.isSelected() ? 1 : 0)
                 .build();
     }
     private void onSave(ActionEvent e){
+        if(isUpdateDialog){
+            if(!ValidateFormData()) return;
+        }
+        else{
+            if(!ValidateFormData() || !ValidateIsExist()) return;
+        }
         var data = gatherFormData();
         boolean rs;
         String action;
@@ -82,7 +141,9 @@ public class DialogUsers extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+        setMinimumSize(new java.awt.Dimension(200, 500));
+        setSize(200,500);
+        setPreferredSize(new Dimension(400,550));
         buttonGroup1 = new javax.swing.ButtonGroup();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         panelBackground2 = new GUI.Comp.Swing.PanelBackground();
@@ -101,19 +162,28 @@ public class DialogUsers extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
-
+        setBackground(Color.WHITE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        panelBackground1.setBackground(Color.WHITE);
+        panelBackground2.setBackground(Color.WHITE);
+        panelBackground3.setBackground(Color.WHITE);
+        panelBackground4.setBackground(Color.WHITE);
+        panelBackground5.setBackground(Color.WHITE);
+        panelBackground6.setBackground(Color.WHITE);
 
-        jLabel1.setText("Thêm người dùng");
+        jLabel1.setText("Điền thông tin người dùng");
+        jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jTextField1.setText("nhập tên tài khoản");
+        jTextField1.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên tài khoản");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Tên người dùng");
+        jLabel2.setText("Tên tài khoản");
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
         panelBackground3.setLayout(panelBackground3Layout);
@@ -136,9 +206,10 @@ public class DialogUsers extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTextField2.setText("nhập email");
+        jTextField2.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập email");
 
         jLabel3.setText("Email");
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout panelBackground4Layout = new javax.swing.GroupLayout(panelBackground4);
         panelBackground4.setLayout(panelBackground4Layout);
@@ -160,9 +231,10 @@ public class DialogUsers extends javax.swing.JDialog {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jTextField3.setText("nhập mật khẩu");
+        jTextField3.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập mật khẩu");
 
         jLabel4.setText("Mật khẩu");
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout panelBackground5Layout = new javax.swing.GroupLayout(panelBackground5);
         panelBackground5.setLayout(panelBackground5Layout);
@@ -184,9 +256,10 @@ public class DialogUsers extends javax.swing.JDialog {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jTextField4.setText("nhập họ tên đầy đủ");
+        jTextField4.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập đầy đủ họ và tên của bạn");
 
         jLabel5.setText("Họ và tên ");
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout panelBackground6Layout = new javax.swing.GroupLayout(panelBackground6);
         panelBackground6.setLayout(panelBackground6Layout);
@@ -208,7 +281,8 @@ public class DialogUsers extends javax.swing.JDialog {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        jCheckBox1.setText("Admin");
+        jCheckBox1.setText("ADMIN");
+        jCheckBox1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
         panelBackground2.setLayout(panelBackground2Layout);
@@ -245,8 +319,10 @@ public class DialogUsers extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(225, 99, 73));
-        jButton1.setText("Lưu");
+        jButton1.setBackground(new java.awt.Color(53,80,154));
+        jButton1.setText("LƯU");
+        jButton1.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -279,6 +355,7 @@ public class DialogUsers extends javax.swing.JDialog {
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+        getContentPane().setBackground(Color.WHITE);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
