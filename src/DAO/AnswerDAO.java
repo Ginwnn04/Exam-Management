@@ -79,6 +79,39 @@ public class AnswerDAO implements BaseDAO<AnswerDTO, Integer>{
         return listAnsw;
         
     }
+
+    public List<AnswerDTO> findByListQuestionId(List<Integer> questionIds) {
+        List<AnswerDTO> listAnsw = new ArrayList<>();
+        String query = "SELECT * FROM answers WHERE awStatus = 1 AND qID IN (";
+
+        for (int i = 0; i < questionIds.size(); i++) {
+            int id = questionIds.get(i);
+
+            if (i < questionIds.size() - 1) query += id + ", ";
+            else query += id + ")";
+        }
+
+        System.out.println(query);
+
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                AnswerDTO answ = AnswerDTO.builder()
+                        .setId(rs.getInt("awID"))
+                        .setContent(rs.getString("awContent"))
+                        .setPicture(rs.getString("awPictures"))
+                        .setQuestionId(rs.getInt("qID"))
+                        .setIsRight(rs.getInt("isRight") == 1 ? true : false)
+                        .build();
+                listAnsw.add(answ);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return listAnsw;
+    }
     
     public boolean deleteByQuestionId(int id) {
         String query = "UPDATE answers SET awStatus = 0 WHERE qID = ?";

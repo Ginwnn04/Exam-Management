@@ -57,9 +57,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setMinimumSize(new Dimension(920, 500));
-       ConnectDB.getInstance().openConnect();
-        
-       
+        ConnectDB.getInstance().openConnect();
     }
 
     private void LoginLayout() {
