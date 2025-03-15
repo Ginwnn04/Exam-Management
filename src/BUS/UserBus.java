@@ -27,7 +27,9 @@ public class UserBus {
     public UserDTO findByUsername(String username) {
         return userDao.findByUsername(username);
     }
-
+    public UserDTO findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
     public UserDTO findByID(Integer id) {
         return userDao.findByID(id);
     }

@@ -204,18 +204,18 @@ public class PannelLogin extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        String username = usernameField.getText();
-        UserDTO user = userBus.findByUsername(username);
-        if (username.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Không được để trống");
-            return;
-        }
-        else if(user == null){
-            JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
-            return;
-        }
+        // String username = usernameField.getText();
+        // UserDTO user = userBus.findByUsername(username);
+        // if (username.isEmpty()){
+        //     JOptionPane.showMessageDialog(this, "Không được để trống");
+        //     return;
+        // }
+        // else if(user == null){
+        //     JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+        //     return;
+        // }
         
-        JDialog dialogOTP = new DialogSendOTP(null, true, username);
+        JDialog dialogOTP = new DialogSendOTP(null, true);
         dialogOTP.setVisible(true);
 
     }//GEN-LAST:event_jLabel5MouseClicked

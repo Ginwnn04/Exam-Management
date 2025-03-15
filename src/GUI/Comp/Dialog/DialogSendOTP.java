@@ -13,6 +13,8 @@ import Helper.MyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.util.stream.Collectors;
+import java.util.List;
 import style.ColorConfig;
 
 public class DialogSendOTP extends JDialog {
@@ -24,6 +26,7 @@ public class DialogSendOTP extends JDialog {
     private UserBus BUS;
     private String username;
     private Date expired_time;
+    private boolean isReceivedOTP = false;
 
     private static int timeLeft ; // Thời gian đếm ngược (giây)
     private static Timer timer;
@@ -31,6 +34,7 @@ public class DialogSendOTP extends JDialog {
     public DialogSendOTP(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.BUS = new UserBus();
     }
 
     public DialogSendOTP(Frame parent, boolean modal, String username) {
@@ -126,19 +130,42 @@ public class DialogSendOTP extends JDialog {
         confirmButton.addActionListener(e -> confirmButtonActionPerformed(e));
     }
     
+    private boolean EmailValidator(String email){
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+
+    private boolean validateEmailTextField(String email){
+        
+        List<String> listEmail = BUS.getAllUsers().stream().map(UserDTO::getEmail).collect(Collectors.toList());
+        if(email.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Email không được để trống");
+            return false;
+        }
+        else if( !EmailValidator(email)){
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ");
+            return false;
+        }
+        else if(!listEmail.contains(email)){
+            JOptionPane.showMessageDialog(this, "Email này chưa được đăng ký ");
+            return false;
+        }
+        return true;
+    }
 
     private void sendOtpButtonActionPerformed(ActionEvent e) {
         String emailText = emailField.getText();
+        if(!validateEmailTextField(emailText))return;
         String otp = Email.generateCodeOtp();
         long time = Email.getExpiredTime();
         expired_time = new Date(time);
-        BUS = new UserBus();
         System.out.println(emailField + " " + "123");
         System.out.println(emailText + " " + otp + " " + expired_time);
         if(BUS.update_OTP_expiredTime(otp, expired_time, emailText)){
             Email.sendEmail(emailText, "OTP", "Mã OTP của bạn là: " + otp);
             JOptionPane.showMessageDialog(this, "Đã gửi OTP đến email của bạn");
             startCountdown(sendOtpButton);
+            isReceivedOTP = true;
         } else {
             JOptionPane.showMessageDialog(this, "Gửi OTP thất bại");
         }
@@ -163,12 +190,28 @@ public class DialogSendOTP extends JDialog {
         timer.start(); // Bắt đầu đếm ngược
     }
 
+    private boolean validateOTP_Email(String email , String otp){
+        if(email.isEmpty() || otp.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đủ thông tin !");
+            return false;
+        }
+        if(!validateEmailTextField(email)){
+            return false;
+        }
+        if(!isReceivedOTP){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhấn nút Gửi otp và thử lại !");
+            return false;
+        }
+        return true;
+    }
+
     private void confirmButtonActionPerformed(ActionEvent e) {
+        String emailText = emailField.getText();
+        String otpText = otpField.getText();
+        if(!validateOTP_Email(emailText, otpText)) return;
         long time = expired_time.getTime();
         boolean isExpired = Email.isExpired(time);
-        String otpText = otpField.getText();
-        BUS = new UserBus();
-        UserDTO user = BUS.findByUsername(username);
+        UserDTO user = BUS.findByEmail(emailText);
         String otp = user.getOtp();
         int user_id = user.getId();
         if(isExpired && otp.equals(otpText)){
