@@ -307,7 +307,6 @@ public class DialogQuestion extends javax.swing.JDialog {
 
         txtImg.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         txtImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/minus-sign-inside-a-black-circle (1).png"))); // NOI18N
         txtImg.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         txtImg.setName(""); // NOI18N
         panelBackground11.add(txtImg, java.awt.BorderLayout.CENTER);

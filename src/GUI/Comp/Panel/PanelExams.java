@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package GUI.Comp.Panel;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,9 @@ import GUI.Custom.TableActionCellEditor;
 import DTO.ExamDTO;
 import BUS.ExamBUS;
 import GUI.Comp.Dialog.DialogDetailExams;
+import GUI.Comp.Dialog.DialogExams;
 import com.formdev.flatlaf.FlatClientProperties;
+
 /**
  *
  * @author Minh Phuc
@@ -28,6 +31,7 @@ public class PanelExams extends javax.swing.JPanel {
     private ArrayList<ExamDTO> examsList = new ArrayList<>();
     private ExamBUS examBUS = new ExamBUS();
     private Set<String> madeSet = new HashSet<>();
+
     /**
      * Creates new form PanelExams
      */
@@ -41,15 +45,19 @@ public class PanelExams extends javax.swing.JPanel {
         txtToHop.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
 
     }
-    
+
     private void initTable() {
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbDeThi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         TableActionEvent event = new TableActionEvent() {
             @Override
-            public void onDelete(int row) {}
+            public void onDelete(int row) {
+            }
+
             @Override
-            public void onUpdate(int row) {}
+            public void onUpdate(int row) {
+            }
+
             @Override
             public void onView(int row) {
                 var a = tbDeThi.getModel().getValueAt(row, 0);
@@ -57,7 +65,7 @@ public class PanelExams extends javax.swing.JPanel {
                 String testCode = a.toString();
                 String examCode = b.toString();
                 System.out.println(testCode);
-                DialogDetailExams d = new DialogDetailExams(null, true,examCode, testCode);
+                DialogDetailExams d = new DialogDetailExams(null, true, examCode, testCode);
                 d.setVisible(true);
             }
         };
@@ -66,16 +74,16 @@ public class PanelExams extends javax.swing.JPanel {
         tbDeThi.setRowHeight(30);
     }
 
-    public void render(){
+    public void render() {
         DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
         model.setRowCount(0);
         examsList = examBUS.getAllExams();
         for (ExamDTO exam : examsList) {
-            model.addRow(new Object[]{
-                exam.getTestCode(),
-                exam.getExOrder(),
-                exam.getExCode(),
-                "Hành động"
+            model.addRow(new Object[] {
+                    exam.getTestCode(),
+                    exam.getExOrder(),
+                    exam.getExCode(),
+                    "Hành động"
             });
         }
 
@@ -87,11 +95,12 @@ public class PanelExams extends javax.swing.JPanel {
         madeSet.clear();
         cbxMaDe.removeAllItems();
         cbxMaDe.addItem("Tất cả");
-        
+
         for (ExamDTO exam : examsList) {
             String testCode = exam.getTestCode();
 
-            if (!madeSet.contains(testCode)) cbxMaDe.addItem(exam.getTestCode());         
+            if (!madeSet.contains(testCode))
+                cbxMaDe.addItem(exam.getTestCode());
             madeSet.add(testCode);
         }
     }
@@ -109,7 +118,7 @@ public class PanelExams extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void setupSearchFieldEvent() {
         Debounce onSearch = new Debounce(() -> filterTable(), 500);
 
@@ -135,7 +144,8 @@ public class PanelExams extends javax.swing.JPanel {
     private void filterTable() {
         String selectedMaDe = (String) cbxMaDe.getSelectedItem();
         String selectedThuTu = (String) cbxThuTu.getSelectedItem();
-        if(selectedMaDe == null || selectedThuTu == null) return;
+        if (selectedMaDe == null || selectedThuTu == null)
+            return;
         String query = txtToHop.getText().toLowerCase();
 
         DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
@@ -145,15 +155,15 @@ public class PanelExams extends javax.swing.JPanel {
             boolean matchesMaDe = selectedMaDe.equals("Tất cả") || exam.getTestCode().equals(selectedMaDe);
             boolean matchesThuTu = selectedThuTu.equals("Tất cả") || exam.getExOrder().equals(selectedThuTu);
             boolean matchesSearch = exam.getTestCode().toLowerCase().contains(query) ||
-                                    exam.getExOrder().toLowerCase().contains(query) ||
-                                    exam.getExCode().toLowerCase().contains(query);
+                    exam.getExOrder().toLowerCase().contains(query) ||
+                    exam.getExCode().toLowerCase().contains(query);
 
             if (matchesMaDe && matchesThuTu && matchesSearch) {
-                model.addRow(new Object[]{
-                    exam.getTestCode(),
-                    exam.getExOrder(),
-                    exam.getExCode(),
-                    "Hành động"
+                model.addRow(new Object[] {
+                        exam.getTestCode(),
+                        exam.getExOrder(),
+                        exam.getExCode(),
+                        "Hành động"
                 });
             }
         }
@@ -167,7 +177,8 @@ public class PanelExams extends javax.swing.JPanel {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
@@ -214,13 +225,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground2Layout = new javax.swing.GroupLayout(panelBackground2);
         panelBackground2.setLayout(panelBackground2Layout);
         panelBackground2Layout.setHorizontalGroup(
-            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground2Layout.setVerticalGroup(
-            panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 602, Short.MAX_VALUE)
-        );
+                panelBackground2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 602, Short.MAX_VALUE));
 
         panelBackground1.add(panelBackground2, java.awt.BorderLayout.LINE_START);
 
@@ -230,13 +239,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground3Layout = new javax.swing.GroupLayout(panelBackground3);
         panelBackground3.setLayout(panelBackground3Layout);
         panelBackground3Layout.setHorizontalGroup(
-            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1177, Short.MAX_VALUE)
-        );
+                panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1177, Short.MAX_VALUE));
         panelBackground3Layout.setVerticalGroup(
-            panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground1.add(panelBackground3, java.awt.BorderLayout.PAGE_START);
 
@@ -246,13 +253,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground4Layout = new javax.swing.GroupLayout(panelBackground4);
         panelBackground4.setLayout(panelBackground4Layout);
         panelBackground4Layout.setHorizontalGroup(
-            panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground4Layout.setVerticalGroup(
-            panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 602, Short.MAX_VALUE)
-        );
+                panelBackground4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 602, Short.MAX_VALUE));
 
         panelBackground1.add(panelBackground4, java.awt.BorderLayout.LINE_END);
 
@@ -262,13 +267,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground5Layout = new javax.swing.GroupLayout(panelBackground5);
         panelBackground5.setLayout(panelBackground5Layout);
         panelBackground5Layout.setHorizontalGroup(
-            panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1177, Short.MAX_VALUE)
-        );
+                panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1177, Short.MAX_VALUE));
         panelBackground5Layout.setVerticalGroup(
-            panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground1.add(panelBackground5, java.awt.BorderLayout.PAGE_END);
 
@@ -279,13 +282,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground6Layout = new javax.swing.GroupLayout(panelBackground6);
         panelBackground6.setLayout(panelBackground6Layout);
         panelBackground6Layout.setHorizontalGroup(
-            panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
+                panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 10, Short.MAX_VALUE));
         panelBackground6Layout.setVerticalGroup(
-            panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 582, Short.MAX_VALUE)
-        );
+                panelBackground6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 582, Short.MAX_VALUE));
 
         main.add(panelBackground6, java.awt.BorderLayout.LINE_START);
 
@@ -294,13 +295,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground7Layout = new javax.swing.GroupLayout(panelBackground7);
         panelBackground7.setLayout(panelBackground7Layout);
         panelBackground7Layout.setHorizontalGroup(
-            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1137, Short.MAX_VALUE)
-        );
+                panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1137, Short.MAX_VALUE));
         panelBackground7Layout.setVerticalGroup(
-            panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
+                panelBackground7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 10, Short.MAX_VALUE));
 
         main.add(panelBackground7, java.awt.BorderLayout.PAGE_START);
 
@@ -309,13 +308,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground8Layout = new javax.swing.GroupLayout(panelBackground8);
         panelBackground8.setLayout(panelBackground8Layout);
         panelBackground8Layout.setHorizontalGroup(
-            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
+                panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 10, Short.MAX_VALUE));
         panelBackground8Layout.setVerticalGroup(
-            panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 582, Short.MAX_VALUE)
-        );
+                panelBackground8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 582, Short.MAX_VALUE));
 
         main.add(panelBackground8, java.awt.BorderLayout.LINE_END);
 
@@ -324,13 +321,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground9Layout = new javax.swing.GroupLayout(panelBackground9);
         panelBackground9.setLayout(panelBackground9Layout);
         panelBackground9Layout.setHorizontalGroup(
-            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1137, Short.MAX_VALUE)
-        );
+                panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1137, Short.MAX_VALUE));
         panelBackground9Layout.setVerticalGroup(
-            panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 10, Short.MAX_VALUE)
-        );
+                panelBackground9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 10, Short.MAX_VALUE));
 
         main.add(panelBackground9, java.awt.BorderLayout.PAGE_END);
 
@@ -351,13 +346,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground17Layout = new javax.swing.GroupLayout(panelBackground17);
         panelBackground17.setLayout(panelBackground17Layout);
         panelBackground17Layout.setHorizontalGroup(
-            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
+                panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 150, Short.MAX_VALUE));
         panelBackground17Layout.setVerticalGroup(
-            panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
+                panelBackground17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 22, Short.MAX_VALUE));
 
         panelBackground10.add(panelBackground17, java.awt.BorderLayout.PAGE_END);
 
@@ -366,13 +359,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground18Layout = new javax.swing.GroupLayout(panelBackground18);
         panelBackground18.setLayout(panelBackground18Layout);
         panelBackground18Layout.setHorizontalGroup(
-            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
+                panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 150, Short.MAX_VALUE));
         panelBackground18Layout.setVerticalGroup(
-            panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 5, Short.MAX_VALUE)
-        );
+                panelBackground18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 5, Short.MAX_VALUE));
 
         panelBackground10.add(panelBackground18, java.awt.BorderLayout.PAGE_START);
 
@@ -401,13 +392,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground12Layout = new javax.swing.GroupLayout(panelBackground12);
         panelBackground12.setLayout(panelBackground12Layout);
         panelBackground12Layout.setHorizontalGroup(
-            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground12Layout.setVerticalGroup(
-            panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground11.add(panelBackground12);
 
@@ -420,13 +409,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground13Layout = new javax.swing.GroupLayout(panelBackground13);
         panelBackground13.setLayout(panelBackground13Layout);
         panelBackground13Layout.setHorizontalGroup(
-            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground13Layout.setVerticalGroup(
-            panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground11.add(panelBackground13);
 
@@ -439,13 +426,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground14Layout = new javax.swing.GroupLayout(panelBackground14);
         panelBackground14.setLayout(panelBackground14Layout);
         panelBackground14Layout.setHorizontalGroup(
-            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground14Layout.setVerticalGroup(
-            panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground11.add(panelBackground14);
 
@@ -464,13 +449,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground15Layout = new javax.swing.GroupLayout(panelBackground15);
         panelBackground15.setLayout(panelBackground15Layout);
         panelBackground15Layout.setHorizontalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground15Layout.setVerticalGroup(
-            panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground11.add(panelBackground15);
 
@@ -483,13 +466,11 @@ public class PanelExams extends javax.swing.JPanel {
         javax.swing.GroupLayout panelBackground16Layout = new javax.swing.GroupLayout(panelBackground16);
         panelBackground16.setLayout(panelBackground16Layout);
         panelBackground16Layout.setHorizontalGroup(
-            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
         panelBackground16Layout.setVerticalGroup(
-            panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+                panelBackground16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 20, Short.MAX_VALUE));
 
         panelBackground11.add(panelBackground16);
 
@@ -504,18 +485,18 @@ public class PanelExams extends javax.swing.JPanel {
 
         tbDeThi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         tbDeThi.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"101", "A", "101A", null},
-                {"102", "A", "102A", null},
-                {"102", "B", "102B", null}
-            },
-            new String [] {
-                "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"
-            }
-        ));
+                new Object[][] {
+                        { "101", "A", "101A", null },
+                        { "102", "A", "102A", null },
+                        { "102", "B", "102B", null }
+                },
+                new String[] {
+                        "Mã đề", "Thứ tự", "Tổ hợp", "Hành động"
+                }));
         tbDeThi.setCellSelectionEnabled(true);
         jScrollPane1.setViewportView(tbDeThi);
-        tbDeThi.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tbDeThi.getColumnModel().getSelectionModel()
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -526,20 +507,18 @@ public class PanelExams extends javax.swing.JPanel {
         add(panelBackground1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbxMaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaDeActionPerformed
+    private void cbxMaDeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbxMaDeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbxMaDeActionPerformed
+    }// GEN-LAST:event_cbxMaDeActionPerformed
 
-    // private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    //     DialogExams d = new DialogExams(null, true);
-    //     d.setVisible(true);
-    //     render();
-    //     renderComboBoxMade();
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+//    // GEN-FIRST:event_jButton1ActionPerformed
+//       DialogExams d = new DialogExams(null, true);
+//       d.setVisible(true);
+//       render();
+//       renderComboBoxMade();
 
-    // }//GEN-LAST:event_jButton1ActionPerformed
-
-
-
+    }                                        
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbxMaDe;
