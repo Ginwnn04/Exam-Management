@@ -37,13 +37,13 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         ConnectDB.getInstance().openConnect();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(new Dimension(835, 560));
+        setSize(new Dimension(835, 600));
         setResizable(false);
         MyListener.getInstance().addPropertyChangeListener(this);
         showForm(new PannelLogin());
         
         String linkImg = Paths.get(System.getProperty("user.dir") + "/src/GUI/Comp/Icon/logo1.jpg").toString();
-        Image img = new ImageIcon(linkImg).getImage().getScaledInstance(417, 535, Image.SCALE_SMOOTH);
+        Image img = new ImageIcon(linkImg).getImage().getScaledInstance(417, 600, Image.SCALE_SMOOTH);
         txtImg.setIcon(new ImageIcon(img));
         
         
