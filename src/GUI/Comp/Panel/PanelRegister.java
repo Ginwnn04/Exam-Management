@@ -223,6 +223,11 @@ public class PanelRegister extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+        UserDTO user = BUS.findByUsername(username);
+        if (user != null) { 
+            JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return null;
+}
          if (!isValidEmail(email)) {
         JOptionPane.showMessageDialog(this, "Email không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         return null;

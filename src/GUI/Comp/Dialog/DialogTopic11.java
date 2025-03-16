@@ -38,6 +38,7 @@ public void setUpdated(boolean updated) {
     public DialogTopic11(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTextField1.putClientProperty("JTextField.placeholderText", "Nhập chủ đề...");
          setLocationRelativeTo(null);
          renderTopic();
     }
