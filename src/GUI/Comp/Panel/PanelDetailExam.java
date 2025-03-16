@@ -200,9 +200,7 @@ public class PanelDetailExam extends javax.swing.JPanel {
                                                                       getDifficultyPoints(question.getLevel()));
             }
 
-
             questionLabelPanel.setData('\0', text, null);
-
 
             questionContainer.add(questionLabelPanel);
             panelAnswers.put(question.getId(), new Pair<>(index, questionLabelPanel));
@@ -225,6 +223,7 @@ public class PanelDetailExam extends javax.swing.JPanel {
         questionPanel.revalidate();
         questionPanel.repaint();
     }
+        
 
     private void addAnswer(int questionId, JPanel questionContainer) {
         List<AnswerDTO> answers = answerBUS.getAnswerByQuestionId(questionId);

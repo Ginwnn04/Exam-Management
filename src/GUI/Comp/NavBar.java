@@ -45,7 +45,6 @@ public class NavBar extends javax.swing.JPanel {
 
     public NavBar() {
         initComponents();
-        initMenu();
         setBackground(new Color(0,0,0,0));
         int op = (int) (255 * 0.8);
         jSeparator2.setForeground(new Color(204, 204, 204, op));
@@ -87,42 +86,39 @@ public class NavBar extends javax.swing.JPanel {
             String role = user.getIsAdmin() == 1 ? "Admin" : "User";
             lbName.setText(user.getFullName());
             lbRole.setText(role);
+            initMenu(user.getIsAdmin() == 1 ? true : false);
     }
 }
-    public void initMenu() {
-        addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Câu hỏi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Cấu trúc đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Chủ đề", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Người dùng", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Thống kê", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-        addMenuItem("Lịch sử", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-//        if (StaffDTO.staffLogging == null) {
-//            return;
-//        }
-//        if (StaffDTO.staffLogging.getRoleId().equals("STAFF")) {
-//            hashMap.put("staff", listButton);
-//        }
-//        else {
-//            // Mặc định là Manager
-//            
-//            addMenuItem("Nguyên liệu", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/mortar.png")));
-//            addMenuItem("Nhập kho", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/shopping-cart.png")));
-//            addMenuItem("Thống kê", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/chart-area.png")));
-//            addMenuItem("Nhà cung cấp", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/supplier.png")));
-//            if (StaffDTO.staffLogging.getRoleId().equals("ADMIN")) {
-//                addMenuItem("Nhân viên", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/employees.png")));
-//                hashMap.put("admin", listButton);
-//            }  
-//            else {
-//                hashMap.put("manager", listButton);
-//            }
-//         }
+    public void initMenu(boolean isAdmin) {
+        if (isAdmin) {
+            addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+            addMenuItem("Câu hỏi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/choose.png")));
+            addMenuItem("Đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/exam.png")));
+            addMenuItem("Cấu trúc đề thi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/test.png")));
+            addMenuItem("Chủ đề", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/trending-topic.png")));
+            addMenuItem("Người dùng", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user.png")));
+            addMenuItem("Thống kê", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/analyzing.png")));
+            addMenuItem("Lịch sử", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+        }
+        else {
+            addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+
+        }
+        btnThongTin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                indexSelected = Integer.parseInt(e.getActionCommand());
+                if (indexSelected != indexCurrent) {
+                    MyListener.getInstance().firePropertyChange("ItemMenu", hashMap, indexSelected);
+                    System.out.println(indexSelected);
+                    clearSelected();
+                    setSelectedMenu(indexSelected); 
+                }
+                
+            }
+        });
         
-//        panelBackground1.setBackground(new Color(255, 107, 39, 30));
-         
-        
+        listButton.add(btnThongTin);
         sliding.setBounds(xPanel, yPanel, 15, 20);
         pnContainer.add(sliding);
 
@@ -166,30 +162,105 @@ public class NavBar extends javax.swing.JPanel {
         for (JButton btn : listButton) {
             btn.setBackground(ColorConfig.WHITE_COLOR_BG);
             btn.setForeground(ColorConfig.GREY_COLOR_FONT);
-            btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+            int index = Integer.parseInt(btn.getActionCommand());
+            System.out.println("Index: " + index);
+            if (index == indexSelected)
+                continue;
+            switch (index) {
+                    case 0:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
+                        break;
+                    case 1:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/choose.png")));
+                        break;
+                    case 2:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/exam.png")));
+                        break;
+                    case 3:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/test.png")));
+                        break;
+                    case 4:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/trending-topic.png")));
+                        break;
+                    case 5:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user.png")));
+                        break;
+                    case 6:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/analyzing.png")));
+                        break;
+                    case 999:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user.png")));
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
         }
     }
 
     public void setSelectedMenu(int indexSelected) {
         if (indexCurrent != indexSelected) {
-            int yNew = (indexSelected - indexCurrent) * 50 + (indexSelected - indexCurrent) * 2;
-            animator = PropertySetter.createAnimator(300, sliding, "location", new Point(xPanel, yPanel), new Point(xPanel, yPanel + yNew));
-            yPanel += yNew;
-            animator.addTarget(new TimingTargetAdapter() {
-                @Override
-                public void timingEvent(float fraction) {
-                    repaint();
-                }
-            });
-            animator.setResolution(5);
-            animator.start();
            
-            indexCurrent = indexSelected;
-            JButton btnSelected = listButton.get(indexSelected);
-            btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home_s.png")));
-            btnSelected.setForeground(ColorConfig.BLUE);
+            if (indexSelected == 999) {
+                int yNew = 446;
+                animator = PropertySetter.createAnimator(300, sliding, "location", new Point(xPanel, yPanel), new Point(xPanel, yPanel + yNew));
+                yPanel += yNew;
+                animator.addTarget(new TimingTargetAdapter() {
+                    @Override
+                    public void timingEvent(float fraction) {
+                        repaint();
+                    }
+                });
+                animator.setResolution(5);
+                animator.start();
+                btnThongTin.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user_s.png")));
+                btnThongTin.setForeground(ColorConfig.BLUE);
 
+            }
+            else {
+                int yNew = (indexSelected - indexCurrent) * 50 + (indexSelected - indexCurrent) * 2;
+                animator = PropertySetter.createAnimator(300, sliding, "location", new Point(xPanel, yPanel), new Point(xPanel, yPanel + yNew));
+                yPanel += yNew;
+                animator.addTarget(new TimingTargetAdapter() {
+                    @Override
+                    public void timingEvent(float fraction) {
+                        repaint();
+                    }
+                });
+                animator.setResolution(5);
+                animator.start();
+
+                indexCurrent = indexSelected;
+                JButton btnSelected = listButton.get(indexSelected);
+                switch (indexSelected) {
+                    case 0:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home_s.png")));
+                        break;
+                    case 1:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/choose_s.png")));
+                        break;
+                    case 2:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/exam_s.png")));
+                        break;
+                    case 3:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/test_s.png")));
+                        break;
+                    case 4:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/trending-topic_s.png")));
+                        break;
+                    case 5:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user_s.png")));
+                        break;
+                    case 6:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/analyzing_s.png")));
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+                btnSelected.setForeground(ColorConfig.BLUE);
+                
+            }
         }
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -223,7 +294,7 @@ public class NavBar extends javax.swing.JPanel {
         btnDangXuat.setBackground(new java.awt.Color(254, 254, 254));
         btnDangXuat.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
         btnDangXuat.setForeground(new java.awt.Color(98, 99, 107));
-        btnDangXuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png"))); // NOI18N
+        btnDangXuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/exit.png"))); // NOI18N
         btnDangXuat.setText("Đăng xuất");
         btnDangXuat.setBorderPainted(false);
         btnDangXuat.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -245,8 +316,9 @@ public class NavBar extends javax.swing.JPanel {
         btnThongTin.setBackground(new java.awt.Color(254, 254, 254));
         btnThongTin.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
         btnThongTin.setForeground(new java.awt.Color(98, 99, 107));
-        btnThongTin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png"))); // NOI18N
+        btnThongTin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/user.png"))); // NOI18N
         btnThongTin.setText(" Thông tin");
+        btnThongTin.setActionCommand("999");
         btnThongTin.setBorderPainted(false);
         btnThongTin.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnThongTin.setMargin(new java.awt.Insets(2, 5, 2, 14));

@@ -81,6 +81,31 @@ public class UserDao implements BaseDAO<UserDTO, Integer> {
         return null;
     }
 
+    public UserDTO findByEmail(String email){
+        String query = "SELECT * FROM users WHERE userEmail = ?";
+        try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
+        .prepareStatement(query)){
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                UserDTO user = UserDTO.builder()
+                .setId(resultSet.getInt("userID"))
+                .setName(resultSet.getString("userName"))
+                .setEmail(resultSet.getString("userEmail"))
+                .setPassword(resultSet.getString("userPassword"))
+                .setFullName(resultSet.getString("userFullName"))
+                .setIsAdmin(resultSet.getInt("isAdmin"))
+                .setOtp(resultSet.getString("otp_code"))
+                .setExpiredTime(resultSet.getTimestamp("expired_time"))
+                .build();
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean update_OTP_expiredTime(String otp, Date expired_time,String email){
         String query = "UPDATE users SET otp_code = ?, expired_time = ? WHERE userEmail = ?";
         try ( PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection()
