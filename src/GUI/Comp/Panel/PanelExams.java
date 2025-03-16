@@ -383,7 +383,7 @@ public class PanelExams extends javax.swing.JPanel {
         jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                // jButton1ActionPerformed(evt);
             }
         });
         panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
@@ -531,7 +531,8 @@ public class PanelExams extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxMaDeActionPerformed
 
     // private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    //     DialogExams d = new DialogExams(null, true);
+    //     // DialogExams d = new DialogExams(null, true);
+    //     // DialogDetailExams d = new DialogDetailExams(null, true);
     //     d.setVisible(true);
     //     render();
     //     renderComboBoxMade();
