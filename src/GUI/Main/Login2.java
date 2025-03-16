@@ -36,7 +36,7 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         initComponents();
         ConnectDB.getInstance().openConnect();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new Dimension(835, 560));
+        setSize(new Dimension(835, 600));
         setLocationRelativeTo(null);
         setResizable(false);
         MyListener.getInstance().addPropertyChangeListener(this);

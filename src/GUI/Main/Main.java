@@ -83,149 +83,51 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             System.out.println(evt.getOldValue() + " " + evt.getNewValue());
 //            Map<String, List<JButton>> hashMap = (Map<String, List<JButton>>)evt.getOldValue();
             int index = (int) evt.getNewValue();
-//            String role = hashMap.keySet().iterator().next();
-            
-            switch (index) {
-                case 0:
-                    showForm(new PanelEnterExams(this::showForm));
+            boolean isAdmin = (boolean) evt.getOldValue();
+            if (isAdmin) {
+                switch (index) {
+                    case 0:
+                        showForm(new PanelEnterExams(this::showForm));
+                        break;
+                    case 1:
+                        showForm(new PanelQuestion());
+                        break;
+                    case 2:
+                        showForm(new PanelExams());
+                        break;
+                    case 3:
+                        showForm(new PanelTest());
+                        break;
+                    case 4:
+                       showForm(new PanelTopic());
+                        break;
+                    case 5:
+                        showForm(new PanelUser());
                     break;
-                case 1:
-                    showForm(new PanelQuestion());
-                    break;
-                case 2:
-                    showForm(new PanelExams());
-                    break;
-                case 3:
-                    showForm(new PanelTest());
-                    break;
-                case 4:
-                   showForm(new PanelTopic());
-                    break;
-                case 5:
-                    showForm(new PanelUser());
-                break;
-                case 6:
-                    showForm(new PanelAnalyze());
-                    break;
-                case 7:
-                    showForm(new PanelHistory(this::showForm));
-                    break;
-                default:
-                    break;
+                    case 6:
+                        showForm(new PanelAnalyze());
+                        break;
+                    case 7:
+                        showForm(new PanelHistory(this::showForm));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+                switch (index) {
+                    case 0:
+                        showForm(new PanelEnterExams(this::showForm));
+                        break;
+                    case 1:
+                        showForm(new PanelHistory(this::showForm));
+                        break;
+                    default:
+                        break;
+                }
             }
             
-//            if (role.equals("admin")) {
-//                System.out.println(role + " " + 1);
-//               switch (index) {
-//                   case 0:
-//                       showForm(new PanelQuestion());
-//                       break;
-//                   case 1:
-//                       showForm(new PanelTestExam());
-//                       break;
-//                    case 2:
-//                        showForm(new QuanLiDatMon());
-//                        break;
-//                    case 3:
-//                        showForm(new QuanLiMonAn());
-//                        break;
-//                    case 4: 
-//                        showForm(new QuanLiHoaDon());
-//                        break;
-//
-//                    case 5: 
-//                        showForm(new QuanLiGiamGia());
-//                        break;
-//                    case 6:
-//                        showForm(new QuanLiTheLoai());
-//                        break;
-//                    case 7:
-//                        showForm(new QuanLiNguyenLieu());
-//                        break;
-//                    case 8:
-//                        showForm(new QuanLiNhapKho());
-//                        break;
-//                    case 9:
-//                        showForm(new PanelStatistic());
-//                        break;
-//                    case 10:
-//                        showForm(new QuanLiSupplier());
-//                        break;
-//                    case 11:
-//                        showForm(new QuanLi_Staff());
-//                        break;
-//                }
-//           }
-//            else if (role.equals("manager")) {
-//                System.out.println(role + " " + 2);
-//                switch (index) {
-//                    case 0:
-//                        showForm(new PanelDashbroad());
-//                        break;
-//                    case 1:
-//                        showForm(new QuanLiBan());
-//                        break;
-//                    case 2:
-//                        showForm(new QuanLiDatMon());
-//                        break;
-//                    case 3:
-//                        showForm(new QuanLiMonAn());
-//                        break;
-//                    case 4: 
-//                        showForm(new QuanLiHoaDon());
-//                        break;
-//
-//                    case 5: 
-//                        showForm(new QuanLiGiamGia());
-//                        break;
-//                    case 6:
-//                        showForm(new QuanLiTheLoai());
-//                        break;
-//                    case 7:
-//                        showForm(new QuanLiNguyenLieu());
-//                        break;
-//                    case 8:
-//                        showForm(new QuanLiNhapKho());
-//                        break;
-//                    case 9:
-//                        showForm(new PanelStatistic());
-//                        break;
-//                    case 10:
-//                        showForm(new QuanLiSupplier());
-//                        break;
-//                }
-//            }
-//            else {
-//                System.out.println(role + " " + 3);
-//                switch (index) {
-//                    case 0:
-//                        showForm(new PanelDashbroad());
-//                        break;
-//                    case 1:
-//                        showForm(new QuanLiBan());
-//                        break;
-//                    case 2:
-//                        showForm(new QuanLiDatMon());
-//                        break;
-//                    case 3:
-//                        showForm(new QuanLiMonAn());
-//                        break;
-//                    case 4: 
-//                        showForm(new QuanLiHoaDon());
-//                        break;
-//
-//                    case 5: 
-//                        showForm(new QuanLiGiamGia());
-//                        break;
-//                    case 6:
-//                        showForm(new QuanLiTheLoai());
-//                        break;
-//                    
-//                }
-//            }
-
         }
-
     }
 
     public void showForm(JPanel com) {
