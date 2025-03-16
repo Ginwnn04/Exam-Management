@@ -66,10 +66,13 @@ public class DialogUsers extends javax.swing.JDialog {
         return email.matches(emailRegex);
     }
 
-    private boolean fullNameValidator(String fullName){
-        String fullNameRegex = "^[a-zA-Z\\s]*$";
+    private boolean fullNameValidator(String fullName) {
+        String fullNameRegex = "^['aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊj"+
+        "JkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ'\\s]+$";
         return fullName.matches(fullNameRegex);
     }
+    
+
     private boolean ValidateFormData(){
         if(jTextField1.getText().isBlank() || jTextField2.getText().isBlank() || jTextField3.getText().isBlank() || jTextField4.getText().isBlank()){
             JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);

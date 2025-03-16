@@ -2,6 +2,7 @@ package GUI.Custom;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Panel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,17 +11,24 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import DTO.UserDTO;
+import GUI.Comp.Panel.PanelUser;
 import BUS.UserBus;
+import javax.swing.BorderFactory;
 
 public class ButtonImportUsers extends javax.swing.JPanel {
+    private PanelUser panelUser;
     private static UserBus BUS;
-    public ButtonImportUsers() {
+    public ButtonImportUsers(PanelUser panelUser) {
+        this.panelUser = panelUser;
         initComponents();
     }
 
@@ -29,12 +37,17 @@ public class ButtonImportUsers extends javax.swing.JPanel {
         btnImport.setBackground(new java.awt.Color(225, 99, 33)); 
         btnImport.setFont(new java.awt.Font("Roboto", Font.BOLD, 16));
         btnImport.setForeground(Color.WHITE); 
-        btnImport.setPreferredSize(new Dimension(150, 40));
-        btnImport.setFocusPainted(false); 
-        btnImport.setBorderPainted(false); 
+        btnImport.setMinimumSize(new Dimension(150, 30));
+        btnImport.setPreferredSize(new Dimension(150, 30));
+        btnImport.setFocusPainted(true); 
         btnImport.setOpaque(true); 
         btnImport.setContentAreaFilled(true);
+        btnImport.setBorder(BorderFactory.createLineBorder(new Color(225, 99, 33),1));
+        
         btnImport.setText("Nhập danh sách");
+        //set round border 
+        
+        // btnImport.setBorderPainted(false); 
         add(btnImport);
         initEvent();
     }
@@ -66,6 +79,7 @@ public class ButtonImportUsers extends javax.swing.JPanel {
             workbook.close();
             ArrayList<UserDTO> rs = importUsers(userList);
             showOptionPane(rs);
+            panelUser.updateTableItems();
         }
         catch (Exception e) {
             e.printStackTrace();

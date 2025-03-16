@@ -12,6 +12,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
+import GUI.Custom.ButtonImportUsers;
 import GUI.Custom.TableActionCellEditor;
 import BUS.UserBus;
 import DTO.UserDTO;
@@ -69,7 +70,7 @@ public class PanelUser extends javax.swing.JPanel {
         updateTableItems();
     }
 
-    private void updateTableItems(){
+    public void updateTableItems(){
         listUser = userBus.getAllUsers();
         listUserTemp = listUser;
         render();
@@ -197,8 +198,8 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnImport = new ButtonImportUsers(this);
         jPanel7 = new javax.swing.JPanel();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         jLabel1 = new javax.swing.JLabel();
@@ -376,11 +377,23 @@ public class PanelUser extends javax.swing.JPanel {
 
         jPanel6.setLayout(new java.awt.GridLayout(1, 0, 20, 0));
 
-        jButton1.setText("jButton1");
-        jPanel6.add(jButton1);
+        btnAdd.setText("Thêm người dùng");
+        btnAdd.setBackground(new java.awt.Color(53, 80, 154));
+        btnAdd.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255,255,255));
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DialogUsers d = new DialogUsers(null,userBus);
+                d.setVisible(true);
+                updateTableItems();
+                d.dispose();
+            }
+        });
+        jPanel6.add(btnAdd);
 
-        jButton2.setText("jButton2");
-        jPanel6.add(jButton2);
+        //update table items after import
+        
+        jPanel6.add(btnImport);
 
         jPanel2.add(jPanel6, java.awt.BorderLayout.CENTER);
 
@@ -412,6 +425,7 @@ public class PanelUser extends javax.swing.JPanel {
 
         txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtNguoiDung.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên người dùng, email hoặc quyền .....");
         panelBackground14.add(txtNguoiDung);
 
         panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);
@@ -486,8 +500,8 @@ public class PanelUser extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAdd;
+    private ButtonImportUsers btnImport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
