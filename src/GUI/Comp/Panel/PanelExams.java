@@ -38,8 +38,6 @@ public class PanelExams extends javax.swing.JPanel {
         renderComboBoxMade();
         addComboBoxListeners();
         setupSearchFieldEvent();
-        txtToHop.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-
     }
     
     private void initTable() {
@@ -400,6 +398,8 @@ public class PanelExams extends javax.swing.JPanel {
 
         txtToHop.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtToHop.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtToHop.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+        txtToHop.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập đề thi...");
         panelBackground11.add(txtToHop);
 
         panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));

@@ -6,6 +6,8 @@ package BUS;
 
 import DAO.AnswerDAO;
 import DTO.AnswerDTO;
+
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,5 +27,26 @@ public class AnswerBUS {
 
     public List<AnswerDTO> findAnswersByListQuestionIds(List<Integer> questionIds) {
         return anwserDAO.findByListQuestionId(questionIds);
+    }
+
+    public boolean isAnswersCorrect(int questionId, Collection<Integer> answerIds) {
+        var correctAnswers = getAnswerByQuestionId(questionId);
+
+        boolean isCorrect = false;
+        boolean isContain = false;
+        boolean isAnswerCorrect = false;
+    
+        for (AnswerDTO answer : correctAnswers) {
+            isContain = answerIds.contains(answer.getId());
+            isCorrect = answer.isIsRight();
+
+            if (!isCorrect && isContain) return false;
+            else if (!isCorrect) continue;
+
+            if (isCorrect && isContain) isAnswerCorrect = true;
+            else isAnswerCorrect = false;
+        }
+
+        return isAnswerCorrect;
     }
 }

@@ -43,7 +43,6 @@ public class PannelLogin extends javax.swing.JPanel {
         ImageIcon icon = new ImageIcon(getClass().getResource("/GUI/Comp/Icon/book1.jpg"));
         Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jLabel1.setIcon(new ImageIcon(img));
-   
     }
 
     /**

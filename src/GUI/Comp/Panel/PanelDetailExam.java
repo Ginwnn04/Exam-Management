@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,6 +33,7 @@ import DTO.ResultDTO;
 import DTO.TestDTO;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.ExportDocx;
+import GUI.Utils.Pair;
 import style.ColorConfig;
 import style.MyFont;
 
@@ -50,8 +52,9 @@ public class PanelDetailExam extends javax.swing.JPanel {
     private String examCode;
     private String testCode;
     private ResultDTO result;
-    private List<QuestionDTO> questions;
+    private HashMap<Integer, QuestionDTO> questions = new HashMap<>();
     private HashMap<Integer, AnswerDTO> examAnswers;
+    private HashMap<Integer, Pair<Integer, PanelAnswers>> panelAnswers = new HashMap<>();
     private GUI.Comp.Swing.PanelBackground panelBackground;
     private java.awt.Label label1;
     private java.awt.Label label2;
@@ -156,17 +159,25 @@ public class PanelDetailExam extends javax.swing.JPanel {
         pnAnsw.setPreferredSize(new Dimension(500, totalSpace));
     }
 
+    private void fetchQuestions() {
+        var list = questionBUS.getQuestionByExamCode(examCode);
+        
+        for (var question : list) {
+            questions.put(question.getId(), question);
+        }
+    }
+
     private void updateQuestions() {
         label1.setText("Xem chi tiết đề thi");
         label1.setFont(new java.awt.Font("Roboto", java.awt.Font.BOLD, 18));
         jButton2.setText("Xuất DOCX");
-        questions = questionBUS.getQuestionByExamCode(examCode);
+        fetchQuestions();
 
         questionPanel.removeAll();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
 
         int index = 1;
-        for (QuestionDTO question : questions) {
+        for (QuestionDTO question : questions.values()) {
             JPanel questionContainer = new JPanel();
             questionContainer.setLayout(new BoxLayout(questionContainer, BoxLayout.Y_AXIS));
             questionContainer.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -175,26 +186,27 @@ public class PanelDetailExam extends javax.swing.JPanel {
             // questionContainer.setPreferredSize(new
             // Dimension(jScrollPane1.getViewport().getWidth() - 20, 150));
 
-            JLabel questionLabel = new JLabel("Câu " + index + ": " + question.getContent() + " ("
-                    + getDifficultyPoints(question.getLevel()) + " điểm)");
             PanelAnswers questionLabelPanel = new PanelAnswers();
-            questionLabelPanel.setData('\0', "Câu " + index + ": " + question.getContent() + " ("
-                    + getDifficultyPoints(question.getLevel()) + " điểm)", null);
-            questionContainer.add(questionLabelPanel);
+            String text;
 
-            List<AnswerDTO> answers = answerBUS.getAnswerByQuestionId(question.getId());
-            List<PanelAnswers> answerPanels = new ArrayList<>();
-            for (int i = 0; i < answers.size(); i++) {
-                AnswerDTO answer = answers.get(i);
-                PanelAnswers answerPanel = new PanelAnswers();
-                answerPanel.setData((char) ('a' + i), answer.getContent(), answer.getPicture());
-                answerPanels.add(answerPanel);
-                if (answer.isIsRight()) {
-                    answerPanel.selected(true, false); // Assuming single choice for simplicity
-                }
-                questionContainer.add(answerPanel);
+            if (result == null) {
+                text = String.format("Câu %d: %s (%s điểm)", index,
+                                                                    question.getContent(),
+                                                                    getDifficultyPoints(question.getLevel()));
             }
-            calcHeight(answers, questionContainer, answerPanels);
+            else {
+                text = String.format("Câu %d: %s (0/%s điểm)", index,
+                                                                      question.getContent(),
+                                                                      getDifficultyPoints(question.getLevel()));
+            }
+
+
+            questionLabelPanel.setData('\0', text, null);
+
+
+            questionContainer.add(questionLabelPanel);
+            panelAnswers.put(question.getId(), new Pair<>(index, questionLabelPanel));
+
             addAnswer(question.getId(), questionContainer);
             questionPanel.add(questionContainer);
 
@@ -252,12 +264,29 @@ public class PanelDetailExam extends javax.swing.JPanel {
 
     private void fetchData() {
         examAnswers = new HashMap<>();
-        ArrayList<Integer> questionIds = new ArrayList<>(questions.stream().map(question -> question.getId()).toList());
+        ArrayList<Integer> questionIds = new ArrayList<>(questions.keySet());
         var list = answerBUS.findAnswersByListQuestionIds(questionIds);
 
         for (AnswerDTO answer : list) {
             examAnswers.put(answer.getId(), answer);
         }
+    }
+
+    private void setPoint(int questionId, Collection<Integer> answerIds){
+        boolean isCorrect = answerBUS.isAnswersCorrect(questionId, answerIds);
+        var question = questions.get(questionId);
+
+        String maxPoint = getDifficultyPoints(question.getLevel());
+        String point = isCorrect ? maxPoint : "0";
+
+        var pr = panelAnswers.get(questionId);
+        var label = pr.getLast();
+
+        String text = String.format("Câu %d: %s (%s/%s điểm)", pr.getFirst(),
+                                                                      question.getContent(),
+                                                                      point, maxPoint);
+
+        label.setData('\0', text, null);
     }
 
     /**
@@ -268,6 +297,8 @@ public class PanelDetailExam extends javax.swing.JPanel {
 
         String answerJSON = result.getRsAnswer();     
         JSONObject json = new JSONObject(answerJSON);
+
+        ArrayList<Integer> answerIdCollection = new ArrayList<>();
         
         for (var questionId : json.keySet()) {
             var pr = answerPanels.get(Integer.parseInt(questionId));
@@ -275,14 +306,21 @@ public class PanelDetailExam extends javax.swing.JPanel {
             try {
                 JSONArray answerIds = (JSONArray) json.get(questionId);
                 for (var item : answerIds) {
-                    int id = (int) item;         
+                    int id = (int) item;      
                     fillUserChoice(id, pr);
+
+                    answerIdCollection.add(id);
                 }
             }
             catch (ClassCastException ex) {
                 int id = (int) json.get(questionId);
                 fillUserChoice(id, pr);
+
+                answerIdCollection.add(id);
             }
+
+            setPoint(Integer.parseInt(questionId), answerIdCollection);
+            answerIdCollection.clear();
         }
     }
 
@@ -387,7 +425,7 @@ public class PanelDetailExam extends javax.swing.JPanel {
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // exportExam(questions, examCode);
-                ExportDocx.exportExamToDocx(examCode, questions, answerBUS);
+                ExportDocx.exportExamToDocx(examCode, new ArrayList<>(questions.values()), answerBUS);
             }
         });
 

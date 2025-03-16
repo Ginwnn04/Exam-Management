@@ -31,6 +31,10 @@ public class TestBUS {
         return DAO.getAll(isActive);
     }
 
+    public ArrayList<TestDTO> getAll() {
+        return DAO.getAll();
+    }
+
     public TestDTO getTestByTestCode(String testCode) {
         return DAO.getByTestCode(testCode);
     }
@@ -53,7 +57,8 @@ public class TestBUS {
     }
 
     public TestDTO findByExam(ExamDTO exam) {
-        String testCode = exam.getTestCode();
+        int length = exam.getExCode().length();
+        String testCode = exam.getExCode().substring(0, length - 1);
         return DAO.getByTestCode(testCode);
     }
 

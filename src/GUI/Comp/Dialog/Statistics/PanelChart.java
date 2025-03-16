@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.swing.Box;
@@ -40,7 +41,7 @@ import style.MyFont;
 
 public class PanelChart extends PanelBackground {
     private final int WIDTH = 1180;
-    private ArrayList<Consumer<PanelBackground>> onChangeTabCallback = new ArrayList<>();
+    private ArrayList<BiConsumer<PanelBackground, PanelBackground>> onChangeTabCallback = new ArrayList<>();
 
     private TestDTO testExam;
     private List<ResultDTO> listResult;
@@ -303,11 +304,11 @@ public class PanelChart extends PanelBackground {
 
     private void OnChangeTab(ActionEvent e) {
         for (var callback : onChangeTabCallback) {
-            callback.accept(this);
+            callback.accept(this, null);
         }
     }
 
-    public void addOnChangeTabCallback(Consumer<PanelBackground> callback) {
+    public void addOnChangeTabCallback(BiConsumer<PanelBackground, PanelBackground> callback) {
         onChangeTabCallback.add(callback);
     }
 }

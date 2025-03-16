@@ -50,9 +50,7 @@ public class QuestionBUS {
         return questionDAO.getQuestionByTopicAndLevel(listTopic, level);
     }
     
-    private List<Integer> getListTopicParent(int topicId) {
-        
-        
+    private List<Integer> getListTopicParent(int topicId) { 
         return questionDAO.getListTopic(topicId);
-    } 
+    }
 }

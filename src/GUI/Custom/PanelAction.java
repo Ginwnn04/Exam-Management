@@ -10,33 +10,41 @@ import java.awt.event.ActionListener;
  */
 public class PanelAction extends javax.swing.JPanel {
 
+    private boolean isRenderView;
+    private boolean isRenderUpdate;
+    private boolean isRenderDelete;
+
     /**
      * Creates new form PanelAction
      */
-    public PanelAction() {
+    public PanelAction(boolean isRenderView, boolean isRenderUpdate, boolean isRenderDelete) {
+        this.isRenderView = isRenderView;
+        this.isRenderUpdate = isRenderUpdate;
+        this.isRenderDelete = isRenderDelete;
+
         initComponents();
-        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnView.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (isRenderDelete) btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (isRenderView) btnView.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (isRenderUpdate) btnUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     public void initEvent(TableActionEvent event,int row) {
        btnUpdate.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
-               event.onUpdate(row);
+               if (isRenderUpdate) event.onUpdate(row);
            }
        });
          btnDelete.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent e) {
-                event.onDelete(row);
+                if (isRenderDelete) event.onDelete(row);
               }
          });
         btnView.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    event.onView(row);
+                    if (isRenderView) event.onView(row);
                 }
         });
     }
@@ -107,6 +115,10 @@ public class PanelAction extends javax.swing.JPanel {
                     .addComponent(btnView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        if (!isRenderDelete) btnDelete.setVisible(false);
+        if (!isRenderUpdate) btnUpdate.setVisible(false);
+        if (!isRenderView) btnView.setVisible(false);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed

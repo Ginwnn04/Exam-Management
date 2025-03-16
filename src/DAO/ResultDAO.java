@@ -45,6 +45,28 @@ public class ResultDAO implements BaseDAO<ResultDTO, Integer> {
         return result;
     }
 
+    public List<ResultDTO> getAllByUserId(int userID) {
+        String query = "SELECT * FROM result WHERE userID = " + userID;
+        ArrayList<ResultDTO> result = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ResultDTO model = fetchData(rs);
+                result.add(model);
+            }
+
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return result;
+    }
+
     public ResultDTO findById(Integer id) {
         String query = "SELECT * FROM result WHERE rs_num = " + id;
 

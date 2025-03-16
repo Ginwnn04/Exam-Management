@@ -33,6 +33,7 @@ import style.MyFont;
 public class PanelTestScore extends JPanel {
     private final int WIDTH = 1160;
     private ArrayList<Consumer<JPanel>> onChangeTabCallback = new ArrayList<>();
+    private ArrayList<Runnable> backToPreviousClickCallbacks = new ArrayList<>();
 
     private Font resultItemLabelFont = MyFont.fontHeader.deriveFont(20f);
     private Font resultItemValueFont = MyFont.fontText.deriveFont(20f);
@@ -47,15 +48,19 @@ public class PanelTestScore extends JPanel {
     private TestDTO test;
     private ResultDTO result;
 
+    private boolean isRenderTakeExamButton = true;
+
     public PanelTestScore() {
         initComponents();
     }
 
-    public PanelTestScore(ResultDTO result) {
+    public PanelTestScore(ResultDTO result, boolean isRenderTakeExamButton) {
         this.result = result;
         student = userBUS.findByID(result.getUserId());
         exam = examBUS.findByExCode(result.getExCode());
         test = testExamBUS.findByTestCode(exam.getTestCode());
+
+        this.isRenderTakeExamButton = isRenderTakeExamButton;
 
         initComponents();
     }
@@ -208,6 +213,15 @@ public class PanelTestScore extends JPanel {
         container.setAbsoluteSize(WIDTH, 100);
         container.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 0));
 
+        backButton = new JButton("Quay lại");
+        backButton.setBackground(ColorConfig.BLUE);
+        backButton.setFont(MyFont.fontHeader.deriveFont(20f));
+        backButton.setForeground(Color.WHITE);
+        backButton.setPreferredSize(new Dimension(150, 50));
+        backButton.addActionListener(e -> onBackToPreviousClick());
+        
+        container.add(backButton);
+
         againButton = new JButton("Thi lại");
         againButton.setBackground(ColorConfig.BLUE);
         againButton.setFont(MyFont.fontHeader.deriveFont(20f));
@@ -215,8 +229,7 @@ public class PanelTestScore extends JPanel {
         againButton.setPreferredSize(new Dimension(150, 50));
 
         if (isOutOfTestExamTime()) againButton.setEnabled(false);
-
-        container.add(againButton);
+        if (isRenderTakeExamButton) container.add(againButton);
 
         resultButton = new JButton("Xem kết quả bài thi");
         resultButton.setBackground(ColorConfig.BLUE);
@@ -229,6 +242,16 @@ public class PanelTestScore extends JPanel {
 
         content.add(Box.createRigidArea(new Dimension(0, 73)));
         content.add(container);
+    }
+
+    public void addOnBackToPreviousClickCallback(Runnable runnable) {
+        backToPreviousClickCallbacks.add(runnable);
+    }
+
+    public void onBackToPreviousClick() {
+        for (var callback : backToPreviousClickCallbacks) {
+            callback.run();
+        }
     }
 
     public void addOnChangeTabCallback(Consumer<JPanel> callback) {
@@ -252,4 +275,5 @@ public class PanelTestScore extends JPanel {
     private CircleProgressBar circleProgressBar;
     private JButton againButton;
     private JButton resultButton;
+    private JButton backButton;
 }

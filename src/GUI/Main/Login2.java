@@ -36,7 +36,6 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         initComponents();
         ConnectDB.getInstance().openConnect();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setSize(new Dimension(835, 560));
         setResizable(false);
         MyListener.getInstance().addPropertyChangeListener(this);
@@ -46,7 +45,7 @@ public class Login2 extends javax.swing.JFrame implements PropertyChangeListener
         Image img = new ImageIcon(linkImg).getImage().getScaledInstance(417, 535, Image.SCALE_SMOOTH);
         txtImg.setIcon(new ImageIcon(img));
         
-        
+        setLocationRelativeTo(null);
     }
     
         public void showForm(JPanel com) {
