@@ -156,6 +156,16 @@ public class PanelDetailExam extends javax.swing.JPanel {
         pnAnsw.setPreferredSize(new Dimension(500, totalSpace));
     }
 
+    //Nếu gọi panel này là dialog của đề thi thì isDialog_of_Exam = true
+    //point là max điểm của câu hỏi
+    //isFull là điểm có được full hay = 0
+    private String getPoint(boolean isFull,String point,boolean isDialog_of_Exam){
+        if(!isDialog_of_Exam){
+            return isFull ? (point+"/") : "0/";
+        }
+        return "";
+    }
+
     private void updateQuestions() {
         label1.setText("Xem chi tiết đề thi");
         label1.setFont(new java.awt.Font("Roboto", java.awt.Font.BOLD, 18));
@@ -174,12 +184,10 @@ public class PanelDetailExam extends javax.swing.JPanel {
             // questionContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
             // questionContainer.setPreferredSize(new
             // Dimension(jScrollPane1.getViewport().getWidth() - 20, 150));
-
-            JLabel questionLabel = new JLabel("Câu " + index + ": " + question.getContent() + " ("
-                    + getDifficultyPoints(question.getLevel()) + " điểm)");
             PanelAnswers questionLabelPanel = new PanelAnswers();
+            String point =  getDifficultyPoints(question.getLevel());
             questionLabelPanel.setData('\0', "Câu " + index + ": " + question.getContent() + " ("
-                    + getDifficultyPoints(question.getLevel()) + " điểm)", null);
+                   + getPoint(true,point,true) + point + " điểm)", null);
             questionContainer.add(questionLabelPanel);
 
             addAnswer(question.getId(), questionContainer);
@@ -200,6 +208,7 @@ public class PanelDetailExam extends javax.swing.JPanel {
         questionPanel.revalidate();
         questionPanel.repaint();
     }
+        
 
     private void addAnswer(int questionId, JPanel questionContainer) {
         List<AnswerDTO> answers = answerBUS.getAnswerByQuestionId(questionId);

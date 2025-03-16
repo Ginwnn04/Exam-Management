@@ -19,11 +19,14 @@ import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -51,6 +54,7 @@ public class PanelTopic extends javax.swing.JPanel {
      */
     public PanelTopic() {
         initComponents();
+        txtchude.putClientProperty("JTextField.placeholderText", "Nhập chủ đề...");
         initTable();
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbChude.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
@@ -423,7 +427,7 @@ public class PanelTopic extends javax.swing.JPanel {
         panelBackground11.add(panelBackground12);
 
         txtchude.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        txtchude.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtchude.setPreferredSize(new java.awt.Dimension(400, 30));
         panelBackground11.add(txtchude);
 
         panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -510,6 +514,21 @@ public class PanelTopic extends javax.swing.JPanel {
             }
         });
         panelBackground11.add(jButton1);
+         panelBackground11.setLayout(new BorderLayout());
+
+
+        JPanel panelLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        panelLeft.setOpaque(false);
+        panelLeft.add(jLabel2);
+        panelLeft.add(txtchude);
+
+        // Panel chứa JButton để tránh bị kéo giãn
+        JPanel panelRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        panelRight.setOpaque(false);
+        panelRight.add(jButton1);
+
+        panelBackground11.add(panelLeft, BorderLayout.WEST);
+        panelBackground11.add(panelRight, BorderLayout.EAST);
 
         pnTop.add(panelBackground11, java.awt.BorderLayout.CENTER);
 
@@ -584,31 +603,7 @@ public class PanelTopic extends javax.swing.JPanel {
     
   
     
-        // private void loadData() {
-    //     DefaultTableModel model = new DefaultTableModel();
-    //     model.addColumn("ID");
-    //     model.addColumn("Tiêu đề");
-    //     model.addColumn("Parent");
-
-    //     // Giả sử bạn đã có phương thức lấy danh sách chủ đề từ TopicBUS
-    //     // (Tạo TopicDTO từ database và thêm vào JTable)
-    //     for (TopicDTO topic : topicBUS.getAllTopic()) {
-    //         model.addRow(new Object[]{topic.getId(), topic.getTitle(), topic.getParent()});
-    //     }
-
-    //     tbChude.setModel(model);
-    // }
-    
-   
-    
-
-    // Phương thức để cập nhật dữ liệu vào bảng JTable
-    // public void updateTopic(int selectedRow, String newTitle, int newParent) {
-    //     DefaultTableModel model = (DefaultTableModel) tbChude.getModel();
-    //     model.setValueAt(newTitle, selectedRow, 1); // Cập nhật Title
-    //     model.setValueAt(newParent, selectedRow, 2); // Cập nhật Parent
-    // }
-
+      
 
 
     // Variables declaration - do not modify                     

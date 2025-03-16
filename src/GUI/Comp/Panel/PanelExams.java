@@ -374,7 +374,7 @@ public class PanelExams extends javax.swing.JPanel {
         jButton1.setPreferredSize(new java.awt.Dimension(116, 30));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                // jButton1ActionPerformed(evt);
             }
         });
         panelBackground10.add(jButton1, java.awt.BorderLayout.CENTER);
