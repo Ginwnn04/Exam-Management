@@ -34,9 +34,8 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.TestBUS;
-import BUS.TopicBUS;
 import DTO.TestDTO;
-import DTO.TopicDTO;
+import Enum.DialogType;
 import GUI.Comp.Dialog.DialogTest;
 import GUI.Comp.Swing.PanelBackground;
 import GUI.Custom.TableActionCellEditor;
@@ -46,19 +45,18 @@ import GUI.Utils.Debounce;
 import GUI.Utils.GridBagConstraintsBuilder;
 import style.ColorConfig;
 import style.MyFont;
+
 public class PanelTest extends JPanel {
     private final int WIDTH = 1160;
 
     private GridBagConstraintsBuilder gbcBuilder = new GridBagConstraintsBuilder();
     private TestBUS BUS;
-    private TopicBUS topicBUS;
 
     private ArrayList<TestDTO> testExams;
     private ArrayList<TestDTO> filterTestExams;
 
     public PanelTest() {
         BUS = new TestBUS();
-        topicBUS = new TopicBUS();
         testExams = BUS.getAll(true);
 
         initComponents();
@@ -114,6 +112,7 @@ public class PanelTest extends JPanel {
         searchField = new JTextField();
         searchField.setPreferredSize(new Dimension(350, 30));
         searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+        searchField.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         setupSearchFieldEvent();
 
         searchAndFilterContainer.add(searchLabel);
@@ -267,7 +266,7 @@ public class PanelTest extends JPanel {
 
             @Override
             public void onView(int row) {
-                showUpdateDialog(row);
+                showViewDialog(row);
             }
             
         };
@@ -287,7 +286,16 @@ public class PanelTest extends JPanel {
 
     private void showUpdateDialog(int row) {
         int id = (int) table.getValueAt(row, 0);
-        DialogTest dialogTestExam = new DialogTest(id, BUS, null);
+        DialogTest dialogTestExam = new DialogTest(id, BUS, null, DialogType.Update);
+
+        dialogTestExam.setVisible(true);
+        resetTableItems(true);
+        renderTable();
+    }
+
+    private void showViewDialog(int row) {
+        int id = (int) table.getValueAt(row, 0);
+        DialogTest dialogTestExam = new DialogTest(id, BUS, null, DialogType.View);
 
         dialogTestExam.setVisible(true);
         resetTableItems(true);

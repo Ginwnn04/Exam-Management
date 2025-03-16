@@ -1,12 +1,11 @@
 package GUI.Comp.Panel.Result;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
-
-import BUS.ResultBUS;
 import DTO.ResultDTO;
-import GUI.Comp.Dialog.Statistics.PanelChart;
 import GUI.Comp.Panel.PanelDetailExam;
 import GUI.Comp.Swing.PanelBackground;
 import style.ColorConfig;
@@ -16,10 +15,30 @@ public class PanelAfterExam extends PanelBackground {
     private final int HEIGHT = 765;
 
     private ResultDTO result;
+    private boolean isRenderTakeExamButton = true;
+
+    private ArrayList<Runnable> backToPreviousClickCallbacks = new ArrayList<>();
 
     public PanelAfterExam(ResultDTO result) {
         this.result = result;
         initComponents();
+    }
+
+    public PanelAfterExam(ResultDTO result, boolean isRenderTakeExamButton) {
+        this.result = result;
+        this.isRenderTakeExamButton = isRenderTakeExamButton;
+
+        initComponents();
+    }
+
+    public void addOnBackToPreviousClickCallback(Runnable runnable) {
+        backToPreviousClickCallbacks.add(runnable);
+    }
+
+    public void onBackToPreviousClick() {
+        for (var callback : backToPreviousClickCallbacks) {
+            callback.run();
+        }
     }
 
     private void initComponents() {
@@ -27,22 +46,31 @@ public class PanelAfterExam extends PanelBackground {
         setBackground(ColorConfig.GREY_COLOR_BG);
         setLayout(new GridBagLayout());
 
-        panelTestScore = new PanelTestScore(result);
+        content = new PanelBackground();
+        content.setAbsoluteSize(1160, HEIGHT - 40);
+        content.setLayout(new BorderLayout());
+
+        panelTestScore = new PanelTestScore(result, isRenderTakeExamButton);
+        panelTestScore.addOnBackToPreviousClickCallback(() -> onBackToPreviousClick());
         panelTestScore.addOnChangeTabCallback(this::handleChangeTab);
 
         panelResult = new PanelDetailExam(result);
         panelResult.addOnChangeTabCallback(this::handleChangeTab);
         
-        add(panelTestScore);
+        content.add(panelTestScore);
+        add(content);
     }
 
     private void handleChangeTab(JPanel oldContent) {
-        remove(oldContent);
+        content.remove(oldContent);
 
         if (oldContent instanceof PanelTestScore) {
-            add(panelResult);
+            content.add(panelResult);
         }
-        else add(panelTestScore);
+        else content.add(panelTestScore);
+
+        content.revalidate();
+        content.repaint();
 
         revalidate();
         repaint();
@@ -50,4 +78,5 @@ public class PanelAfterExam extends PanelBackground {
 
     private PanelTestScore panelTestScore;
     private PanelDetailExam panelResult;
+    private PanelBackground content;
 }

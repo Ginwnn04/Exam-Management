@@ -24,6 +24,7 @@ import GUI.Comp.Panel.PanelTest;
 import GUI.Comp.Panel.PanelUser;
 import GUI.Comp.Panel.Result.PanelAfterExam;
 import GUI.Comp.Panel.PanelExams;
+import GUI.Comp.Panel.PanelHistory;
 import Helper.MyListener;
 
 
@@ -59,7 +60,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
         MyListener.getInstance().addPropertyChangeListener(this);
 
         setTitle("PHẦN MỀM QUẢN LÍ THI TRẮC NGHIỆM");
-        showForm(new PanelEnterExams(this::handlerAfterExam));
+        showForm(new PanelEnterExams(this::showForm));
 //        FlatMacLightLaf.registerCustomDefaultsSource("style");
 //        UIManager.put("TextField.font", style.MyFont.fontText);
 //        UIManager.put("Label.font", style.MyFont.fontText);
@@ -86,7 +87,7 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
             
             switch (index) {
                 case 0:
-                    showForm(new PanelEnterExams(this::handlerAfterExam));
+                    showForm(new PanelEnterExams(this::showForm));
                     break;
                 case 1:
                     showForm(new PanelQuestion());
@@ -105,6 +106,9 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
                 break;
                 case 6:
                     showForm(new PanelAnalyze());
+                    break;
+                case 7:
+                    showForm(new PanelHistory(this::showForm));
                     break;
                 default:
                     break;
@@ -222,10 +226,6 @@ public class Main extends javax.swing.JFrame implements PropertyChangeListener {
 
         }
 
-    }
-
-    private void handlerAfterExam(ResultDTO result) {
-        showForm(new PanelAfterExam(result));
     }
 
     public void showForm(JPanel com) {

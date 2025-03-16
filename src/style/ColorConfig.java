@@ -25,5 +25,5 @@ public class ColorConfig {
     
     public static Color RIGHT_ANSWER_COLOR = new Color(113, 255, 84, 80);
     public static Color WRONG_ANSWER_COLOR = new Color(255, 86, 86, 80);
-
+    public static Color TRANSPARENT = new Color(255, 255, 255, 0);
 }

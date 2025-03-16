@@ -13,11 +13,17 @@ import GUI.Comp.Dialog.DialogQuestion;
 import GUI.Custom.TableActionCellEditor;
 import GUI.Custom.TableActionCellRenderer;
 import GUI.Custom.TableActionEvent;
+import GUI.Utils.Debounce;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.formdev.flatlaf.FlatClientProperties;
 
 /**
  *
@@ -32,6 +38,7 @@ public class PanelQuestion extends javax.swing.JPanel {
     private DefaultTableModel model;
     public PanelQuestion() {
         initComponents();
+        txtCauHoi.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         txtCauHoi.putClientProperty("JTextField.placeholderText", "Tập hợp...");
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbCauHoi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
@@ -340,9 +347,23 @@ public class PanelQuestion extends javax.swing.JPanel {
 
         txtCauHoi.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtCauHoi.setPreferredSize(new java.awt.Dimension(300, 30));
-        txtCauHoi.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCauHoiKeyReleased(evt);
+
+        Debounce onSearch = new Debounce(() -> txtCauHoiKeyReleased(), 300);
+        txtCauHoi.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
             }
         });
         panelBackground11.add(txtCauHoi);
@@ -519,8 +540,26 @@ public class PanelQuestion extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cbxChuDeItemStateChanged
 
+    private String translateLevelToEng(String vietnamese) {
+        switch (vietnamese) {
+            case "Dễ":
+                return "easy";
+                
+            case "Trung bình":
+                return "medium";
+
+            case "Khó":
+                return "diff";
+
+            default:
+                return "";
+        }
+    }
+
     private void cbxDoKhoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxDoKhoItemStateChanged
-        String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
+        String selectedItem = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
+        String level = translateLevelToEng(selectedItem);
+
         if (level.equals("")) {
             renderData(listQuestion);
         }
@@ -535,7 +574,7 @@ public class PanelQuestion extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cbxDoKhoItemStateChanged
 
-    private void txtCauHoiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCauHoiKeyReleased
+    private void txtCauHoiKeyReleased() {//GEN-FIRST:event_txtCauHoiKeyReleased
         if (txtCauHoi.getText().equals("")) {
             renderData(listTmp); 
         }
@@ -544,8 +583,9 @@ public class PanelQuestion extends javax.swing.JPanel {
             String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
 
             for (QuestionDTO q : listTmp) {
-                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase()) && q.getLevel().equals(level)) {
-                    listTmp1.add(q);
+                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase())) {
+                    if (level == "") listTmp1.add(q);                   
+                    else if (q.getLevel().equals(level)) listTmp1.add(q);
                 }
             }
             renderData(listTmp1); 

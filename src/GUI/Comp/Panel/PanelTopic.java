@@ -29,6 +29,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 
 
 
@@ -427,7 +429,10 @@ public class PanelTopic extends javax.swing.JPanel {
         panelBackground11.add(panelBackground12);
 
         txtchude.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        txtchude.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+        txtchude.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập chủ đề...");
         txtchude.setPreferredSize(new java.awt.Dimension(400, 30));
+      
         panelBackground11.add(txtchude);
 
         panelBackground13.setPreferredSize(new java.awt.Dimension(20, 20));

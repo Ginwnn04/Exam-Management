@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Desktop.Action;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -19,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -32,20 +35,25 @@ import javax.swing.table.TableColumnModel;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import BUS.ExamBUS;
+import BUS.ResultBUS;
 import BUS.TestBUS;
 import BUS.UserBus;
 import DTO.ExamDTO;
 import DTO.ResultDTO;
 import DTO.TestDTO;
 import DTO.UserDTO;
+import GUI.Comp.Panel.Result.PanelAfterExam;
 import GUI.Comp.Swing.PanelBackground;
+import GUI.Custom.TableActionCellEditor;
+import GUI.Custom.TableActionCellRenderer;
+import GUI.Custom.TableActionEvent;
 import GUI.Utils.Debounce;
 import style.ColorConfig;
 import style.MyFont;
 
 public class PanelStudentsStatistics extends PanelBackground {
     private final int WIDTH = 1180;
-    private ArrayList<Consumer<PanelBackground>> onChangeTabCallback = new ArrayList<>();
+    private ArrayList<BiConsumer<PanelBackground, PanelBackground>> onChangeTabCallback = new ArrayList<>();
 
     private List<ResultDTO> listResult;
     private List<ResultDTO> filterListResult;
@@ -55,6 +63,7 @@ public class PanelStudentsStatistics extends PanelBackground {
 
     private UserBus userBUS = new UserBus();
     private ExamBUS examBUS = new ExamBUS();
+    private ResultBUS resultBUS = new ResultBUS();
 
     public PanelStudentsStatistics(TestDTO testExam, List<ResultDTO> listResult) {
         this.listResult = listResult;
@@ -96,7 +105,7 @@ public class PanelStudentsStatistics extends PanelBackground {
         toChartButton.setForeground(Color.WHITE);
         toChartButton.setPreferredSize(new Dimension(136, 44));
 
-        toChartButton.addActionListener(this::OnChangeTab);
+        toChartButton.addActionListener(this::onChangeTab);
 
         PanelBackground container = new PanelBackground();
         container.setAbsoluteSize(WIDTH, 50);
@@ -284,11 +293,11 @@ public class PanelStudentsStatistics extends PanelBackground {
         studentTable.setModel(new DefaultTableModel(
             new Object [][]{},
             new String [] {
-                "ID", "ID học sinh", "Họ tên", "Điểm", "Thứ tự", "Ngày thi"
+                "ID", "ID học sinh", "Họ tên", "Điểm", "Thứ tự", "Ngày thi", "Hành động"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -307,6 +316,8 @@ public class PanelStudentsStatistics extends PanelBackground {
     }
 
     private void styleTable() {
+        studentTable.setRowHeight(30);
+
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) studentTable.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.CENTER);
 
@@ -317,6 +328,31 @@ public class PanelStudentsStatistics extends PanelBackground {
         for (int i = 0; i < columnModel.getColumnCount(); i++) {
             columnModel.getColumn(i).setCellRenderer(cellRenderer);
         }
+
+        TableActionEvent event = new TableActionEvent() {
+
+            @Override
+            public void onDelete(int row) {
+                
+            }
+
+            @Override
+            public void onUpdate(int row) {
+                
+            }
+
+            @Override
+            public void onView(int row) {
+                Short id = (Short) studentTable.getValueAt(row, 0);
+                toStudentResultDetail(id);
+            }
+            
+        };
+
+        studentTable.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRenderer(true, false, false));
+        studentTable.getColumnModel().getColumn(6).setCellEditor(new TableActionCellEditor(event, true, false, false));
+        studentTable.getColumnModel().getColumn(6).setMaxWidth(100);
+        studentTable.getColumnModel().getColumn(6).setPreferredWidth(100);
     }
 
     private void renderTable() {
@@ -342,13 +378,27 @@ public class PanelStudentsStatistics extends PanelBackground {
         studentTable.setModel(model);
     }
 
-    private void OnChangeTab(ActionEvent e) {
+    private void onChangeTab(ActionEvent e) {
         for (var callback : onChangeTabCallback) {
-            callback.accept(this);
+            callback.accept(this, null);
         }
     }
 
-    public void addOnChangeTabCallback(Consumer<PanelBackground> callback) {
+    private void onChangeTab(ActionEvent e, PanelBackground oldContent, PanelBackground nextContent) {
+        for (var callback : onChangeTabCallback) {
+            callback.accept(oldContent, nextContent);
+        }
+    }
+    
+    private void toStudentResultDetail(int id) {
+        ResultDTO result = resultBUS.findById(id);
+        PanelAfterExam afterExam = new PanelAfterExam(result, false);
+        afterExam.addOnBackToPreviousClickCallback(() -> onChangeTab(null, afterExam, this));
+
+        onChangeTab(null, this, afterExam);
+    }
+
+    public void addOnChangeTabCallback(BiConsumer<PanelBackground, PanelBackground> callback) {
         onChangeTabCallback.add(callback);
     }
 

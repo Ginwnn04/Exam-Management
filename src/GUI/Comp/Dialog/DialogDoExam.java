@@ -39,6 +39,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.jfree.data.json.impl.JSONObject;
@@ -321,17 +322,23 @@ public class DialogDoExam extends javax.swing.JDialog {
         } else {
             lbTime.setText(Format.formatTime.format(testTime));
         }
+
+        var comp = this;
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 testTime -= 1000;
-
                 lbTime.setText(Format.formatTime.format(testTime));
 
-                if (testTime <= 0) {
-                    timer.stop();
-                    lbTime.setText("Hết giờ!");
-                }
+                if (testTime > 0) return;
+                
+                // out of time
+                timer.stop();
+                lbTime.setText("Hết giờ!");
+                JOptionPane.showMessageDialog(comp, "Hết thời gian làm bài! Tự động nộp bài");
+                
+                submit();
+                dispose();
             }
         });
         timer.start();
@@ -598,6 +605,12 @@ public class DialogDoExam extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
+        if (!submit()) JOptionPane.showMessageDialog(this, "Nộp bài thất bại");
+        else JOptionPane.showMessageDialog(this, "Nộp bài thành công");
+        dispose();
+    }// GEN-LAST:event_jButton1ActionPerformed
+
+    private boolean submit() {
         if (logger != null) logger.save();
         var result = getUserAnswersAndMark();
         var user = UserSession.getInstance().getCurrentUser();
@@ -609,9 +622,8 @@ public class DialogDoExam extends javax.swing.JDialog {
                                     .setRsMark(result.getLast())
                                     .setRsAnswer(result.getFirst());
 
-        resultBUS.create(model);
-        dispose();
-    }// GEN-LAST:event_jButton1ActionPerformed
+        return resultBUS.create(model) != null;
+    }
 
     
     @SuppressWarnings("unchecked")
@@ -623,7 +635,9 @@ public class DialogDoExam extends javax.swing.JDialog {
             var answers = userAnswers.get(questionId);
             var answerIds = gatherAnswer(answers);
 
-            mark += resultBUS.getScore(questionId, answerIds);
+            if (answerBUS.isAnswersCorrect(questionId, answerIds)) {
+                mark += resultBUS.getScore(questionId);
+            }
 
             if (answerIds.size() == 1) json.put(questionId, answerIds.peek());
             else json.put(questionId, answerIds);
@@ -635,7 +649,6 @@ public class DialogDoExam extends javax.swing.JDialog {
     }
 
     private Queue<Integer> gatherAnswer(Set<Integer> answers) {
-        // ArrayList<Integer> result = new ArrayList<>();
         Queue<Integer> result = new LinkedList<>();
 
         for (var answerId : answers) {
@@ -648,52 +661,52 @@ public class DialogDoExam extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-        // (optional) ">
-        /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-         * look and feel.
-         * For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
-        }
-        // </editor-fold>
+    // public static void main(String args[]) {
+    //     /* Set the Nimbus look and feel */
+    //     // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+    //     // (optional) ">
+    //     /*
+    //      * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+    //      * look and feel.
+    //      * For details see
+    //      * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+    //      */
+    //     try {
+    //         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    //             if ("Nimbus".equals(info.getName())) {
+    //                 javax.swing.UIManager.setLookAndFeel(info.getClassName());
+    //                 break;
+    //             }
+    //         }
+    //     } catch (ClassNotFoundException ex) {
+    //         java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
+    //                 ex);
+    //     } catch (InstantiationException ex) {
+    //         java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
+    //                 ex);
+    //     } catch (IllegalAccessException ex) {
+    //         java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
+    //                 ex);
+    //     } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+    //         java.util.logging.Logger.getLogger(DialogDoExam.class.getName()).log(java.util.logging.Level.SEVERE, null,
+    //                 ex);
+    //     }
+    //     // </editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DialogDoExam dialog = new DialogDoExam(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    //     /* Create and display the dialog */
+    //     java.awt.EventQueue.invokeLater(new Runnable() {
+    //         public void run() {
+    //             DialogDoExam dialog = new DialogDoExam(new javax.swing.JFrame(), true);
+    //             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+    //                 @Override
+    //                 public void windowClosing(java.awt.event.WindowEvent e) {
+    //                     System.exit(0);
+    //                 }
+    //             });
+    //             dialog.setVisible(true);
+    //         }
+    //     });
+    // }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

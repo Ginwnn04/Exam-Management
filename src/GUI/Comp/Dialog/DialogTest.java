@@ -41,6 +41,7 @@ import DTO.QuestionDTO;
 import DTO.TestDTO;
 import DTO.TestStructureDTO;
 import DTO.TopicDTO;
+import Enum.DialogType;
 import Exceptions.DuplicateTopicException;
 import Exceptions.EmptyQuestionsException;
 import GUI.Comp.DateChooser.DateChooser;
@@ -54,7 +55,7 @@ import style.ColorConfig;
 import style.MyFont;
 
 public class DialogTest extends JDialog {
-    private boolean isUpdateDialog;
+    private DialogType dialogType;
     private int selectedTestExamId;
 
     private TestBUS BUS;
@@ -73,9 +74,10 @@ public class DialogTest extends JDialog {
     public DialogTest(TestBUS BUS, JFrame parent) {
         super(parent, "Tạo cấu trúc đề thi", true);
 
-        isUpdateDialog = false;
+        dialogType = DialogType.Create;
         this.BUS = BUS;
-        initComponents();
+
+        setupDialog();
 
         setResizable(false);
         setLocationRelativeTo(null);
@@ -85,21 +87,41 @@ public class DialogTest extends JDialog {
      * For update
      * @param id id of the test exam
      */
-    public DialogTest(int id, TestBUS BUS, JFrame parent) {
-        super(parent, "Cập nhật cấu trúc đề thi", true);
+    public DialogTest(int id, TestBUS BUS, JFrame parent, DialogType type) {
+        super(parent, type == DialogType.Update ? "Cập nhật cấu trúc đề thi" : "Xem cấu trúc đề thi", true);
 
-        isUpdateDialog = true;
+        dialogType = type;
+
         this.BUS = BUS;
         selectedTestExamId = id;
 
-        initComponents();
+        setupDialog();
 
         setResizable(false);
         setLocationRelativeTo(null);
     }
 
-    private void prepareData() {
+    private void setupDialog() {
+        initComponents();
+
+        switch (dialogType) {
+            case Create:
+                setupCreateDialog();
+                break;
+
+            case Update:
+                setupUpdateDialog();
+                setModel();
+                break;
+
+            case View:
+                setupViewDialog();
+                setModel();
+                break;
         
+            default:
+                break;
+        }
     }
     
     private void initComponents() {
@@ -126,10 +148,11 @@ public class DialogTest extends JDialog {
 
         addScroll();
 
-        int fixedHeightValue = isUpdateDialog ? 0 : -20;
+        int fixedHeightValue = dialogType != DialogType.Create ? 0 : -20;
         fixedContentHeight(fixedHeightValue);
 
-        if (isUpdateDialog) setModel();
+        if (dialogType != DialogType.Create) setModel();
+
         add(main);
     }
 
@@ -156,7 +179,7 @@ public class DialogTest extends JDialog {
     //#region Update Model
 
     private void initIdLabel() {
-        if (!isUpdateDialog) return;
+        if (dialogType != DialogType.Create) return;
 
         content.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -303,7 +326,7 @@ public class DialogTest extends JDialog {
         examCount.setFont(MyFont.fontText);
         examCount.setPreferredSize(new Dimension(70, height));;
 
-        if (!isUpdateDialog) container.add(addExamInformationItem("Số đề thi:", examCount));
+        container.add(addExamInformationItem("Số đề thi:", examCount));
 
         informationPanel.add(container);
     }
@@ -350,7 +373,9 @@ public class DialogTest extends JDialog {
     private void addTestStructure(TestStructureDTO model) {
         TestStructurePanel testStructurePanel = new TestStructurePanel(topics, model.getTestCode(), questionBUS);
         testStructurePanel.setModel(model);
-        testStructurePanel.setEditable(!isUpdateDialog);
+
+        boolean canEdit = dialogType == DialogType.Create;
+        testStructurePanel.setEditable(canEdit);
 
         int height = (int) testStructureContainer.getPreferredSize().getHeight() + 210;
         testStructureContainer.setAbsoluteSize(WIDTH, height);
@@ -392,10 +417,7 @@ public class DialogTest extends JDialog {
 
         testStructureContainer.add(labelContainer);
 
-        if (!isUpdateDialog) addTestStructure();
         content.add(testStructureContainer);
-
-        if (!isUpdateDialog) initAddNewTestStructureButton();
     }
 
     private void initAddNewTestStructureButton() {
@@ -415,7 +437,7 @@ public class DialogTest extends JDialog {
     private void initSaveButton() {
         content.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        saveButton = new JButton(!isUpdateDialog ? "Tạo đề thi" : "Lưu");
+        saveButton = new JButton();
         saveButton.setFont(new Font("Roboto", Font.BOLD, 16));
         saveButton.setPreferredSize(new Dimension(100, 50));
         saveButton.setForeground(Color.white);
@@ -425,6 +447,26 @@ public class DialogTest extends JDialog {
         saveButton.addActionListener(this::onSave);
 
         content.add(saveButton);
+    }
+
+    private void setupCreateDialog() {
+        addTestStructure();
+        initAddNewTestStructureButton();
+        saveButton.setText("Tạo đề thi");
+    }
+
+    private void setupUpdateDialog() {
+        saveButton.setText("Lưu");
+        examCount.setEnabled(false);
+    }
+
+    private void setupViewDialog() {
+        saveButton.setVisible(false);
+        examTitle.setEnabled(false);
+        testLimit.setEnabled(false);
+        time.setEnabled(false);
+        testDateChooser.setEnabled(false);
+        examCount.setEnabled(false);
     }
 
     private void onSave(ActionEvent e) {
@@ -440,8 +482,8 @@ public class DialogTest extends JDialog {
         List<TestStructureDTO> listTestStructure = getTestStructureList();
         if (listTestStructure == null) return;
 
-        String action = !isUpdateDialog ? "Tạo" : "Cập nhật";
-        var result = !isUpdateDialog ? create(data, listTestStructure) != null : update(data);
+        String action = dialogType == DialogType.Create ? "Tạo" : "Cập nhật";
+        var result = dialogType == DialogType.Create ? create(data, listTestStructure) != null : update(data);
 
         if (result) JOptionPane.showMessageDialog(this, action + " thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         else JOptionPane.showMessageDialog(this, action + " thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);

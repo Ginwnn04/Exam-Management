@@ -399,6 +399,9 @@ public class PanelUser extends javax.swing.JPanel {
 
         txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
+        txtNguoiDung.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên người dùng, email hoặc quyền .....");
+        txtNguoiDung.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+
         panelBackground14.add(txtNguoiDung);
 
         panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);

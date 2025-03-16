@@ -55,6 +55,8 @@ public final class Dates extends javax.swing.JPanel {
                 cmd.setBackground(getForeground());
                 cmd.setForeground(new Color(255, 255, 255));
             }
+
+            cmd.setEnabled(isEnabled());
             start++;
         }
     }

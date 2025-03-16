@@ -11,10 +11,12 @@ import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import DTO.TestDTO;
 import DTO.UserDTO;
 import GUI.Comp.Dialog.DialogDoExam;
+import GUI.Comp.Panel.Result.PanelAfterExam;
 import GUI.Utils.UserSession;
 
 /**
@@ -25,19 +27,23 @@ import GUI.Utils.UserSession;
 public class ExamComp extends javax.swing.JPanel {
     private TestDTO exam;
     private ExamBUS examBUS = new ExamBUS();
-    private Consumer<ResultDTO> handlerAfterExam;
+    private ResultBUS resultBUS = new ResultBUS();
+    private Consumer<JPanel> showFormCallback;
+    private JPanel parent;
 
     /**
      * Creates new form ExamComp
      */
-    public ExamComp(TestDTO exam) {
+    public ExamComp(JPanel parent, TestDTO exam) {
+        this.parent = parent;
         this.exam = exam;
+
         initComponents();
         loadExamData(exam);
     }
 
-    public void setAfterExamHandler(Consumer<ResultDTO> handler) {
-        handlerAfterExam = handler;
+    public void setShowFormCallback(Consumer<JPanel> handler) {
+        showFormCallback = handler;
     }
 
     private void loadExamData(TestDTO exam) {
@@ -151,13 +157,23 @@ public class ExamComp extends javax.swing.JPanel {
                                 .addGap(50, 50, 50)));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    LocalDate currentDate = LocalDate.now();
-    LocalDate examDate = exam.getTestDate().toLocalDate();
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
+        LocalDate currentDate = LocalDate.now();
+        LocalDate examDate = exam.getTestDate().toLocalDate();
 
-    if (currentDate.isAfter(examDate)) {
-        JOptionPane.showMessageDialog(this, "Ngày thi đã qua, bạn không thể vào thi.");
-    } else {
+        int testLimit = exam.getTestLimit();
+        int userTakeExamTime = resultBUS.getTakeExamTime(UserSession.getInstance().getCurrentUser(), exam);
+
+        if (currentDate.isAfter(examDate)) {
+            JOptionPane.showMessageDialog(this, "Ngày thi đã qua, bạn không thể vào thi.");
+            return;
+        }
+
+        if (userTakeExamTime >= testLimit) {
+            JOptionPane.showMessageDialog(this, "Bạn đã hết lượt thi!");
+            return;
+        }
+
         ExamDTO examDTO = examBUS.randomExamByTestCode(exam.getTestCode());
         DialogDoExam doExam = new DialogDoExam(null, true);
         doExam.setTime(exam.getTestTime());
@@ -166,8 +182,7 @@ public class ExamComp extends javax.swing.JPanel {
         doExam.setVisible(true);
 
         toResultView(examDTO);
-    }
-}//GEN-LAST:event_jButton2ActionPerformed
+    }// GEN-LAST:event_jButton2ActionPerformed
 
     private void toResultView(ExamDTO exam) {
         UserDTO currentUser = UserSession.getInstance().getCurrentUser();
@@ -175,10 +190,10 @@ public class ExamComp extends javax.swing.JPanel {
         ResultBUS resultBUS = new ResultBUS();
         ResultDTO result = resultBUS.findByUserAndExam(currentUser, exam);
 
-        handlerAfterExam.accept(result);
+        var afterExam = new PanelAfterExam(result);
+        afterExam.addOnBackToPreviousClickCallback(() -> showFormCallback.accept(parent));
+        showFormCallback.accept(afterExam);
     }
-
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

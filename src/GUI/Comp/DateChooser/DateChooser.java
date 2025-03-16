@@ -115,6 +115,7 @@ public final class DateChooser extends javax.swing.JPanel {
             Dates d = new Dates();
             d.setForeground(getForeground());
             d.setEvent(getEventDay(d));
+            d.setEnabled(isEnabled());
             d.showDate(MONTH, YEAR, selectedDate);
             if (slide.slideToDown(d)) {
                 cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
@@ -145,6 +146,7 @@ public final class DateChooser extends javax.swing.JPanel {
         Dates dates = new Dates();
         dates.setForeground(getForeground());
         dates.setEvent(getEventDay(dates));
+        dates.setEnabled(isEnabled());
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         String toDay = df.format(date);
@@ -170,6 +172,8 @@ public final class DateChooser extends javax.swing.JPanel {
         dates.setForeground(getForeground());
         dates.setEvent(getEventDay(dates));
         dates.showDate(MONTH, YEAR, selectedDate);
+        dates.setEnabled(isEnabled());
+
         if (slide.slideToLeft(dates)) {
             cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
             cmdYear.setText(YEAR + "");
@@ -181,6 +185,7 @@ public final class DateChooser extends javax.swing.JPanel {
         dates.setForeground(getForeground());
         dates.setEvent(getEventDay(dates));
         dates.showDate(MONTH, YEAR, selectedDate);
+        dates.setEnabled(isEnabled());
         if (slide.slideToRight(dates)) {
             cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
             cmdYear.setText(YEAR + "");
@@ -351,6 +356,8 @@ public final class DateChooser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPreviousActionPerformed
+        if (!isEnabled()) return;
+        
         if (STATUS == 1) {   //  Date
             if (MONTH == 1) {
                 MONTH = 12;
@@ -373,6 +380,8 @@ public final class DateChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdPreviousActionPerformed
 
     private void cmdForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdForwardActionPerformed
+        if (!isEnabled()) return;
+
         if (STATUS == 1) {   //  Date
             if (MONTH == 12) {
                 MONTH = 1;
@@ -393,6 +402,8 @@ public final class DateChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdForwardActionPerformed
 
     private void cmdMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMonthActionPerformed
+        if (!isEnabled()) return;
+        
         if (STATUS != 2) {
             STATUS = 2;
             Months months = new Months();
@@ -409,6 +420,8 @@ public final class DateChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdMonthActionPerformed
 
     private void cmdYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdYearActionPerformed
+        if (!isEnabled()) return;
+        
         if (STATUS != 3) {
             STATUS = 3;
             Years years = new Years();
@@ -426,6 +439,8 @@ public final class DateChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdYearActionPerformed
 
     private void cmdPreviousKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmdPreviousKeyPressed
+        if (!isEnabled()) return;
+        
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             Component com = slide.getComponent(0);
             if (com instanceof Dates) {
@@ -475,6 +490,7 @@ public final class DateChooser extends javax.swing.JPanel {
         dates.setEvent(getEventDay(dates));
         dates.setSelected(DAY);
         dates.showDate(MONTH, YEAR, selectedDate);
+        dates.setEnabled(isEnabled());
         slide.slideNon(dates);
         cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
         cmdYear.setText(YEAR + "");
@@ -506,6 +522,7 @@ public final class DateChooser extends javax.swing.JPanel {
         Dates dates = new Dates();
         dates.setForeground(getForeground());
         dates.setEvent(getEventDay(dates));
+        dates.setEnabled(isEnabled());
         dates.setSelected(DAY);
         dates.showDate(MONTH, YEAR, selectedDate);
         slide.slideNon(dates);

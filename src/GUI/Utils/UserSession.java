@@ -14,7 +14,7 @@ import DTO.UserDTO;
     
 public class UserSession {
     private static UserSession instance;
-    private static UserDTO currentUser; 
+    private UserDTO currentUser; 
     public static UserSession getInstance() {
         if (instance == null) {
             instance = new UserSession();
@@ -26,7 +26,6 @@ public class UserSession {
         currentUser = user;
     }
 
-   
     public UserDTO getCurrentUser() {
         return currentUser;
     }

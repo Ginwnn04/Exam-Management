@@ -7,11 +7,25 @@ import java.awt.Component;
 import style.ColorConfig;
 
 public class TableActionCellRenderer extends DefaultTableCellRenderer {
+    private boolean isRenderView = true;
+    private boolean isRenderUpdate = true;
+    private boolean isRenderDelete = true;
+
+    public TableActionCellRenderer() {
+
+    }
+
+    public TableActionCellRenderer(boolean isRenderView, boolean isRenderUpdate, boolean isRenderDelete) {
+        this.isRenderView = isRenderView;
+        this.isRenderUpdate = isRenderUpdate;
+        this.isRenderDelete = isRenderDelete;
+    }
+
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, 
     boolean isSelected, boolean hasFocus, int row, int column) {
         Component com =  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        PanelAction action = new PanelAction();
+        PanelAction action = new PanelAction(isRenderView, isRenderUpdate, isRenderDelete);
         if(isSelected == false){
             action.setBackground(ColorConfig.WHITE_COLOR_BG);
         }

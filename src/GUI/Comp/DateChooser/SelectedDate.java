@@ -1,5 +1,7 @@
 package GUI.Comp.DateChooser;
 
+import java.sql.Date;
+
 public class SelectedDate {
 
     public int getDay() {
@@ -32,7 +34,31 @@ public class SelectedDate {
         this.year = year;
     }
 
+    public Date convert() {
+        String value = String.format("%d-%d-%d", year, month, day);
+        Date date = Date.valueOf(value);
+
+        return date;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        try {
+            SelectedDate date = (SelectedDate) obj;
+            return day == date.day && month == date.month && year == date.year;
+        }
+        catch (Exception ignore) {
+            return false;
+        } 
+    }
+
     public SelectedDate() {
+
+    }
+
+    @Override
+    protected SelectedDate clone() {
+        return new SelectedDate(day, month, year);
     }
 
     private int day;

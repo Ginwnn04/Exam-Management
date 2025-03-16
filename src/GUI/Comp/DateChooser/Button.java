@@ -30,6 +30,8 @@ public final class Button extends JButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
+                if (!isEnabled()) return;
+
                 if (!getText().equals("") && getName() != null) {
                     if (getName().equals("day") || getName().equals("year")) {
                         event.execute(me, Integer.valueOf(getText()));

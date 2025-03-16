@@ -60,10 +60,11 @@ public class DialogStatistics extends JDialog {
         add(main);
     }
 
-    private void handleChangeTab(PanelBackground oldContent) {
+    private void handleChangeTab(PanelBackground oldContent, PanelBackground nextContent) {
         main.remove(oldContent);
 
-        if (oldContent instanceof PanelChart) {
+        if (nextContent != null) main.add(nextContent);
+        else if (oldContent instanceof PanelChart) {
             main.add(studentStatistics);
         }
         else main.add(chart);

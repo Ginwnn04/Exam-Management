@@ -26,9 +26,32 @@ public class TestDAO implements BaseDAO<TestDTO, Integer> {
                       .setTestStatus(rs.getBoolean("testStatus"));
     }
 
+    @Override
     public ArrayList<TestDTO> getAll(boolean isActive) {
         int isGet = isActive ? 1 : 0;
         String query = "SELECT * FROM test WHERE testStatus = " + isGet;
+        ArrayList<TestDTO> result = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = dbHelper.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                TestDTO model = fetchData(rs);
+                result.add(model);
+            }
+
+            return result;
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    public ArrayList<TestDTO> getAll() {
+        String query = "SELECT * FROM test";
         ArrayList<TestDTO> result = new ArrayList<>();
 
         try {

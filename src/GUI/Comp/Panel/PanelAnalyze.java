@@ -1,6 +1,14 @@
 package GUI.Comp.Panel;
 
 import GUI.Comp.AnalyzeComp;
+import GUI.Comp.DateChooser.DateChooser;
+import GUI.Comp.DateChooser.DateChooserPopup;
+import GUI.Comp.DateChooser.SelectedDate;
+import GUI.Comp.Swing.PanelBackground;
+import GUI.Utils.Debounce;
+import style.ColorConfig;
+
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -13,11 +21,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import com.formdev.flatlaf.FlatClientProperties;
 import com.toedter.calendar.JDateChooser;
-import java.util.Date;
+
 import BUS.TestBUS;
 import DTO.TestDTO;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,8 +40,8 @@ import java.util.List;
  * Author: Minh Phuc
  */
 public class PanelAnalyze extends javax.swing.JPanel {
-    private JDateChooser startDateChooser;
-    private JDateChooser endDateChooser;
+    private DateChooserPopup startDateChooser;
+    private DateChooserPopup endDateChooser;
     private TestBUS testExamBUS = new TestBUS();
     private List<TestDTO> examList;
     private List<AnalyzeComp> examComponents;
@@ -63,34 +77,50 @@ public class PanelAnalyze extends javax.swing.JPanel {
     JPanel searchPanel = new JPanel();
     searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
     searchPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // Add padding top and bottom
+    searchPanel.setBackground(ColorConfig.TRANSPARENT);
 
     JLabel searchLabel = new JLabel("Tìm kiếm :");
     searchLabel.setPreferredSize(new Dimension(100, 30));
 
     searchField = new JTextField();
     searchField.setPreferredSize(new Dimension(300, 30));
-    searchField.addKeyListener(new KeyAdapter() {
-        @Override
-        public void keyReleased(KeyEvent e) {
-            filterExamComponents();
-        }
-    });
+    searchField.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+    searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập đề thi...");
+    
+    Debounce onSearch = new Debounce(() -> filterExamComponents(), 300);
+    searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onSearch.execute();
+            }
+        });
 
     JLabel startDateLabel = new JLabel("Ngày bắt đầu:");
     startDateLabel.setPreferredSize(new Dimension(100, 30));
     startDateLabel.setFont(new java.awt.Font("Roboto", 0, 14));
 
-    startDateChooser = new JDateChooser();
+    startDateChooser = new DateChooserPopup();
     startDateChooser.setPreferredSize(new Dimension(150, 30));
-    startDateChooser.addPropertyChangeListener("date", evt -> filterExamComponents());
+    startDateChooser.addOnDateChangedCallback(date -> filterExamComponents());
 
     JLabel endDateLabel = new JLabel("Ngày kết thúc:");
     endDateLabel.setPreferredSize(new Dimension(100, 30));
     endDateLabel.setFont(new java.awt.Font("Roboto", 0, 14));
 
-    endDateChooser = new JDateChooser();
+    endDateChooser = new DateChooserPopup();
     endDateChooser.setPreferredSize(new Dimension(150, 30));
-    endDateChooser.addPropertyChangeListener("date", evt -> filterExamComponents());
+    endDateChooser.addOnDateChangedCallback(date -> filterExamComponents());
 
     searchPanel.add(searchLabel);
     searchPanel.add(searchField);
@@ -101,7 +131,7 @@ public class PanelAnalyze extends javax.swing.JPanel {
     searchPanel.add(endDateLabel);
     searchPanel.add(endDateChooser);
 
-    add(searchPanel, java.awt.BorderLayout.PAGE_START);
+    content.add(searchPanel, java.awt.BorderLayout.PAGE_START);
 }
 
     private void filterExamComponents() {
@@ -115,7 +145,7 @@ public class PanelAnalyze extends javax.swing.JPanel {
             boolean matchesDate = true;
     
             if (startDate != null && endDate != null) {
-                Date examDate = exComp.getTestDate(); // Assuming ExamComp has a method getExamDate()
+                Date examDate = exComp.getTestDate(); // Assuming ExamComp has a method getExamDate()\
                 matchesDate = (examDate.equals(startDate) || examDate.after(startDate)) &&
                               (examDate.equals(endDate) || examDate.before(endDate));
             }
@@ -149,8 +179,13 @@ public class PanelAnalyze extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1200, 765));
         setVerifyInputWhenFocusTarget(false);
         setLayout(new java.awt.BorderLayout());
+        setBackground(ColorConfig.GREY_COLOR_BG);
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 51));
+
+        content = new PanelBackground();
+        content.setAbsoluteSize(1160, 745);
+        content.setLayout(new BorderLayout());
+
         jPanel1.setPreferredSize(new java.awt.Dimension(1200, 10));
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
@@ -171,7 +206,8 @@ public class PanelAnalyze extends javax.swing.JPanel {
         scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new java.awt.Dimension(1180, 745));
 
-        add(scrollPane, java.awt.BorderLayout.CENTER);
+        content.add(scrollPane, java.awt.BorderLayout.CENTER);
+        add(content, BorderLayout.CENTER);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -180,5 +216,6 @@ public class PanelAnalyze extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private PanelBackground content;
     // End of variables declaration//GEN-END:variables
 }

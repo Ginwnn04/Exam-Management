@@ -17,7 +17,6 @@ import DTO.UserDTO;
 public class ResultBUS {
     private ResultDAO DAO = new ResultDAO();
     private QuestionBUS questionBUS = new QuestionBUS();
-    private AnswerBUS answerBUS = new AnswerBUS();
     private HashMap<Integer, QuestionDTO> questions;
 
     public ResultBUS() {
@@ -36,6 +35,11 @@ public class ResultBUS {
 
     public List<ResultDTO> getAll() {
         return DAO.getAll(true);
+    }
+
+    public List<ResultDTO> getAllByUser(UserDTO user) {
+        int userId = user.getId();
+        return DAO.getAllByUserId(userId);
     }
 
     public int getTakeExamTime(UserDTO user, TestDTO test) {
@@ -65,21 +69,9 @@ public class ResultBUS {
     public List<ResultDTO> getAllByTestExam(TestDTO testExam) {
         return DAO.getAllByTestCode(testExam.getTestCode());
     }
-
-    private boolean isCorrect(int questionId, Queue<Integer> answerIds) {
-        var correctAnswers = answerBUS.getAnswerByQuestionId(questionId);
-
-        for (AnswerDTO answerDTO : correctAnswers) {
-            if (!answerDTO.isIsRight()) continue;
-            return answerIds.contains(answerDTO.getId());
-        }
-
-        return false;
-    }
-
-    public int getScore(int questionId, Queue<Integer> answerIds) {
+    
+    public int getScore(int questionId) {
         if (questions == null) prepareResource();
-        if (!isCorrect(questionId, answerIds)) return 0;
 
         var question = questions.get(questionId);
         String level = question.getLevel();
