@@ -180,7 +180,6 @@ public class PanelUser extends javax.swing.JPanel {
     private void initComponents() {
 
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
-        dateChooser2 = new GUI.Comp.DateChooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         panelBackground2 = new GUI.Comp.Swing.PanelBackground();
@@ -216,8 +215,6 @@ public class PanelUser extends javax.swing.JPanel {
             panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 20, Short.MAX_VALUE)
         );
-
-        dateChooser2.setTextRefernce(txtNguoiDung);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(1200, 765));
@@ -393,15 +390,13 @@ public class PanelUser extends javax.swing.JPanel {
 
         panelBackground14.add(panelBackground10);
 
-        jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        jLabel2.setText("Người dùng");
-        panelBackground14.add(jLabel2);
+        // jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        // jLabel2.setText("Người dùng");
+        // panelBackground14.add(jLabel2);
 
         txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
         txtNguoiDung.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên người dùng, email hoặc quyền .....");
-        txtNguoiDung.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-
         panelBackground14.add(txtNguoiDung);
 
         panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);
@@ -419,17 +414,20 @@ public class PanelUser extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Họ và Tên", "Email", "Phân Quyền", "Hành động"
+                "Họ và Tên", "Email", "Phân Quyền", "Hành động","id"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+
+        tbNguoidung.removeColumn(tbNguoidung.getColumnModel().getColumn(4));
+
         jScrollPane1.setViewportView(tbNguoidung);
 
         pnCenter.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -482,7 +480,6 @@ public class PanelUser extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private GUI.Comp.DateChooser.DateChooser dateChooser2;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
