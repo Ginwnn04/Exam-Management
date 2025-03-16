@@ -18,10 +18,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnUpdate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
               <Component id="btnView" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnUpdate" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -33,7 +33,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="btnDelete" max="32767" attributes="0"/>
-                  <Component id="btnUpdate" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="btnUpdate" alignment="1" min="-2" pref="24" max="-2" attributes="0"/>
                   <Component id="btnView" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -45,7 +45,7 @@
     <Component class="GUI.Comp.DateChooser.Button" name="btnUpdate">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/GUI/Comp/Icon/fix.png"/>
+          <Image iconType="3" name="/GUI/Comp/Icon/pen_1.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="borderPainted" type="boolean" value="false"/>
@@ -57,7 +57,7 @@
     <Component class="GUI.Comp.DateChooser.Button" name="btnDelete">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/GUI/Comp/Icon/delete.png"/>
+          <Image iconType="3" name="/GUI/Comp/Icon/bin_1.png"/>
         </Property>
       </Properties>
       <Events>
@@ -66,8 +66,11 @@
     </Component>
     <Component class="GUI.Comp.DateChooser.Button" name="btnView">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="66" green="99" red="ff" type="rgb"/>
+        </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/GUI/Comp/Icon/black_eye.png"/>
+          <Image iconType="3" name="/GUI/Comp/Icon/view.png"/>
         </Property>
         <Property name="borderPainted" type="boolean" value="false"/>
       </Properties>
@@ -77,5 +80,3 @@
     </Component>
   </SubComponents>
 </Form>
-
-
