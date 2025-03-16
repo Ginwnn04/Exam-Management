@@ -195,6 +195,7 @@ public class PannelLogin extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
+        MyListener.getInstance().firePropertyChange("authorize", 0, 1);
         loginButtonActionPerformed(username, password);
     }//GEN-LAST:event_jButton2ActionPerformed
 

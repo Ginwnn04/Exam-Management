@@ -32,6 +32,7 @@ import style.ColorConfig;
  */
 public class NavBar extends javax.swing.JPanel {
     private Animator animator;
+    private boolean isAdmin;
     int indexCurrent = 0;
     int indexSelected = 0;
     Sliding sliding = new Sliding();
@@ -40,7 +41,7 @@ public class NavBar extends javax.swing.JPanel {
     // Vị trí y của thanh panel trượt
     int yPanel = 184 + 15;
     List<JButton> listButton = new ArrayList<>();
-    private Map<String, List<JButton>> hashMap = new HashMap<String, List<JButton>>();
+//    private Map<String, List<JButton>> hashMap = new HashMap<String, List<JButton>>();
     
 
     public NavBar() {
@@ -86,10 +87,11 @@ public class NavBar extends javax.swing.JPanel {
             String role = user.getIsAdmin() == 1 ? "Admin" : "User";
             lbName.setText(user.getFullName());
             lbRole.setText(role);
-            initMenu(user.getIsAdmin() == 1 ? true : false);
+            this.isAdmin = user.getIsAdmin() == 1 ? true : false;
+            initMenu();
     }
 }
-    public void initMenu(boolean isAdmin) {
+    public void initMenu() {
         if (isAdmin) {
             addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
             addMenuItem("Câu hỏi", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/choose.png")));
@@ -102,14 +104,14 @@ public class NavBar extends javax.swing.JPanel {
         }
         else {
             addMenuItem("Trang chủ", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
-
+            addMenuItem("Lịch sử", new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
         }
         btnThongTin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 indexSelected = Integer.parseInt(e.getActionCommand());
                 if (indexSelected != indexCurrent) {
-                    MyListener.getInstance().firePropertyChange("ItemMenu", hashMap, indexSelected);
+                    MyListener.getInstance().firePropertyChange("ItemMenu", isAdmin, indexSelected);
                     System.out.println(indexSelected);
                     clearSelected();
                     setSelectedMenu(indexSelected); 
@@ -140,12 +142,13 @@ public class NavBar extends javax.swing.JPanel {
         btn.setFont(style.MyFont.fontMenuBar);
         pnMenuItem.add(btn);
         btn.setActionCommand(listButton.size() + "");
+        System.out.println(btn.getActionCommand() + " Index");
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 indexSelected = Integer.parseInt(e.getActionCommand());
                 if (indexSelected != indexCurrent) {
-                    MyListener.getInstance().firePropertyChange("ItemMenu", hashMap, indexSelected);
+                    MyListener.getInstance().firePropertyChange("ItemMenu", isAdmin, indexSelected);
                     System.out.println(indexSelected);
                     clearSelected();
                     setSelectedMenu(indexSelected); 
@@ -163,7 +166,6 @@ public class NavBar extends javax.swing.JPanel {
             btn.setBackground(ColorConfig.WHITE_COLOR_BG);
             btn.setForeground(ColorConfig.GREY_COLOR_FONT);
             int index = Integer.parseInt(btn.getActionCommand());
-            System.out.println("Index: " + index);
             if (index == indexSelected)
                 continue;
             switch (index) {
@@ -187,6 +189,9 @@ public class NavBar extends javax.swing.JPanel {
                         break;
                     case 6:
                         btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/analyzing.png")));
+                        break;
+                    case 7:
+                        btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home.png")));
                         break;
                     case 999:
                         btn.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/user.png")));
@@ -252,6 +257,9 @@ public class NavBar extends javax.swing.JPanel {
                         break;
                     case 6:
                         btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/analyzing_s.png")));
+                        break;
+                    case 7:
+                        btnSelected.setIcon(new ImageIcon(getClass().getResource("/GUI/Comp/Icon/home_s.png")));
                         break;
                     default:
                         throw new AssertionError();

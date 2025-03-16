@@ -48,6 +48,10 @@ public class MyListener{
         propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
     
+    public void firePropertyChange(String propertyName, boolean oldValue, int newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
+    
     public void firePropertyChange(String propertyName, Map<String, List<JButton>> oldValue, int newValue) {
         propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }

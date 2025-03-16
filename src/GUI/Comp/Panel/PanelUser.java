@@ -180,6 +180,7 @@ public class PanelUser extends javax.swing.JPanel {
     private void initComponents() {
 
         panelBackground12 = new GUI.Comp.Swing.PanelBackground();
+        jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         panelBackground1 = new GUI.Comp.Swing.PanelBackground();
         panelBackground2 = new GUI.Comp.Swing.PanelBackground();
@@ -194,11 +195,13 @@ public class PanelUser extends javax.swing.JPanel {
         pnCenter = new GUI.Comp.Swing.PanelBackground();
         pnTop = new GUI.Comp.Swing.PanelBackground();
         panelBackground11 = new GUI.Comp.Swing.PanelBackground();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
         panelBackground14 = new GUI.Comp.Swing.PanelBackground();
         jLabel1 = new javax.swing.JLabel();
-        panelBackground10 = new GUI.Comp.Swing.PanelBackground();
-        jLabel2 = new javax.swing.JLabel();
         txtNguoiDung = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbNguoidung = new javax.swing.JTable();
@@ -214,6 +217,17 @@ public class PanelUser extends javax.swing.JPanel {
         panelBackground12Layout.setVerticalGroup(
             panelBackground12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 350, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 188, Short.MAX_VALUE)
         );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -348,55 +362,56 @@ public class PanelUser extends javax.swing.JPanel {
 
         main.add(panelBackground9, java.awt.BorderLayout.PAGE_END);
 
-        pnCenter.setLayout(new java.awt.BorderLayout());
+        pnCenter.setLayout(new java.awt.BorderLayout(0, 15));
 
         pnTop.setPreferredSize(new java.awt.Dimension(1140, 80));
-        pnTop.setLayout(new java.awt.BorderLayout());
+        pnTop.setLayout(new java.awt.BorderLayout(100, 0));
 
         panelBackground11.setPreferredSize(new java.awt.Dimension(993, 30));
-        panelBackground11.setLayout(new java.awt.BorderLayout(100, 0));
+        panelBackground11.setLayout(new java.awt.BorderLayout(400, 0));
 
-        jButton1.setBackground(new java.awt.Color(53, 80, 154));
-        jButton1.setFont(new java.awt.Font("Roboto", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setActionCommand("Thêm người dùng");
-        jButton1.setLabel("+ Thêm người dùng");
-        jButton1.setMaximumSize(new java.awt.Dimension(250, 28));
-        jButton1.setMinimumSize(new java.awt.Dimension(250, 28));
-        jButton1.setPreferredSize(new java.awt.Dimension(250, 30));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        panelBackground11.add(jButton1, java.awt.BorderLayout.LINE_END);
+        jPanel2.setBackground(new java.awt.Color(255, 51, 51));
+        jPanel2.setPreferredSize(new java.awt.Dimension(350, 100));
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
-        panelBackground14.setLayout(new java.awt.GridLayout(2, 0, 1, 0));
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0, 20, 0));
+
+        jButton1.setText("jButton1");
+        jPanel6.add(jButton1);
+
+        jButton2.setText("jButton2");
+        jPanel6.add(jButton2);
+
+        jPanel2.add(jPanel6, java.awt.BorderLayout.CENTER);
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setPreferredSize(new java.awt.Dimension(200, 40));
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 350, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        jPanel2.add(jPanel7, java.awt.BorderLayout.PAGE_END);
+
+        panelBackground11.add(jPanel2, java.awt.BorderLayout.LINE_END);
+
+        panelBackground14.setMaximumSize(new java.awt.Dimension(300, 32767));
+        panelBackground14.setMinimumSize(new java.awt.Dimension(300, 50));
+        panelBackground14.setPreferredSize(new java.awt.Dimension(300, 80));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel1.setText("Tìm kiếm");
         panelBackground14.add(jLabel1);
 
-        javax.swing.GroupLayout panelBackground10Layout = new javax.swing.GroupLayout(panelBackground10);
-        panelBackground10.setLayout(panelBackground10Layout);
-        panelBackground10Layout.setHorizontalGroup(
-            panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 327, Short.MAX_VALUE)
-        );
-        panelBackground10Layout.setVerticalGroup(
-            panelBackground10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 29, Short.MAX_VALUE)
-        );
-
-        panelBackground14.add(panelBackground10);
-
-        // jLabel2.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
-        // jLabel2.setText("Người dùng");
-        // panelBackground14.add(jLabel2);
-
         txtNguoiDung.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
         txtNguoiDung.setPreferredSize(new java.awt.Dimension(300, 30));
-        txtNguoiDung.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Nhập tên người dùng, email hoặc quyền .....");
         panelBackground14.add(txtNguoiDung);
 
         panelBackground11.add(panelBackground14, java.awt.BorderLayout.CENTER);
@@ -469,25 +484,19 @@ public class PanelUser extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        UserBus userBus = new UserBus();
-        DialogUsers d = new DialogUsers(null,userBus);
-        System.out.println("them nguoi dung");
-        d.setVisible(true);
-        updateTableItems();
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private GUI.Comp.Swing.PanelBackground main;
     private GUI.Comp.Swing.PanelBackground panelBackground1;
-    private GUI.Comp.Swing.PanelBackground panelBackground10;
     private GUI.Comp.Swing.PanelBackground panelBackground11;
     private GUI.Comp.Swing.PanelBackground panelBackground12;
     private GUI.Comp.Swing.PanelBackground panelBackground14;
