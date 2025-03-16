@@ -39,7 +39,7 @@ public class PanelQuestion extends javax.swing.JPanel {
     public PanelQuestion() {
         initComponents();
         txtCauHoi.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-        txtCauHoi.putClientProperty("JTextField.placeholderText", "Hôm nay tôi bùn...");
+        txtCauHoi.putClientProperty("JTextField.placeholderText", "Tập hợp...");
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tbCauHoi.getTableHeader().getDefaultRenderer();
         renderer.setHorizontalAlignment(JLabel.LEFT);
         TableActionEvent actionEvent = new TableActionEvent() {
@@ -81,7 +81,8 @@ public class PanelQuestion extends javax.swing.JPanel {
         model.setRowCount(0);
         list.stream()
                 .forEach(question -> {
-                    model.addRow(new Object[] {question.getId(), question.getContent(), question.getTopicId(), question.getLevel()});
+                    String level = question.getLevel().equals("easy") ? "Dễ" : question.getLevel().equals("medium") ? "Trung bình" : "Khó";
+                    model.addRow(new Object[] {question.getId(), question.getContent(), question.getTopicId(), level});
                 });
         
         model.fireTableDataChanged();

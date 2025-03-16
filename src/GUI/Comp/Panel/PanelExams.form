@@ -560,7 +560,7 @@
                             </Property>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="4">
-                                <StringItem index="0" value="Ch&#x1ecd;n th&#x1ee9; t&#x1ef1;"/>
+                                <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
                                 <StringItem index="1" value="A"/>
                                 <StringItem index="2" value="B"/>
                                 <StringItem index="3" value="C"/>
