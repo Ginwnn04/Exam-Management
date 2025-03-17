@@ -122,7 +122,7 @@ public class PanelUser extends javax.swing.JPanel {
 
 
     private void setupSearchEvent() {
-        Debounce onSearch = new Debounce(() -> filterUsers(), 500);
+        Debounce onSearch = new Debounce(() -> searchUsers(), 500);
     
         txtNguoiDung.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -141,8 +141,14 @@ public class PanelUser extends javax.swing.JPanel {
             }
         });
     }
+
+    private void searchUsers(){
+        String query = txtNguoiDung.getText().trim().toLowerCase();
+        ArrayList<UserDTO> result = userBus.searchUser(query);
+        setTableItems(result);
+    }
     
-    private void filterUsers() {
+    private void filterUsers1() {
         ArrayList<UserDTO> usersList = userBus.getAllUsers();
         String query = txtNguoiDung.getText().trim().toLowerCase();
         if (query.isEmpty()) {

@@ -2,23 +2,13 @@ package GUI.Custom;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Panel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import DTO.UserDTO;
 import GUI.Comp.Panel.PanelUser;
 import BUS.UserBus;
@@ -26,8 +16,9 @@ import javax.swing.BorderFactory;
 
 public class ButtonImportUsers extends javax.swing.JPanel {
     private PanelUser panelUser;
-    private static UserBus BUS;
+    private UserBus BUS;
     public ButtonImportUsers(PanelUser panelUser) {
+        this.BUS = new UserBus();
         this.panelUser = panelUser;
         initComponents();
     }
@@ -68,21 +59,14 @@ public class ButtonImportUsers extends javax.swing.JPanel {
     }
 
     private void onImport(String filePath) {
-        ArrayList<UserDTO> userList = new ArrayList<>();
-        try (FileInputStream file = new FileInputStream(new File(filePath))) {
-            Workbook workbook = new XSSFWorkbook(file);
-            Sheet sheet = workbook.getSheetAt(0);
-            for (Row row : sheet) {
-                if(row.getRowNum() == 0) continue; 
-                setValueByCellRow(row, userList);
-            }
-            workbook.close();
-            ArrayList<UserDTO> rs = importUsers(userList);
+        try{
+            ArrayList<UserDTO> rs = BUS.ImportUsers(filePath);
             showOptionPane(rs);
             panelUser.updateTableItems();
         }
         catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Import thất bại! Vui lòng kiểm tra lại file.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -94,47 +78,7 @@ public class ButtonImportUsers extends javax.swing.JPanel {
         }
     }
 
-    private void setValueByCellRow(Row row , ArrayList<UserDTO> userList) {
-        String username = getCellValueAsString(row.getCell(0));
-        String email = getCellValueAsString(row.getCell(1));
-        String password = getCellValueAsString(row.getCell(2));
-        String fullname = getCellValueAsString(row.getCell(3));
-        UserDTO user = UserDTO.builder()
-            .setName(username)
-            .setPassword(password)
-            .setFullName(fullname)
-            .setEmail(email)
-            .setIsAdmin(0)
-            .build();
-        userList.add(user);
-    }
 
-    private ArrayList<UserDTO> importUsers(ArrayList<UserDTO> userList) {
-        ArrayList<UserDTO> result = new ArrayList<>();
-        BUS = new UserBus();
-        for (UserDTO user : userList) {
-            if (BUS.addUser(user)!=null) {
-                result.add(user);
-            }
-        }
-        return result;
-    }
-
-    private String getCellValueAsString(Cell cell) {
-        if (cell == null) return null;
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue().trim();
-            case NUMERIC:
-                return String.valueOf((int) cell.getNumericCellValue()); // Chuyển số thành chuỗi
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
-            case FORMULA:
-                return cell.getCellFormula();
-            default:
-                return "";
-        }
-    }
 
     private GUI.Comp.DateChooser.Button btnImport;
     
