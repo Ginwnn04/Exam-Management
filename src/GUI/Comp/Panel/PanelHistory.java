@@ -243,7 +243,7 @@ public class PanelHistory extends PanelBackground {
             var test = getTest(result.getExCode());
             boolean isPass = isUserPass.get(result.getResNum());
 
-            HistoryItemPanel historyItem = new HistoryItemPanel(result, test, isPass);
+            HistoryItemPanel historyItem = new HistoryItemPanel(result.getResNum(), test, isPass);
             historyItem.addActionCallback(this::handleToDetailExam);
             
             historyContainer.add(historyItem);
@@ -254,7 +254,9 @@ public class PanelHistory extends PanelBackground {
         historyContainer.repaint();
     }
 
-    private void handleToDetailExam(ResultDTO result) {
+    private void handleToDetailExam(int resultId) {
+        ResultDTO result = resultBUS.findById(resultId);
+
         var afterExam = new PanelAfterExam(result, false);
         afterExam.addOnBackToPreviousClickCallback(() -> showFormCallback.accept(this));
 

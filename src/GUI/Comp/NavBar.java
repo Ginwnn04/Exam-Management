@@ -319,7 +319,7 @@ public class NavBar extends javax.swing.JPanel {
         flowLayout1.setAlignOnBaseline(true);
         pnMenuItem.setLayout(flowLayout1);
 
-        imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/385514898_1350252949206356_5905706099619149463_n.jpg"))); // NOI18N
+        imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/GUI/Comp/Icon/avatae.png"))); // NOI18N
 
         btnThongTin.setBackground(new java.awt.Color(254, 254, 254));
         btnThongTin.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N

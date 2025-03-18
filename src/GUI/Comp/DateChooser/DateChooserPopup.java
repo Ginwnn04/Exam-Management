@@ -14,7 +14,7 @@ import style.MyFont;
 public class DateChooserPopup extends JDateChooser {
     private DateChooser dateChooser;
     private ArrayList<Consumer<SelectedDate>> onDateChangedCallbacks = new ArrayList<>();
-    private boolean isEmpty = false;
+    private boolean isEmpty = true;
     private SelectedDate currentSelected = null;
 
     public DateChooserPopup() {

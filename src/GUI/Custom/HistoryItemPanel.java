@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
+import BUS.ResultBUS;
 import BUS.TestBUS;
 import DTO.ResultDTO;
 import DTO.TestDTO;
@@ -32,12 +33,14 @@ public class HistoryItemPanel extends PanelBackground {
     private ResultDTO result;
     private TestDTO test;
     private Color resultColor;
+    private ResultBUS resultBUS = new ResultBUS();
 
-    private ArrayList<Consumer<ResultDTO>> onActionCallbacks = new ArrayList<>();
+    private ArrayList<Consumer<Integer>> onActionCallbacks = new ArrayList<>();
     private boolean isPass;
 
-    public HistoryItemPanel(ResultDTO result, TestDTO test, boolean isPass) {
-        this.result = result;
+    public HistoryItemPanel(int id, TestDTO test, boolean isPass) {
+        this.result = resultBUS.findById(id);
+        
         this.test = test;
         this.isPass = isPass;
 
@@ -46,13 +49,13 @@ public class HistoryItemPanel extends PanelBackground {
         initComponents();
     }
 
-    public void addActionCallback(Consumer<ResultDTO> callback) {
+    public void addActionCallback(Consumer<Integer> callback) {
         onActionCallbacks.add(callback);
     }
 
     private void onAction() {
         for (var callback : onActionCallbacks) {
-            callback.accept(result);
+            callback.accept((int)result.getResNum());
         }
     }
 

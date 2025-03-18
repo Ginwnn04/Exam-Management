@@ -47,6 +47,7 @@ public class PanelChart extends PanelBackground {
     private List<ResultDTO> listResult;
 
     private ExamBUS examBUS = new ExamBUS();
+    private TestBUS testBUS = new TestBUS();
 
     // for filter user that take more than one exam (take the highest mark one)
     private HashMap<Integer, ResultDTO> resultData = new HashMap<>();
@@ -193,11 +194,17 @@ public class PanelChart extends PanelBackground {
         analyzeResults();
     }
 
+    private String getTestCode(String exCode) {
+        int length = exCode.length();
+        return exCode.substring(0, length - 1);
+    }
+
     private void analyzeResults() {
         for (var userId : resultData.keySet()) {
             var result = resultData.get(userId);
+            var maxScore = testBUS.getMaxScore(getTestCode(result.getExCode()));
 
-            if (result.getRsMark() >= 50) passCount++;
+            if (result.getRsMark() >= maxScore / 2) passCount++;
             else failCount++;
         }
     }
