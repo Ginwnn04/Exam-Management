@@ -3,6 +3,7 @@ package BUS;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 
 import DAO.TestDAO;
 import DTO.ExamDTO;
@@ -79,6 +80,41 @@ public class TestBUS {
         examBUS.deleteExam(testCode);
         testStructureBUS.delete(testCode);
         return DAO.delete(id);
+    }
+
+    public List<TestDTO> filterTableItems(String query, String searchBy) {
+        var list = DAO.getAll(true);
+        List<TestDTO> filterList;
+
+        Predicate<TestDTO> filter = getSearchFilter(searchBy, query);
+        filterList = list.stream().filter(filter).toList();
+    
+        return filterList;
+    }
+
+    private Predicate<TestDTO> getSearchFilter(String searchBy, String query) {
+        if (query.isEmpty()) return testExam -> true;
+
+        switch (searchBy) {
+            case "ID":
+                return testExam -> {
+                    try {
+                        return testExam.getId() == Integer.parseInt(query);
+                    }
+                    catch (Exception ignore) {
+                        return false;
+                    }
+                };
+
+            case "Tiêu đề":
+                return testExam -> testExam.getTitle().toLowerCase().contains(query);
+
+            case "Mã đề":
+                return testExam -> testExam.getTestCode().toLowerCase().contains(query);
+        
+            default:
+                return null;
+        }
     }
 
     public int getMaxScore(String testCode) {

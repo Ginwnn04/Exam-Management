@@ -162,38 +162,10 @@ public class PanelTest extends JPanel {
         String query = searchField.getText().toLowerCase();
 
         var searchBy = searchByCb.getSelectedItem().toString();
-        List<TestDTO> filterList;
-
-        Predicate<TestDTO> filter = getSearchFilter(searchBy, query);
-        filterList = filterTestExams.stream().filter(filter).toList();
+        List<TestDTO> filterList = BUS.filterTableItems(query, searchBy);
     
         setTableItems(new ArrayList<>(filterList));
         renderTable();
-    }
-
-    private Predicate<TestDTO> getSearchFilter(String searchBy, String query) {
-        if (query.isEmpty()) return testExam -> true;
-
-        switch (searchBy) {
-            case "ID":
-                return testExam -> {
-                    try {
-                        return testExam.getId() == Integer.parseInt(query);
-                    }
-                    catch (Exception ignore) {
-                        return false;
-                    }
-                };
-
-            case "Tiêu đề":
-                return testExam -> testExam.getTitle().toLowerCase().contains(query);
-
-            case "Mã đề":
-                return testExam -> testExam.getTestCode().toLowerCase().contains(query);
-        
-            default:
-                return null;
-        }
     }
 
     private PanelBackground buildCreateButtonContainer() {

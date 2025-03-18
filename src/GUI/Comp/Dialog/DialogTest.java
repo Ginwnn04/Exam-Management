@@ -144,6 +144,7 @@ public class DialogTest extends JDialog {
         initTitleAndTestCode();
         initInformationPanel();
         initTestStructureContainer();
+        initAddNewTestStructureButton();
         initSaveButton();
 
         addScroll();
@@ -179,7 +180,7 @@ public class DialogTest extends JDialog {
     //#region Update Model
 
     private void initIdLabel() {
-        if (dialogType != DialogType.Create) return;
+        if (dialogType == DialogType.Create) return;
 
         content.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -421,17 +422,19 @@ public class DialogTest extends JDialog {
     }
 
     private void initAddNewTestStructureButton() {
-        PanelBackground container = new PanelBackground();
-        container.setAbsoluteSize(WIDTH, 40);
-        container.setLayout(new FlowLayout(FlowLayout.LEFT));
+        addButtonContainer = new PanelBackground();
+        addButtonContainer.setAbsoluteSize(WIDTH, 40);
+        addButtonContainer.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         JButton addButton = new JButton("+ Thêm cấu trúc");
         addButton.setBackground(ColorConfig.BLUE);
         addButton.setForeground(Color.WHITE);
         addButton.addActionListener(e -> addTestStructure());
 
-        container.add(addButton);
-        content.add(container);
+        addButtonContainer.setVisible(false);
+
+        addButtonContainer.add(addButton);
+        content.add(addButtonContainer);
     }
 
     private void initSaveButton() {
@@ -451,7 +454,7 @@ public class DialogTest extends JDialog {
 
     private void setupCreateDialog() {
         addTestStructure();
-        initAddNewTestStructureButton();
+        addButtonContainer.setVisible(true);
         saveButton.setText("Tạo đề thi");
     }
 
@@ -467,6 +470,21 @@ public class DialogTest extends JDialog {
         time.setEnabled(false);
         testDateChooser.setEnabled(false);
         examCount.setEnabled(false);
+        
+        examTitle.setDisabledTextColor(Color.BLACK);
+        examTitle.setForeground(Color.BLACK);
+        examTitle.setBackground(Color.WHITE);
+
+        examCount.setForeground(Color.BLACK);
+        examCount.setBackground(Color.WHITE);
+
+        testLimit.setDisabledTextColor(Color.BLACK);
+        testLimit.setForeground(Color.BLACK);
+        testLimit.setBackground(Color.WHITE);
+        
+        time.setDisabledTextColor(Color.BLACK);
+        time.setForeground(Color.BLACK);
+        time.setBackground(Color.WHITE);
     }
 
     private void onSave(ActionEvent e) {
@@ -530,8 +548,8 @@ public class DialogTest extends JDialog {
             if (examTitle.getText().isEmpty() || time.getText().isEmpty() || testLimit.getText().isEmpty())
                 return new Pair<>(false, "Vui lòng nhập đầy đủ thông tin");
 
-//            var _ = Short.parseShort(testLimit.getText());
-//            var _ = Integer.parseInt(time.getText());
+           var _ = Short.parseShort(testLimit.getText());
+           var _ = Integer.parseInt(time.getText());
         }
         catch (NumberFormatException ignore) {
             return new Pair<>(false, "Thời gian và Số lượt thi chỉ được nhập số");
@@ -587,5 +605,6 @@ public class DialogTest extends JDialog {
     private DateChooser testDateChooser;
     private JComboBox<Integer> examCount;
     private PanelBackground testStructureContainer;
+    private PanelBackground addButtonContainer;
     private JButton saveButton;
 }
