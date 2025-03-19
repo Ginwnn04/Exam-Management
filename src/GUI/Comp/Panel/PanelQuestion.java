@@ -24,6 +24,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.event.ItemEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,7 +33,6 @@ import com.formdev.flatlaf.FlatClientProperties;
  */
 public class PanelQuestion extends javax.swing.JPanel {
     private List<QuestionDTO> listQuestion = new ArrayList<>();
-    private List<QuestionDTO> listTmp = new  ArrayList<>();
     private List<TopicDTO> listTopic = new ArrayList<>();
     private QuestionBUS questionBUS = new QuestionBUS();
     private TopicBUS topicBUS = new TopicBUS();
@@ -52,9 +53,13 @@ public class PanelQuestion extends javax.swing.JPanel {
 
             @Override
             public void onDelete(int row) {
-                questionBUS.deleteQuestion(listQuestion.get(row).getId());
-                listQuestion = questionBUS.getAllQuestion(true);
-                renderData(listQuestion);
+                int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xoá không ?");
+                if (choice != 0) {
+                    questionBUS.deleteQuestion(listQuestion.get(row).getId());
+                    listQuestion = questionBUS.getAllQuestion(true);
+                    renderData(listQuestion);
+                }
+                return;
             }
 
             @Override
@@ -69,7 +74,6 @@ public class PanelQuestion extends javax.swing.JPanel {
         tbCauHoi.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(actionEvent));
         tbCauHoi.setRowHeight(30);
         listQuestion = questionBUS.getAllQuestion(true);
-        listTmp = listQuestion;
         renderData(listQuestion);
         renderTopic();
         
@@ -87,6 +91,23 @@ public class PanelQuestion extends javax.swing.JPanel {
         
         model.fireTableDataChanged();
         tbCauHoi.setModel(model);
+    }
+    
+    
+    private void filterTable() {
+        int index = cbxChuDe.getSelectedIndex() - 1;
+        int selectChuDe = -1;
+        if (index > -1) {
+            selectChuDe = listTopic.get(index).getId();
+        }
+       
+        String selectDoKho = cbxDoKho.getSelectedItem().toString().equals("Dễ") ? "easy" :
+                cbxDoKho.getSelectedItem().toString().equals("Trung bình") ? "medium" : 
+                cbxDoKho.getSelectedItem().toString().equals("Khó") ? "diff" : "All";
+        String search = txtCauHoi.getText();
+        System.out.println(search + " " + selectChuDe + " " + selectDoKho);
+        listQuestion = questionBUS.filterTable(search, selectChuDe, selectDoKho);
+        renderData(listQuestion);
     }
     
     
@@ -525,19 +546,10 @@ public class PanelQuestion extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cbxChuDeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxChuDeItemStateChanged
-        int index = cbxChuDe.getSelectedIndex();
-        System.out.println(index);
-        if (index == -1 || index == 0) {
-            listQuestion = questionBUS.getAllQuestion(true);
-            renderData(listQuestion);
-
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            filterTable();
         }
-        else {
-            int topicId = listTopic.get(index - 1).getId();
-            String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
-            listTmp = questionBUS.getQuestionByTopicAndLevel(topicId, level);
-            renderData(listTmp);
-        }
+        
     }//GEN-LAST:event_cbxChuDeItemStateChanged
 
     private String translateLevelToEng(String vietnamese) {
@@ -557,39 +569,13 @@ public class PanelQuestion extends javax.swing.JPanel {
     }
 
     private void cbxDoKhoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxDoKhoItemStateChanged
-        String selectedItem = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
-        String level = translateLevelToEng(selectedItem);
-
-        if (level.equals("")) {
-            renderData(listQuestion);
-        }
-        else {
-            List<QuestionDTO> listTmp1 = new  ArrayList<>();
-            for (QuestionDTO q : listTmp) {
-                if (q.getLevel().equals(level)) {
-                    listTmp1.add(q);
-                }
-            }
-            renderData(listTmp1);
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            filterTable();
         }
     }//GEN-LAST:event_cbxDoKhoItemStateChanged
 
     private void txtCauHoiKeyReleased() {//GEN-FIRST:event_txtCauHoiKeyReleased
-        if (txtCauHoi.getText().equals("")) {
-            renderData(listTmp); 
-        }
-        else {
-            List<QuestionDTO> listTmp1 = new  ArrayList<>();
-            String level = cbxDoKho.getSelectedIndex() != 0 ? cbxDoKho.getSelectedItem().toString() : "";
-
-            for (QuestionDTO q : listTmp) {
-                if (q.getContent().toLowerCase().contains(txtCauHoi.getText().toLowerCase())) {
-                    if (level == "") listTmp1.add(q);                   
-                    else if (q.getLevel().equals(level)) listTmp1.add(q);
-                }
-            }
-            renderData(listTmp1); 
-        }
+        filterTable();
     }//GEN-LAST:event_txtCauHoiKeyReleased
 
     

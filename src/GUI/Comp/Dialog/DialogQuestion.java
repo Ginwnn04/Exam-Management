@@ -39,6 +39,7 @@ public class DialogQuestion extends javax.swing.JDialog {
     private List<TopicDTO> listTopic = new ArrayList<>();
     private TopicBUS topicBUS = new TopicBUS();
     private boolean isUpdate = false;
+    private QuestionDTO question;
     
     private List<JRadioButton> listRadio = new ArrayList<>();
     private List<JTextField> listTxt = new ArrayList<>();
@@ -67,6 +68,7 @@ public class DialogQuestion extends javax.swing.JDialog {
     
     public void setData(QuestionDTO question, boolean isUpdate) {
         this.isUpdate = isUpdate;
+        this.question = question;
         if (isUpdate == true) {
             btnLuu.setEnabled(true);
         }
@@ -816,57 +818,118 @@ public class DialogQuestion extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnThemAnhActionPerformed
 
+    public boolean updateAnsw() {
+        return true;
+    }
+    
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        if (txtCauHoi.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "Câu hỏi không được để trống");
+            return;
+        }
+        int cnt = 0;
+        for (JTextField answ : listTxt) {
+            if (answ.getText().isEmpty())
+                cnt++;
+        }
+        if (cnt < 2) {
+            JOptionPane.showMessageDialog(rootPane, "1 câu hỏi phải có ít nhất 2 đáp án");
+            return;
+        }
+        if (isUpdate) {
+            question.setContent(txtCauHoi.getText());
+            question.setPicture(txtImg.getName());
+            question.setLevel(cbxDoKho.getSelectedItem().toString());
+            question.setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId());
+            boolean isUpdateQuestion = questionBUS.updateQuestion(question.getId(), question);
+            boolean isUpdateAnsw = updateAnsw();
+            
+            if (isUpdateQuestion && isUpdateAnsw) {
+                JOptionPane.showMessageDialog(rootPane, "Cập nhật câu hỏi thành công");
+            }
+            else {
+                JOptionPane.showMessageDialog(rootPane, "Cập nhật câu hỏi thất bại");
+            }
+                
+        }
+        else {
+            QuestionDTO question = QuestionDTO.builder()
+                    .setContent(txtCauHoi.getText())
+                    .setPicture(txtImg.getName())
+                    .setLevel(cbxDoKho.getSelectedItem().toString())
+                    .setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId())
+                    .setStatus(true)
+                    .build();
+            int idQuestion = questionBUS.createQuestion(question).getId();
+            System.out.println(idQuestion + "");
+           createAnws(idQuestion);
 
-        QuestionDTO question = QuestionDTO.builder()
-                .setContent(txtCauHoi.getText())
-                .setPicture(txtImg.getName())
-                .setLevel(cbxDoKho.getSelectedItem().toString())
-                .setTopicId(listTopic.get(cbxChuDe.getSelectedIndex()).getId())
-                .setStatus(true)
-                .build();
-        int idQuestion = questionBUS.createQuestion(question).getId();
-        System.out.println(idQuestion + "");
-       
-        AnswerDTO aws1 = AnswerDTO.builder()
-                .setContent(txtAws1.getText())
-                .setIsRight(rd1.isSelected())
-                .setQuestionId(idQuestion)
-                .setStatus(true)
-                .build();
-        anwserBUS.createAnwser(aws1);
-        AnswerDTO aws2 = AnswerDTO.builder()
-                .setContent(txtAws2.getText())
-                .setIsRight(rd2.isSelected())
-                .setQuestionId(idQuestion)
-                .setStatus(true)
-                .build();
-        anwserBUS.createAnwser(aws2);
-        AnswerDTO aws3 = AnswerDTO.builder()
-                .setContent(txtAws3.getText())
-                .setIsRight(rd3.isSelected())
-                .setQuestionId(idQuestion)
-                .setStatus(true)
-                .build();
-        anwserBUS.createAnwser(aws3);
-        AnswerDTO aws4 = AnswerDTO.builder()
-                .setContent(txtAws4.getText())
-                .setIsRight(rd4.isSelected())
-                .setQuestionId(idQuestion)
-                .setStatus(true)
-                .build();
-        anwserBUS.createAnwser(aws4);
-        AnswerDTO aws5 = AnswerDTO.builder()
-                .setContent(txtAws5.getText())
-                .setIsRight(rd5.isSelected())
-                .setQuestionId(idQuestion)
-                .setStatus(true)
-                .build();
-        anwserBUS.createAnwser(aws5);
-        
+           JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+        }
         
     }//GEN-LAST:event_btnLuuActionPerformed
 
+    
+    private void updateAnws(int idQuestion) {
+        List<AnswerDTO> listAnswerDTOs = anwserBUS.getAnswerByQuestionId(idQuestion);
+        for (AnswerDTO answ : listAnswerDTOs) {
+            answ.setContent(txtAws1.getText());
+            answ.setIsRight(rd1.isSelected());
+            answ.setQuestionId(idQuestion);
+            answ.setStatus(true);
+            anwserBUS.updateAnswer(answ.getId(), answ);
+        }
+    }
+    
+    
+    
+    private void createAnws(int idQuestion) {
+        if (!txtAws1.getText().isEmpty()) {
+            AnswerDTO aws1 = AnswerDTO.builder()
+                    .setContent(txtAws1.getText())
+                    .setIsRight(rd1.isSelected())
+                    .setQuestionId(idQuestion)
+                    .setStatus(true)
+                    .build();
+            anwserBUS.createAnwser(aws1);
+        }
+        if (!txtAws2.getText().isEmpty()) {
+            AnswerDTO aws2 = AnswerDTO.builder()
+                    .setContent(txtAws2.getText())
+                    .setIsRight(rd2.isSelected())
+                    .setQuestionId(idQuestion)
+                    .setStatus(true)
+                    .build();
+            anwserBUS.createAnwser(aws2);
+        }
+        if (!txtAws3.getText().isEmpty()) {
+            AnswerDTO aws3 = AnswerDTO.builder()
+                    .setContent(txtAws3.getText())
+                    .setIsRight(rd3.isSelected())
+                    .setQuestionId(idQuestion)
+                    .setStatus(true)
+                    .build();
+            anwserBUS.createAnwser(aws3);
+        }
+        if (!txtAws4.getText().isEmpty()) {
+            AnswerDTO aws4 = AnswerDTO.builder()
+                    .setContent(txtAws4.getText())
+                    .setIsRight(rd4.isSelected())
+                    .setQuestionId(idQuestion)
+                    .setStatus(true)
+                    .build();
+            anwserBUS.createAnwser(aws4);
+        }
+        if (!txtAws5.getText().isEmpty()) {
+            AnswerDTO aws5 = AnswerDTO.builder()
+                    .setContent(txtAws5.getText())
+                    .setIsRight(rd5.isSelected())
+                    .setQuestionId(idQuestion)
+                    .setStatus(true)
+                    .build();
+            anwserBUS.createAnwser(aws5);
+        }
+    }
     /**
      * @param args the command line arguments
      */

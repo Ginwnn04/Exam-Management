@@ -13,6 +13,7 @@ import DAO.QuestionDAO;
 import DTO.QuestionDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -23,6 +24,16 @@ public class QuestionBUS {
     private AnswerDAO answerDAO = new AnswerDAO();
 
 
+    
+    public List<QuestionDTO> filterTable(String search, int topicId, String level) {
+        List<QuestionDTO> list = questionDAO.getAll(true);
+        return list.stream()
+            .filter(question -> topicId == -1 || question.getTopicId() == topicId) 
+            .filter(question -> level.equals("All") || question.getLevel().equalsIgnoreCase(level)) 
+            .filter(question -> search.isEmpty() || question.getContent().toLowerCase().contains(search.toLowerCase())) 
+            .collect(Collectors.toList());
+       
+    }
     
     public List<QuestionDTO> getAllQuestion(boolean active) {
         return questionDAO.getAll(active);

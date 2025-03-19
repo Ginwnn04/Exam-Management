@@ -12,11 +12,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class ExamBUS {
     private ExamDAO ExamDAO = new ExamDAO();
     private QuestionBUS questionBUS = new QuestionBUS();
 
+    public ArrayList<ExamDTO> filterTable(String search, String selectedMaDe, String selectedThuTu) {
+        ArrayList<ExamDTO> listExam = ExamDAO.getAll(true);
+        ArrayList<ExamDTO> listExamFilter = new ArrayList<>();
+        for (ExamDTO exam : listExam) {
+            boolean matchesMaDe = selectedMaDe.equals("Tất cả") || exam.getTestCode().equals(selectedMaDe);
+            boolean matchesThuTu = selectedThuTu.equals("Tất cả") || exam.getExOrder().equals(selectedThuTu);
+            boolean matchesSearch = exam.getTestCode().toLowerCase().contains(search) ||
+                    exam.getExOrder().toLowerCase().contains(search) ||
+                    exam.getExCode().toLowerCase().contains(search);
+
+            if (matchesMaDe && matchesThuTu && matchesSearch) {
+                listExamFilter.add(exam);
+            }
+        }
+        return listExamFilter;
+    }
+    
+    
     public ArrayList<ExamDTO> getAllExams() {
         return ExamDAO.getAll(true);
     }

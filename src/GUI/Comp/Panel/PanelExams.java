@@ -148,22 +148,16 @@ public class PanelExams extends javax.swing.JPanel {
 
         DefaultTableModel model = (DefaultTableModel) tbDeThi.getModel();
         model.setRowCount(0);
-
+        
+        examsList = examBUS.filterTable(query, selectedMaDe, selectedThuTu);
+        
         for (ExamDTO exam : examsList) {
-            boolean matchesMaDe = selectedMaDe.equals("Tất cả") || exam.getTestCode().equals(selectedMaDe);
-            boolean matchesThuTu = selectedThuTu.equals("Tất cả") || exam.getExOrder().equals(selectedThuTu);
-            boolean matchesSearch = exam.getTestCode().toLowerCase().contains(query) ||
-                    exam.getExOrder().toLowerCase().contains(query) ||
-                    exam.getExCode().toLowerCase().contains(query);
-
-            if (matchesMaDe && matchesThuTu && matchesSearch) {
                 model.addRow(new Object[] {
                         exam.getTestCode(),
                         exam.getExOrder(),
                         exam.getExCode(),
                         "Hành động"
                 });
-            }
         }
         model.fireTableDataChanged();
         tbDeThi.setModel(model);

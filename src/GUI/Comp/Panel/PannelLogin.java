@@ -196,7 +196,7 @@ public class PannelLogin extends javax.swing.JPanel {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         MyListener.getInstance().firePropertyChange("authorize", 0, 1);
-        loginButtonActionPerformed(username, password);
+        login(username, password);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -220,7 +220,7 @@ public class PannelLogin extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jLabel5MouseClicked
 
-    private void loginButtonActionPerformed(String textUsername, String textPassword) {
+    private void login(String textUsername, String textPassword) {
 
        if (textUsername.isEmpty() || textPassword.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -231,7 +231,8 @@ public class PannelLogin extends javax.swing.JPanel {
               JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
               return;
         }
-        if (userBus.login(textUsername, textPassword)) {
+        String passwordHash = Encryptor.decrypt(user.getPassword());
+        if (textPassword.equals(passwordHash)) {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công !!");
             UserSession.getInstance().setCurrentUser(user);
             Main main = new Main(user);

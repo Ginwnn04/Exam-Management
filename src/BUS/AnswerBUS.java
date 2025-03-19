@@ -29,6 +29,10 @@ public class AnswerBUS {
         return anwserDAO.findByListQuestionId(questionIds);
     }
 
+    public boolean updateAnswer(int id, AnswerDTO answ) {
+        return anwserDAO.update(id, answ);
+    }
+    
     public boolean isAnswersCorrect(int questionId, Collection<Integer> answerIds) {
         var correctAnswers = getAnswerByQuestionId(questionId);
 

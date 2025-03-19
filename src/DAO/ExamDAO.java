@@ -11,26 +11,26 @@ import java.sql.ResultSet;
 
 public class ExamDAO implements BaseDAO<ExamDTO, Integer> {
     @Override
-    public ArrayList<ExamDTO> getAll(boolean active) {
-        // int isGet = active ? 1 : 0;
-        ArrayList<ExamDTO> list_exams = new ArrayList<ExamDTO>();
-        String query = "SELECT * FROM exams";
-        try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                ExamDTO exam = ExamDTO.builder()
-                    .setTestCode(resultSet.getString("testCode"))
-                    .setExOrder(resultSet.getString("exOrder"))
-                    .setExCode(resultSet.getString("exCode"))
-                    .setStatus(resultSet.getBoolean("status"))
-                    .build();
-                list_exams.add(exam);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+public ArrayList<ExamDTO> getAll(boolean active) {
+    // int isGet = active ? 1 : 0;
+    ArrayList<ExamDTO> list_exams = new ArrayList<ExamDTO>();
+    String query = "SELECT * FROM exams";
+    try (PreparedStatement preparedStatement = Helper.ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            ExamDTO exam = ExamDTO.builder()
+                .setTestCode(resultSet.getString("testCode"))
+                .setExOrder(resultSet.getString("exOrder"))
+                .setExCode(resultSet.getString("exCode"))
+                .setStatus(resultSet.getBoolean("status"))
+                .build();
+            list_exams.add(exam);
         }
-        return list_exams;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list_exams;
+}
 
     public ExamDTO findByID(Integer id) {
         String query = "SELECT * FROM exams WHERE id = ?";

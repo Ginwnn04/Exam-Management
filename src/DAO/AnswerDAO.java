@@ -42,7 +42,17 @@ public class AnswerDAO implements BaseDAO<AnswerDTO, Integer>{
 
     @Override
     public boolean update(Integer id, AnswerDTO request) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String query = "UPDATE questions SET qContent = ?, qPictures = ?, qStatus = ? WHERE qID = ?";
+        try (PreparedStatement pstm = ConnectDB.getInstance().getConnection().prepareStatement(query)) {
+            pstm.setString(1, request.getContent());
+            pstm.setString(2, request.getPicture() != null ? request.getPicture() : "");
+            pstm.setInt(3, request.isStatus() ? 1 : 0);
+            pstm.setInt(4, id); 
+            return pstm.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
